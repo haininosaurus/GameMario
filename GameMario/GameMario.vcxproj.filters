@@ -30,6 +30,15 @@
     <ClCompile Include="Mario.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mario.h">
@@ -42,6 +51,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

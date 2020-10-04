@@ -1,16 +1,3 @@
-/* =============================================================
-	INTRODUCTION TO GAME PROGRAMMING SE102
-	
-	SAMPLE 01 - SKELETON CODE 
-
-	This sample illustrates how to:
-
-	1/ Re-organize introductory code to an initial skeleton for better scalability
-	2/ Render transparent sprites
-	3/ CGame is a singleton, playing a role of an "engine".
-	4/ CGameObject is an abstract class for all game objects
-================================================================ */
-
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
@@ -19,12 +6,14 @@
 #include "debug.h"
 #include "Game.h"
 #include "GameObject.h"
-#include "Mario.h"
+//#include "Mario.h"
+#include "Brick.h"
+#include "Textures.h"
 #define WINDOW_CLASS_NAME L"Game Window"
-#define MAIN_WINDOW_TITLE L"01 - Skeleton"
+#define MAIN_WINDOW_TITLE L"Game Mario"
 #define WINDOW_ICON_PATH L"brick.ico"
 
-#define BRICK_TEXTURE_PATH L"brick.png"
+//#define BRICK_TEXTURE_PATH L"brick.png"
 #define MARIO_TEXTURE_PATH L"mario.png"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
@@ -34,19 +23,20 @@
 
 using namespace std;
 
-CMario *mario;
-#define MARIO_START_X 10.0f
-#define MARIO_START_Y 130.0f
-#define MARIO_START_VX 0.1f
+//CMario *mario;
+//#define MARIO_START_X 10.0f
+//#define MARIO_START_Y 130.0f
+//#define MARIO_START_VX 0.1f
 
-CGameObject *brick[20];
-#define BRICK_X 10.0f
-#define BRICK_Y 100.0f
+CBrick *brick;
+//#define BRICK_X 10.0f
+//#define BRICK_Y 100.0f
+#define ID_TEX_BRICK 0
 
-LPDIRECT3DTEXTURE9 texMario = NULL;
+//LPDIRECT3DTEXTURE9 texMario = NULL;
 LPDIRECT3DTEXTURE9 texBrick = NULL;
 
-vector<LPGAMEOBJECT> objects;  
+//vector<LPGAMEOBJECT> objects;  
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -66,7 +56,18 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 */
 void LoadResources()
 {
+	CGame* game = CGame::GetInstance();
+	texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
+	brick = new CBrick(10, 10, texBrick);
+	//CTextures*textures = CTextures::GetInstance();
 
+	//textures->Add(ID_TEX_BRICK, L"Textures\\items-objects.png", D3DCOLOR_XRGB(255, 255, 255));
+
+	//CSprites* sprites = CSprites::GetInstance();
+
+	//LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_BRICK);
+
+	//sprites->Add(10001, 235, 216, 266, 247, texBrick);
 	
 }
 
@@ -98,7 +99,7 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 
-
+		brick->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -119,7 +120,8 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+	wc.hIcon = NULL;
+	//wc.hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
@@ -152,7 +154,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	SetDebugWindow(hWnd);
+	//SetDebugWindow(hWnd);
 
 	return hWnd;
 }
