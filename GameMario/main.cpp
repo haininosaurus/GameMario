@@ -6,15 +6,15 @@
 #include "debug.h"
 #include "Game.h"
 #include "GameObject.h"
-//#include "Mario.h"
+#include "Mario.h"
 #include "Brick.h"
 #include "Textures.h"
 #define WINDOW_CLASS_NAME L"Game Window"
 #define MAIN_WINDOW_TITLE L"Game Mario"
 #define WINDOW_ICON_PATH L"brick.ico"
 
-//#define BRICK_TEXTURE_PATH L"brick.png"
-#define MARIO_TEXTURE_PATH L"mario.png"
+#define BRICK_TEXTURE_PATH L"Textures\\brick.png"
+#define MARIO_TEXTURE_PATH L"Textures\\mario1.png"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 640
@@ -23,17 +23,18 @@
 
 using namespace std;
 
-//CMario *mario;
-//#define MARIO_START_X 10.0f
-//#define MARIO_START_Y 130.0f
-//#define MARIO_START_VX 0.1f
+CMario *mario;
+#define MARIO_START_X 10.0f
+#define MARIO_START_Y 130.0f
+#define MARIO_START_VX 0.1f
+#define ID_TEX_MARIO 0
 
 CBrick *brick;
-//#define BRICK_X 10.0f
-//#define BRICK_Y 100.0f
-#define ID_TEX_BRICK 0
+#define BRICK_X 10.0f
+#define BRICK_Y 10.0f
+//#define ID_TEX_BRICK 0
 
-//LPDIRECT3DTEXTURE9 texMario = NULL;
+LPDIRECT3DTEXTURE9 texMario = NULL;
 LPDIRECT3DTEXTURE9 texBrick = NULL;
 
 //vector<LPGAMEOBJECT> objects;  
@@ -58,17 +59,40 @@ void LoadResources()
 {
 	CGame* game = CGame::GetInstance();
 	texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
-	brick = new CBrick(10, 10, texBrick);
-	//CTextures*textures = CTextures::GetInstance();
+	brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
 
-	//textures->Add(ID_TEX_BRICK, L"Textures\\items-objects.png", D3DCOLOR_XRGB(255, 255, 255));
+	CTextures* textures = CTextures::GetInstance();
+	textures->Add(ID_TEX_MARIO, MARIO_TEXTURE_PATH, D3DCOLOR_XRGB(176, 224, 248));
 
-	//CSprites* sprites = CSprites::GetInstance();
+	CSprites* sprites = CSprites::GetInstance();
 
-	//LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_BRICK);
+	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
 
-	//sprites->Add(10001, 235, 216, 266, 247, texBrick);
+	sprites->Add(10001, 246, 154, 259, 181, texMario);
+	sprites->Add(10002, 275, 154, 290, 181, texMario);
+	sprites->Add(10003, 304, 154, 321, 181, texMario);
+
+	sprites->Add(10011, 186, 154, 199, 181, texMario);
+	sprites->Add(10012, 155, 154, 170, 181, texMario);
+	sprites->Add(10013, 125, 154, 140, 181, texMario);
+
+
+	CAnimations* animations = CAnimations::GetInstance();
+	LPANIMATION ani;
+
+	ani = new CAnimation(100);
+	ani->Add(10001);
+	ani->Add(10002);
+	ani->Add(10003);
+	animations->Add(500, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(10011);
+	ani->Add(10012);
+	ani->Add(10013);
+	animations->Add(501, ani);
 	
+	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
 }
 
 /*
@@ -77,7 +101,7 @@ void LoadResources()
 */
 void Update(DWORD dt)
 {
-
+	mario->Update(dt);
 	
 }
 
@@ -98,7 +122,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-
+		mario->Render();
 		brick->Render();
 
 		spriteHandler->End();

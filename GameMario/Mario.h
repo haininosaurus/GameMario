@@ -1,21 +1,15 @@
 #pragma once
-#include"GameObject.h"
 
-#define MARIO_WALKING_SPEECH 0.15f
+#include "GameObject.h"
 
-#define MARIO_SMALL_BBOX_WIDTH  13
-#define MARIO_SMALL_BBOX_HEIGHT 15
+#define MARIO_WIDTH 14
 
-class CMario:public CGameObject
+class CMario : public CGameObject
 {
-	float start_x;
-	float start_y;
-
+protected:
+	float vx;
 public:
-	CMario() {};
-	CMario(float x, float y) { start_x = x; start_y = y; };
-	virtual void Render();
-	virtual void Update(DWORD dt);
-
+	CMario(float x, float y, float vx);
+	void Update(DWORD dt);
+	void Render();
 };
-
