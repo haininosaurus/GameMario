@@ -4,7 +4,7 @@
 #include <d3dx9.h>
 
 
-#define MAX_FRAME_RATE 60
+#define MAX_FRAME_RATE 70
 
 
 class CGame
