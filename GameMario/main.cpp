@@ -10,6 +10,7 @@
 #include "Brick.h"
 #include "Textures.h"
 #include "QuestionBlock.h"
+#include "Goombas.h"
 #define WINDOW_CLASS_NAME L"Game Window"
 #define MAIN_WINDOW_TITLE L"Game Mario"
 #define WINDOW_ICON_PATH L"brick.ico"
@@ -17,6 +18,7 @@
 #define BRICK_TEXTURE_PATH L"Textures\\brick.png"
 #define MARIO_TEXTURE_PATH L"Textures\\mario.png"
 #define TILE_4_PATH L"Textures\\tiles-4.png"
+#define ENEMIES_6 L"Textures\\enemies-6.png"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 640
@@ -40,10 +42,17 @@ CQuestionBlock* questionBlock;
 #define QUESTION_BLOCK_Y 30.0f
 #define ID_TEX_QUESTIONBLOCK 1
 
+CGoombas* goombas;
+#define GOOMBAS_START_X 50.0f
+#define GOOMBAS_START_Y 50.0f
+#define GOOMBAS_START_VX 0.1f
+#define ID_TEX_GOOMBAS 2
+
 
 LPDIRECT3DTEXTURE9 texMario = NULL;
 LPDIRECT3DTEXTURE9 texBrick = NULL;
 LPDIRECT3DTEXTURE9 texQuestionBlock = NULL;
+LPDIRECT3DTEXTURE9 texGoombas = NULL;
 
 //vector<LPGAMEOBJECT> objects;  
 
@@ -66,16 +75,18 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void LoadResources()
 {
 	CGame* game = CGame::GetInstance();
-	texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
+	//texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
 	brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
 
 	CTextures* textures = CTextures::GetInstance();
 	textures->Add(ID_TEX_MARIO, MARIO_TEXTURE_PATH, D3DCOLOR_XRGB(176, 224, 248));
 	textures->Add(ID_TEX_QUESTIONBLOCK, TILE_4_PATH, D3DCOLOR_XRGB(176, 224, 248));
+	textures->Add(ID_TEX_GOOMBAS, ENEMIES_6, D3DCOLOR_XRGB(64, 144, 192));
 	CSprites* sprites = CSprites::GetInstance();
 
 	texMario = textures->Get(ID_TEX_MARIO);
 	texQuestionBlock = textures->Get(ID_TEX_QUESTIONBLOCK);
+	texGoombas = textures->Get(ID_TEX_GOOMBAS);
 
 	sprites->Add(10001, 215, 88, 229, 105, texMario);
 	sprites->Add(10002, 254, 88, 272, 105, texMario);
@@ -89,6 +100,9 @@ void LoadResources()
 	sprites->Add(1006, 137, 52, 152, 67, texQuestionBlock);
 	sprites->Add(1007, 154, 52, 169, 67, texQuestionBlock);
 	sprites->Add(1008, 171, 52, 186, 67, texQuestionBlock);
+
+	sprites->Add(1009, 352, 273, 375, 295, texGoombas);
+	sprites->Add(10010, 376, 273, 399, 295, texGoombas);
 
 
 	CAnimations* animations = CAnimations::GetInstance();
@@ -114,8 +128,15 @@ void LoadResources()
 	//ani->Add(10013);
 	animations->Add(502, ani);
 
+	ani = new CAnimation(102);
+	ani->Add(1009);
+	ani->Add(10010);
+	//ani->Add(10013);
+	animations->Add(503, ani);
+
 	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
 	questionBlock = new CQuestionBlock(QUESTION_BLOCK_X, QUESTION_BLOCK_Y);
+	goombas = new CGoombas(GOOMBAS_START_X, GOOMBAS_START_Y, GOOMBAS_START_VX);
 
 }
 
@@ -126,6 +147,7 @@ void LoadResources()
 void Update(DWORD dt)
 {
 	mario->Update(dt);
+	goombas->Update(dt);
 	
 }
 
@@ -149,6 +171,7 @@ void Render()
 		mario->Render();
 		brick->Render();
 		questionBlock->Render();
+		goombas->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();

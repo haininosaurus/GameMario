@@ -80,40 +80,6 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
-/*
-	Utility function to wrap D3DXCreateTextureFromFileEx
-*/
-LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
-{
-	LPDIRECT3DTEXTURE9 texture; 
-
-	LPDIRECT3DDEVICE9 d3ddv = CGame::GetInstance()->GetDirect3DDevice();
-
-	HRESULT result = D3DXCreateTextureFromFileEx(
-		d3ddv,								// Pointer to Direct3D device object
-		texturePath,						// Path to the image to load
-		D3DX_DEFAULT_NONPOW2,				// Texture width
-		D3DX_DEFAULT_NONPOW2,				// Texture height
-		1,
-		D3DUSAGE_DYNAMIC,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 255, 255),			// Transparent color
-		NULL,
-		NULL,
-		&texture);								// Created texture pointer
-
-	if (result != D3D_OK)
-	{
-		DebugOut(L"[ERROR] CreateTextureFromFile failed. File: %s\n", texturePath);
-		return NULL;
-	}
-
-	DebugOut(L"[INFO] Texture loaded Ok from file: %s \n", texturePath);
-	return texture;
-}
 
 CGame::~CGame()
 {

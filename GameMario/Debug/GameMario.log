@@ -1,2 +1,10 @@
-﻿  main.cpp
+﻿  Brick.cpp
+  Game.cpp
+  GameObject.cpp
+  Goombas.cpp
+  Mario.cpp
+  Sprites.cpp
+  Textures.cpp
+  main.cpp
+  Generating Code...
   GameMario.vcxproj -> F:\COURSES\game directx\GameMario\GameMario\Debug\GameMario.exe
