@@ -1,6 +1,5 @@
 #include "Sprites.h"
 #include "Game.h"
-#include "debug.h"
 
 CSprite::CSprite(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)
 {
@@ -23,7 +22,7 @@ CSprites* CSprites::GetInstance()
 void CSprite::Draw(float x, float y, int alpha)
 {
 	CGame* game = CGame::GetInstance();
-	//game->Draw(x, y, texture, left, top, right, bottom, alpha);
+	game->Draw(x, y, texture, left, top, right, bottom, alpha);
 	game->Draw(x, y, texture, left, top, right, bottom);
 }
 
@@ -38,55 +37,17 @@ LPSPRITE CSprites::Get(int id)
 	return sprites[id];
 }
 
-
-
-void CAnimation::Add(int spriteId, DWORD time)
+/*
+	Clear all loaded textures
+*/
+void CSprites::Clear()
 {
-	int t = time;
-	if (time == 0) t = this->defaultTime;
-
-	LPSPRITE sprite = CSprites::GetInstance()->Get(spriteId);
-	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
-	frames.push_back(frame);
-}
-
-void CAnimation::Render(float x, float y, int alpha)
-{
-	DWORD now = GetTickCount();
-	if (currentFrame == -1)
+	for (auto x : sprites)
 	{
-		currentFrame = 0;
-		lastFrameTime = now;
-	}
-	else
-	{
-		DWORD t = frames[currentFrame]->GetTime();
-		if (now - lastFrameTime > t)
-		{
-			currentFrame++;
-			lastFrameTime = now;
-			if (currentFrame == frames.size()) currentFrame = 0;
-		}
-
+		LPSPRITE s = x.second;
+		delete s;
 	}
 
-	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
+	sprites.clear();
 }
 
-CAnimations* CAnimations::__instance = NULL;
-
-CAnimations* CAnimations::GetInstance()
-{
-	if (__instance == NULL) __instance = new CAnimations();
-	return __instance;
-}
-
-void CAnimations::Add(int id, LPANIMATION ani)
-{
-	animations[id] = ani;
-}
-
-LPANIMATION CAnimations::Get(int id)
-{
-	return animations[id];
-}

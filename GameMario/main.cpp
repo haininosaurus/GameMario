@@ -1,60 +1,40 @@
+/* =============================================================
+	INTRODUCTION TO GAME PROGRAMMING SE102
+
+	SAMPLE 05 - SCENCE MANAGER
+
+	This sample illustrates how to:
+
+		1/ Implement a scence manager
+		2/ Load scene from "database", add/edit/remove scene without changing code
+		3/ Dynamically move between scenes without hardcode logic
+
+================================================================ */
+
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <vector>
 
-#include "debug.h"
+#include "Utils.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "Textures.h"
+
 #include "Mario.h"
 #include "Brick.h"
-#include "Textures.h"
-#include "QuestionBlock.h"
-#include "Goombas.h"
-#define WINDOW_CLASS_NAME L"Game Window"
-#define MAIN_WINDOW_TITLE L"Game Mario"
-#define WINDOW_ICON_PATH L"brick.ico"
 
-#define BRICK_TEXTURE_PATH L"Textures\\brick.png"
-#define MARIO_TEXTURE_PATH L"Textures\\mario.png"
-#define TILE_4_PATH L"Textures\\tiles-4.png"
-#define ENEMIES_6 L"Textures\\enemies-6.png"
+#include "PlayScence.h"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define WINDOW_CLASS_NAME L"SampleWindow"
+#define MAIN_WINDOW_TITLE L"MARIO"
 
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
 
-using namespace std;
+#define MAX_FRAME_RATE 120
 
-CMario *mario;
-#define MARIO_START_X 10.0f
-#define MARIO_START_Y 130.0f
-#define MARIO_START_VX 0.2f
-#define ID_TEX_MARIO 0
-
-CBrick *brick;
-#define BRICK_X 10.0f
-#define BRICK_Y 10.0f
-
-CQuestionBlock* questionBlock;
-#define QUESTION_BLOCK_X 30.0f
-#define QUESTION_BLOCK_Y 30.0f
-#define ID_TEX_QUESTIONBLOCK 1
-
-CGoombas* goombas;
-#define GOOMBAS_START_X 50.0f
-#define GOOMBAS_START_Y 50.0f
-#define GOOMBAS_START_VX 0.1f
-#define ID_TEX_GOOMBAS 2
-
-
-LPDIRECT3DTEXTURE9 texMario = NULL;
-LPDIRECT3DTEXTURE9 texBrick = NULL;
-LPDIRECT3DTEXTURE9 texQuestionBlock = NULL;
-LPDIRECT3DTEXTURE9 texGoombas = NULL;
-
-//vector<LPGAMEOBJECT> objects;  
+CGame* game;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -70,93 +50,19 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 /*
-	Load all game resources. In this example, create a brick object and mario object
-*/
-void LoadResources()
-{
-	CGame* game = CGame::GetInstance();
-	//texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
-	brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
-
-	CTextures* textures = CTextures::GetInstance();
-	textures->Add(ID_TEX_MARIO, MARIO_TEXTURE_PATH, D3DCOLOR_XRGB(176, 224, 248));
-	textures->Add(ID_TEX_QUESTIONBLOCK, TILE_4_PATH, D3DCOLOR_XRGB(176, 224, 248));
-	textures->Add(ID_TEX_GOOMBAS, ENEMIES_6, D3DCOLOR_XRGB(64, 144, 192));
-	CSprites* sprites = CSprites::GetInstance();
-
-	texMario = textures->Get(ID_TEX_MARIO);
-	texQuestionBlock = textures->Get(ID_TEX_QUESTIONBLOCK);
-	texGoombas = textures->Get(ID_TEX_GOOMBAS);
-
-	sprites->Add(10001, 215, 88, 229, 105, texMario);
-	sprites->Add(10002, 254, 88, 272, 105, texMario);
-	//sprites->Add(10003, 135, 154, 151, 181, texMario);
-
-	sprites->Add(1003, 135, 88, 151, 105, texMario);
-	sprites->Add(1004, 175, 88, 191, 105, texMario);
-	//sprites->Add(10013, 135, 154, 140, 181, texMario);
-
-	sprites->Add(1005, 120, 52, 135, 67, texQuestionBlock);
-	sprites->Add(1006, 137, 52, 152, 67, texQuestionBlock);
-	sprites->Add(1007, 154, 52, 169, 67, texQuestionBlock);
-	sprites->Add(1008, 171, 52, 186, 67, texQuestionBlock);
-
-	sprites->Add(1009, 352, 273, 375, 295, texGoombas);
-	sprites->Add(10010, 376, 273, 399, 295, texGoombas);
-
-
-	CAnimations* animations = CAnimations::GetInstance();
-	LPANIMATION ani;
-
-	ani = new CAnimation(100);
-	ani->Add(10001);
-	ani->Add(10002);
-	//ani->Add(10003);
-	animations->Add(500, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(1003);
-	ani->Add(1004);
-	//ani->Add(10013);
-	animations->Add(501, ani);
-	
-	ani = new CAnimation(101);
-	ani->Add(1005, 500);
-	ani->Add(1006);
-	ani->Add(1007);
-	ani->Add(1008);
-	//ani->Add(10013);
-	animations->Add(502, ani);
-
-	ani = new CAnimation(102);
-	ani->Add(1009);
-	ani->Add(10010);
-	//ani->Add(10013);
-	animations->Add(503, ani);
-
-	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
-	questionBlock = new CQuestionBlock(QUESTION_BLOCK_X, QUESTION_BLOCK_Y);
-	goombas = new CGoombas(GOOMBAS_START_X, GOOMBAS_START_Y, GOOMBAS_START_VX);
-
-}
-
-/*
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
 void Update(DWORD dt)
 {
-	mario->Update(dt);
-	goombas->Update(dt);
-	
+	//CGame::GetInstance()->GetCurrentScene()->Update(dt);
 }
 
 /*
-	Render a frame 
+	Render a frame
 */
 void Render()
 {
-	CGame * game = CGame::GetInstance();
 	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
@@ -168,10 +74,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		mario->Render();
-		brick->Render();
-		questionBlock->Render();
-		goombas->Render();
+		CGame::GetInstance()->GetCurrentScene()->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -193,7 +96,6 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hIcon = NULL;
-	//wc.hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
@@ -216,17 +118,15 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 			hInstance,
 			NULL);
 
-	if (!hWnd) 
+	if (!hWnd)
 	{
+		OutputDebugString(L"[ERROR] CreateWindow failed");
 		DWORD ErrCode = GetLastError();
-		DebugOut(L"[ERROR] CreateWindow failed! ErrCode: %d\nAt: %s %d \n", ErrCode, _W(__FILE__), __LINE__);
-		return 0;
+		return FALSE;
 	}
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-
-	//SetDebugWindow(hWnd);
 
 	return hWnd;
 }
@@ -257,11 +157,14 @@ int Run()
 		if (dt >= tickPerFrame)
 		{
 			frameStart = now;
+
+			game->ProcessKeyboard();
+
 			Update(dt);
 			Render();
 		}
 		else
-			Sleep(tickPerFrame - dt);	
+			Sleep(tickPerFrame - dt);
 	}
 
 	return 1;
@@ -271,10 +174,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	CGame * game = CGame::GetInstance();
+	game = CGame::GetInstance();
 	game->Init(hWnd);
+	game->InitKeyboard();
 
-	LoadResources();
+	game->Load(L"mario.txt");
+
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
 

@@ -1,6 +1,6 @@
 #include "QuestionBlock.h"
 
-CQuestionBlock::CQuestionBlock(float x, float y) :CGameObject(x, y) {}
+//CQuestionBlock::CQuestionBlock(float x, float y) :CGameObject(x, y) {}
 
 void CQuestionBlock::Render() {
 	LPANIMATION ani;

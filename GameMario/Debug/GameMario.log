@@ -1,8 +1,14 @@
-﻿  Brick.cpp
-  Game.cpp
+﻿  Game.cpp
   GameObject.cpp
   Goombas.cpp
   Mario.cpp
+  PlayScence.cpp
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(93,20): warning C4018: '<': signed/unsigned mismatch
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(115,20): warning C4018: '<': signed/unsigned mismatch
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(138,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(139,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(251,20): warning C4018: '<': signed/unsigned mismatch
+F:\COURSES\game directx\GameMario\GameMario\GameMario\PlayScence.cpp(260,20): warning C4018: '<': signed/unsigned mismatch
   Sprites.cpp
   Textures.cpp
   main.cpp
