@@ -28,7 +28,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_ROAD	2
 #define OBJECT_TYPE_KOOPAS	3
 
 #define OBJECT_TYPE_PORTAL	50
@@ -147,6 +147,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

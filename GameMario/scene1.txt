@@ -7,12 +7,16 @@
 [SPRITES]
 #BRICK
 20001	52	52	68	68	0
+#ROAD
+20002	18	1	34	17	0
 						
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
 # ==== BRICK =========
 601	20001	100
+# ==== ROAD =========
+602	20002	100
 
 #
 # id	ani1	ani2	ani3
@@ -21,16 +25,35 @@
 
 # BRICK 
 2	601
-
+3	602
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba
+# type: 0 = Mario , 1 = Brick, 2 = Road
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	150	2
-1	50	50	2
+1	0	50	2
+2	0	149	3
+2	16	149	3
+2	32	149	3
+2	48	149	3
+2	64	149	3
+2	80	149	3
+2	96	149	3
+2	112	149	3
+2	128	149	3
+2	144	149	3
+2	160	149	3
+2	176	149	3
+2	192	149	3
+2	208	149	3
+2	224	149	3
+2	240	149	3
+2	256	149	3
+2	272	149	3
+2	288	149	3
+2	304	149	3
 
 
 # --- SCENE PORTAL ----
