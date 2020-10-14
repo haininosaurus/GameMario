@@ -1,10 +1,33 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	Textures\tiles-4.png	255	255	255
-
-
+1	Textures\mario1.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+# SMALL MARIO 
+# idle small right
+10001	247	0	259	15	1
+# walk
+10002	275	0	291	16	1		
+10003	306	0	321	16	1
+# idle small left
+10011	187	0	199	15	1
+#walk
+10012	155	0	170	16	1
+10013	125	0	140	16	1
+# die 
+10099	215	120	231	136	1
+# BIG MARIO
+# idle right
+10021	246	154	260	181	1
+# walk
+10022	275	154	291	181	1
+10023	305	155	321	181	1
+# idle left
+10031	186	154	200	181	1
+# walk
+10032	155	154	171	181	1
+10033	125	155	141	181	1
 #BRICK
 20001	52	52	68	68	0
 #ROAD
@@ -12,7 +35,25 @@
 						
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-
+# ==== MARIO =========
+#idle SMALL right
+400	10001	100
+#idle SMALL left
+401	10011	100
+#idle big right
+402	10021	100
+#idle big left
+403	10031	100
+#walk right small
+500	10001	100	10002	100	10003	100
+#walk left small
+501	10011	100	10012	100	10013	100
+#walk right big
+502	10021	100	10022	100	10023	100
+#walk left big
+503	10031	100	10032	100	10033	100
+#die
+599	10099	100
 # ==== BRICK =========
 601	20001	100
 # ==== ROAD =========
@@ -22,15 +63,18 @@
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
-
+# MARIO
+1	400	401	402	403	500	501	502	503
 # BRICK 
 2	601
+#ROAD
 3	602
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Road
-
+# MARIO
+0	80.0	0	1
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
 1	0	50	2

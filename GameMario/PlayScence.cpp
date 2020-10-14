@@ -146,6 +146,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
+	case OBJECT_TYPE_MARIO:
+		if (player != NULL)
+		{
+			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			return;
+		}
+		obj = new CMario(x, y);
+		player = (CMario*)obj;
+
+		DebugOut(L"[INFO] Player object created!\n");
+		break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 
@@ -234,17 +245,17 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	//if (player == NULL) return;
+	if (player == NULL) return;
 
-	//// Update camera to follow mario
-	//float cx, cy;
-	//player->GetPosition(cx, cy);
+	// Update camera to follow mario
+	float cx, cy;
+	player->GetPosition(cx, cy);
 
-	//CGame* game = CGame::GetInstance();
-	//cx -= game->GetScreenWidth() / 2;
-	//cy -= game->GetScreenHeight() / 2;
+	CGame* game = CGame::GetInstance();
+	cx -= game->GetScreenWidth() / 4;
+	cy -= game->GetScreenHeight() / 2;
 
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
@@ -277,23 +288,23 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
-	//case DIK_A:
-	//	mario->Reset();
-	//	break;
+	case DIK_A:
+		mario->Reset();
+		break;
 	}
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
-	//CGame* game = CGame::GetInstance();
-	//CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	CGame* game = CGame::GetInstance();
+	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
-	//// disable control key when Mario die 
-	////if (mario->GetState() == MARIO_STATE_DIE) return;
-	//if (game->IsKeyDown(DIK_RIGHT))
-	//	mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	//else if (game->IsKeyDown(DIK_LEFT))
-	//	mario->SetState(MARIO_STATE_WALKING_LEFT);
-	//else
-	//	mario->SetState(MARIO_STATE_IDLE);
+	// disable control key when Mario die 
+	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (game->IsKeyDown(DIK_RIGHT))
+		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	else if (game->IsKeyDown(DIK_LEFT))
+		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	else
+		mario->SetState(MARIO_STATE_IDLE);
 }

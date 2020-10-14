@@ -27,34 +27,34 @@ void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 */
 LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 {
-	//float sl, st, sr, sb;		// static object bbox
-	//float ml, mt, mr, mb;		// moving object bbox
-	//float t, nx, ny;
+	float sl, st, sr, sb;		// static object bbox
+	float ml, mt, mr, mb;		// moving object bbox
+	float t, nx, ny;
 
-	//coO->GetBoundingBox(sl, st, sr, sb);
+	coO->GetBoundingBox(sl, st, sr, sb);
 
-	//// deal with moving object: m speed = original m speed - collide object speed
-	//float svx, svy;
-	//coO->GetSpeed(svx, svy);
+	// deal with moving object: m speed = original m speed - collide object speed
+	float svx, svy;
+	coO->GetSpeed(svx, svy);
 
-	//float sdx = svx * dt;
-	//float sdy = svy * dt;
+	float sdx = svx * dt;
+	float sdy = svy * dt;
 
-	//// (rdx, rdy) is RELATIVE movement distance/velocity 
-	//float rdx = this->dx - sdx;
-	//float rdy = this->dy - sdy;
+	// (rdx, rdy) is RELATIVE movement distance/velocity 
+	float rdx = this->dx - sdx;
+	float rdy = this->dy - sdy;
 
-	//GetBoundingBox(ml, mt, mr, mb);
+	GetBoundingBox(ml, mt, mr, mb);
 
-	//CGame::SweptAABB(
-	//	ml, mt, mr, mb,
-	//	rdx, rdy,
-	//	sl, st, sr, sb,
-	//	t, nx, ny
-	//	);
+	CGame::SweptAABB(
+		ml, mt, mr, mb,
+		rdx, rdy,
+		sl, st, sr, sb,
+		t, nx, ny
+		);
 
-	//CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
-	//return e;
+	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
+	return e;
 	return 0;
 }
 
@@ -130,7 +130,7 @@ void CGameObject::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
+	CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 0);
 }
 
 
