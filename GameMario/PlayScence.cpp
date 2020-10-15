@@ -48,10 +48,6 @@ void CPlayScene::_ParseSection_TEXTURES(string line)
 	int G = atoi(tokens[3].c_str());
 	int B = atoi(tokens[4].c_str());
 
-	DebugOut(L"[INFO] textID is %d.\n", texID);
-	DebugOut(L"[INFO] B is %d.\n", B);
-	DebugOut(L"[INFO] G is %d.\n", G);
-	DebugOut(L"[INFO] R is %d.\n", R);
 	CTextures::GetInstance()->Add(texID, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
@@ -68,7 +64,6 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	int b = atoi(tokens[4].c_str());
 	int texID = atoi(tokens[5].c_str());
 
-	DebugOut(L"[INFO] ID is %d.\n", ID);
 	LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
 	if (tex == NULL)
 	{
@@ -251,11 +246,17 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
+	
 	CGame* game = CGame::GetInstance();
-	cx -= game->GetScreenWidth() / 4;
-	cy -= game->GetScreenHeight() / 2;
+	if (cx < 0) player->SetPosition(0, cy);
+	if (cx > game->GetScreenWidth()/2) {
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
+		CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	}
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+
+
 }
 
 void CPlayScene::Render()

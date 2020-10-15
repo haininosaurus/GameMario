@@ -3,9 +3,16 @@
 
 void CRoad::Render()
 {
-	animation_set->at(0)->Render(x, y);
+
+	if (x >= 624 && x <= 988 && y==149)
+	{
+		animation_set->at(1)->Render(x, y);
+	}
+	else {
+		animation_set->at(0)->Render(x, y);
+	}
+
 	RenderBoundingBox();
-	DebugOut(L"[INFO] Render brick successfully! \n");
 }
 
 void CRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
