@@ -4,10 +4,11 @@
 
 #include "Mario.h"
 #include "Game.h"
+#include "Utils.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_BIG;
+	level = MARIO_LEVEL_FIRE;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
 
@@ -20,11 +21,10 @@ CMario::CMario(float x, float y) : CGameObject()
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
+	//DebugOut(L"[INFO] bef-Vy in update %f\n", vy);
 	CGameObject::Update(dt);
-
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
-
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -47,11 +47,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += dx;
 		y += dy;
 
-		DebugOut(L"khong va cham\n");
 	}
 	else
 	{
-		DebugOut(L"va cham\n");
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
@@ -104,6 +102,28 @@ void CMario::Render()
 				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 			else ani = MARIO_ANI_SMALL_WALKING_LEFT;
 		}
+		else if (level == MARIO_LEVEL_TAIL)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_TAIL_IDLE_RIGHT;
+				else ani = MARIO_ANI_TAIL_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+			else ani = MARIO_ANI_TAIL_WALKING_LEFT;
+		}
+		else if (level == MARIO_LEVEL_FIRE)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0) ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+				else ani = MARIO_ANI_FIRE_IDLE_LEFT;
+			}
+			else if (vx > 0)
+				ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+			else ani = MARIO_ANI_FIRE_WALKING_LEFT;
+		}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -130,6 +150,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		vy = -MARIO_JUMP_SPEED_Y;
+		//DebugOut(L"[INFO] Vy %d\n", vy);
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
@@ -150,8 +171,19 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		right = x + MARIO_BIG_BBOX_WIDTH;
 		bottom = y + MARIO_BIG_BBOX_HEIGHT;
 	}
-	else
+	else if (level == MARIO_LEVEL_TAIL)
 	{
+		right = x + MARIO_TAIL_BBOX_WIDTH;
+		bottom = y + MARIO_TAIL_BBOX_HEIGHT;
+
+	}
+	else if (level == MARIO_LEVEL_FIRE)
+	{
+		right = x + MARIO_FIRE_BBOX_WIDTH;
+		bottom = y + MARIO_FIRE_BBOX_HEIGHT;
+
+	}
+	else {
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
