@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -29,7 +30,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_ROAD	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_KOOPAS	4
+#define OBJECT_TYPE_BACKGROUND 3
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -139,6 +141,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	CGameObject* obj = NULL;
 
+
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
@@ -154,6 +157,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
+	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -169,6 +173,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
 }
+
 
 void CPlayScene::Load()
 {
@@ -232,11 +237,13 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
+		//nonCoObjects.push_back(bgrObject[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+		//bgrObject[i]->Update(dt, &nonCoObjects);
 	}
 
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -261,7 +268,7 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = objects.size()-1; i >= 0 ; i--)
 		objects[i]->Render();
 }
 

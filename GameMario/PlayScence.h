@@ -6,6 +6,7 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Road.h"
+#include "BackgroundObject.h"
 
 
 
@@ -21,6 +22,7 @@ protected:
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
+	//void _ParseSection_BACKGROUND_OBJECTS(string line);
 
 
 public:
