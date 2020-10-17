@@ -1,7 +1,7 @@
 #include "BackgroundObject.h"
 #include "Game.h"
 #include "Sprites.h"
-
+#include "Utils.h"
 
 void CBackgroundObject::Render() {
 	if (x == 16 && y >= 117 && y <= 133
@@ -39,7 +39,20 @@ void CBackgroundObject::Render() {
 		|| x == 192 && y == 133) {
 		animation_set->at(7)->Render(x, y);
 	}
+
+	else if (x == 136 && y == 5
+		|| x == 664 && y == 289
+		|| x == 1192 && y == 289
+		|| x == 2344 && y == 305) {
+		DebugOut(L"load cloud \n");
+		animation_set->at(9)->Render(x, y);
+	}
+	else if (x == 344 && y == -11) {
+		DebugOut(L"load cloud \n");
+		animation_set->at(8)->Render(x, y);
+	}
 	else animation_set->at(6)->Render(x, y);
+
 }
 
 void CBackgroundObject::GetBoundingBox(float& l, float& t, float& r, float& b)

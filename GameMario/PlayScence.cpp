@@ -30,8 +30,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_ROAD	2
-#define OBJECT_TYPE_KOOPAS	4
+#define OBJECT_TYPE_QUESTION_BLOCK	4
 #define OBJECT_TYPE_BACKGROUND 3
+#define OBJECT_TYPE_COLOR_BRICK 5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -158,6 +159,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
+	case OBJECT_TYPE_QUESTION_BLOCK: obj = new CQuestionBlock(); break;
+	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -237,13 +240,11 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
-		//nonCoObjects.push_back(bgrObject[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
-		//bgrObject[i]->Update(dt, &nonCoObjects);
 	}
 
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -253,13 +254,17 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
-	
 	CGame* game = CGame::GetInstance();
-	if (cx < 0) player->SetPosition(0, cy);
+	if (cx < 0){
+		player->SetPosition(0, cy);
+	}
 	if (cx > game->GetScreenWidth()/2) {
 		cx -= game->GetScreenWidth() / 2;
 		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+		CGame::GetInstance()->SetCamPos(cx, -20.0f /*cy*/);
+	}
+	else {
+		CGame::GetInstance()->SetCamPos(0.0f, -20.0f /*cy*/);
 	}
 
 

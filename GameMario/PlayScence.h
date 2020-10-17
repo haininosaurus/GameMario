@@ -6,6 +6,8 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Road.h"
+#include "QuestionBlock.h"
+#include "ColorBrick.h"
 #include "BackgroundObject.h"
 
 
