@@ -4,7 +4,7 @@
 void CRoad::Render()
 {
 
-	if (x >= 624 && x <= 988 && y==149)
+	if (x >= 640 && x <= 1104 && y==149)
 	{
 		animation_set->at(1)->Render(x, y);
 	}

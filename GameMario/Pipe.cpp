@@ -7,8 +7,6 @@ void CPipe::Render() {
 
 void CPipe::renderBlock(INT color, int w, int h, int x, int y)
 {
-
-
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
 			if (i == 0) {
@@ -27,7 +25,7 @@ void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + SIZE*(this->w - 1) + PIPE_BBOX_WIDTH;
-	b = y +	SIZE*(this->h - 1) + PIPE_BBOX_HEIGHT;
+	r = x + PIPE_BBOX_WIDTH;
+	b = y + PIPE_BBOX_HEIGHT;
 	DebugOut(L"w: %d\n", w);
 }
