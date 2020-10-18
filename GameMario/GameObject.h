@@ -91,7 +91,7 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
-	virtual void renderBlock(int color, int w, int h, int x, int y);
+	virtual void renderBlock(INT color, int w, int h, int x, int y);
 	virtual void SetState(int state) { this->state = state; }
 
 

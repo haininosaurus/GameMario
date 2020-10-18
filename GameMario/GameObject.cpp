@@ -21,7 +21,7 @@ void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	dx = vx * dt;
 	dy = vy * dt;
 }
-void CGameObject::renderBlock(int color, int w, int h, int x, int y) {
+void CGameObject::renderBlock(INT color, int w, int h, int x, int y) {
 
 }
 

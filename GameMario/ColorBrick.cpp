@@ -1,11 +1,11 @@
 #include "ColorBrick.h"
 
 void CColorBrick::Render(){
-	renderBlock(0, 4, 5, 272, 69);
-	renderBlock(1, 4, 3, 240, 101);
+	renderBlock(BLUE_BRICK, 4, 5, 272, 69);
+	renderBlock(PINK_BRICK, 4, 3, 240, 101);
 }
 
-void CColorBrick::renderBlock(int color, int w, int h, int x, int y)
+void CColorBrick::renderBlock(INT color, int w, int h, int x, int y)
 {
 	int size = 16;
 	int brick = 9;

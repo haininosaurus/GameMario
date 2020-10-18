@@ -8,6 +8,7 @@
 #include "Road.h"
 #include "QuestionBlock.h"
 #include "ColorBrick.h"
+#include "Pipe.h"
 #include "BackgroundObject.h"
 
 

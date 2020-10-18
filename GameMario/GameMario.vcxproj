@@ -28,6 +28,7 @@
     <ClCompile Include="Goombas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Road.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Goombas.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Road.h" />

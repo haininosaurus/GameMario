@@ -1,0 +1,10 @@
+﻿  Pipe.cpp
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(15,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(15,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(16,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(16,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(19,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(19,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(20,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\COURSES\game directx\GameMario\GameMario\GameMario\Pipe.cpp(20,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  GameMario.vcxproj -> F:\COURSES\game directx\GameMario\GameMario\Debug\GameMario.exe
