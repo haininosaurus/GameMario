@@ -2,25 +2,39 @@
 #include "Utils.h"
 
 void CPipe::Render() {
-	renderBlock(NULL, 2, 3, 368, 101);
-	renderBlock(NULL, 2, 2, 1808, 117);
-	renderBlock(NULL, 2, 3, 1872, 101);
+	renderBlock(1, 2, 3, 368, 101);
+	renderBlock(1, 2, 2, 1808, 117);
+	renderBlock(1, 2, 3, 1872, 101);
+	renderBlock(0, 2, 3, 2272, 117);
+	renderBlock(1, 2, 12, 2272, -155);
+	renderBlock(1, 2, 2, 2336, 117);
 }
 
-void CPipe::renderBlock(INT color, int w, int h, int x, int y)
+void CPipe::renderBlock(INT checkHead, int w, int h, int x, int y)
 {
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			if (i == 0) {
-				if (j == 0) 	animation_set->at(0)->Render(x + SIZE * j, y + SIZE * i);
-				else animation_set->at(1)->Render(x + SIZE * j, y + SIZE * i);
+	if (checkHead == 1) {
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				if (i == 0) {
+					if (j == 0) 	animation_set->at(0)->Render(x + SIZE * j, y + SIZE * i);
+					else animation_set->at(1)->Render(x + SIZE * j, y + SIZE * i);
+				}
+				else {
+					if (j == 0) 	animation_set->at(2)->Render(x + SIZE * j + 1, y + SIZE * i);
+					else animation_set->at(3)->Render(x + SIZE * j, y + SIZE * i);
+				}
 			}
-			else {
+		}
+	}
+	else {
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
 				if (j == 0) 	animation_set->at(2)->Render(x + SIZE * j + 1, y + SIZE * i);
 				else animation_set->at(3)->Render(x + SIZE * j, y + SIZE * i);
 			}
 		}
 	}
+
 }
 
 void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)

@@ -158,7 +158,16 @@ void CMario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
+	case MARIO_STATE_RUNNING_RIGHT:
+		vx = MARIO_RUNNING_SPEED;
+		nx = 1;
+		break;
+	case MARIO_STATE_RUNNING_LEFT:
+		vx = -MARIO_RUNNING_SPEED;
+		nx = -1;
+		break;
 	}
+
 }
 
 void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)

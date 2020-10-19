@@ -9,11 +9,11 @@ class CPipe : public CGameObject
 {
 	int h;
 	int w;
-	INT color;
+	INT checkHead;
 
 public:
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
-	virtual void renderBlock(INT color, int w, int h, int x, int y);
+	virtual void renderBlock(INT checkHead, int w, int h, int x, int y);
 };
 
