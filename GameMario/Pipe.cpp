@@ -3,6 +3,8 @@
 
 void CPipe::Render() {
 	renderBlock(NULL, 2, 3, 368, 101);
+	renderBlock(NULL, 2, 2, 1808, 117);
+	renderBlock(NULL, 2, 3, 1872, 101);
 }
 
 void CPipe::renderBlock(INT color, int w, int h, int x, int y)

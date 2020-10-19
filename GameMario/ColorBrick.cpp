@@ -7,6 +7,13 @@ void CColorBrick::Render(){
 	renderBlock(PINK_BRICK, 4, 5, 480, 69);
 	renderBlock(GREEN_BRICK, 5, 3, 416, 101);
 	renderBlock(GREEN_BRICK, 6, 2, 528, 117);
+
+	renderBlock(BLUE_BRICK, 7, 6, 1344, 53);
+	renderBlock(PINK_BRICK, 7, 4, 1312, 85);
+	renderBlock(GREEN_BRICK, 7, 2, 1280, 117);
+
+	renderBlock(GREEN_BRICK, 3, 9, 2192, 5);
+	renderBlock(PINK_BRICK, 3, 3, 2160, 101);
 }
 
 void CColorBrick::renderBlock(INT color, int w, int h, int x, int y)

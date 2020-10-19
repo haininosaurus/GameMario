@@ -34,6 +34,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND 3
 #define OBJECT_TYPE_COLOR_BRICK 5
 #define OBJECT_TYPE_PIPE 6
+#define OBJECT_TYPE_WOOD_BLOCK 7
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -163,6 +164,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_QUESTION_BLOCK: obj = new CQuestionBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
+	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

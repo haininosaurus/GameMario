@@ -7,7 +7,8 @@ void CBackgroundObject::Render() {
 	if (x == 16 && y >= 117 && y <= 133
 		|| x == 96 && y == 117
 		|| x == 976 && y == 101
-		|| x == 848 && y == 101) {
+		|| x == 848 && y == 101
+		|| x == 1920 && y == 117) {
 		animation_set->at(2)->Render(x, y);
 	}
 	else if (x == 80 && y == 133
@@ -15,7 +16,8 @@ void CBackgroundObject::Render() {
 		|| x == 112 && y == 117
 		|| x == 992 && y == 101
 		|| x == 864 && y == 101
-		|| x == 896 && y == 101) {
+		|| x == 896 && y == 101
+		|| x == 1936 && y == 117) {
 		animation_set->at(5)->Render(x, y);
 	}
 	else if (x == 96 && y == 133
@@ -25,7 +27,8 @@ void CBackgroundObject::Render() {
 		|| x == 848 && y == 117
 		|| x == 880 && y == 101
 		|| x == 912 && y == 101
-		|| x == 896 && y == 85) {
+		|| x == 896 && y == 85
+		|| x == 1920 && y == 133) {
 		animation_set->at(4)->Render(x, y);
 	}
 	else if (x == 16 && y == 101
@@ -38,7 +41,9 @@ void CBackgroundObject::Render() {
 		|| x == 848 && y == 85
 		|| x == 880 && y == 85
 		|| x == 928 && y == 85
-		|| x == 896 && y == 69) {
+		|| x == 896 && y == 69
+		|| x == 1904 && y == 133
+		|| x == 1920 && y == 101) {
 		animation_set->at(0)->Render(x, y);
 	}
 	else if (x == 48 && y == 85
@@ -49,7 +54,9 @@ void CBackgroundObject::Render() {
 		|| x == 992 && y == 85
 		|| x == 864 && y == 85
 		|| x == 912 && y == 69
-		|| x == 944 && y == 85) {
+		|| x == 944 && y == 85
+		|| x == 1936 && y == 101
+		|| x == 1952 && y == 117) {
 		animation_set->at(1)->Render(x, y);
 	}
 	else if (x == 48 && y == 101
@@ -57,7 +64,8 @@ void CBackgroundObject::Render() {
 		|| x == 1008 && y == 117
 		|| x == 944 && y == 117
 		|| x == 944 && y == 101
-		|| x == 912 && y == 85) {
+		|| x == 912 && y == 85
+		|| x == 1952 && y == 133) {
 		animation_set->at(3)->Render(x, y);
 	}
 	else if (x == 160 && y == 133
@@ -70,7 +78,13 @@ void CBackgroundObject::Render() {
 		|| x == 704 && y == 117
 		|| x == 720 && y == 117
 		|| x == 1072 && y == 117
-		|| x == 1056 && y == 117) {
+		|| x == 1056 && y == 117
+		|| x == 1216 && y == 133
+		|| x == 1232 && y == 133
+		|| x == 1200 && y == 133
+		|| x == 1744 && y == 133
+		|| x == 1760 && y == 133
+		|| x == 1776 && y == 133) {
 		animation_set->at(7)->Render(x, y);
 	}
 

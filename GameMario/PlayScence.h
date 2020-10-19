@@ -9,6 +9,7 @@
 #include "QuestionBlock.h"
 #include "ColorBrick.h"
 #include "Pipe.h"
+#include "WoodBlock.h"
 #include "BackgroundObject.h"
 
 
