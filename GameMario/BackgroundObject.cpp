@@ -124,7 +124,17 @@ void CBackgroundObject::Render() {
 	//DebugOut(L"load cloud \n");
 	animation_set->at(10)->Render(x, y);
 	}
+	else if (x == 2496 && y == 133) {
+		for (int i = 0; i < 17; i++) {
+			for (int j = 0; j < 21; j++) {
+				if(x+16*j==2496) animation_set->at(17)->Render(x + 16 * j, y - 16 * i);
+				else animation_set->at(18)->Render(x + 16*j, y - 16*i);
+			}
+		}
+	}
 	else animation_set->at(6)->Render(x, y);
+
+
 
 }
 

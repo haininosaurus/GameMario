@@ -8,8 +8,9 @@
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_BIG;
+	level = MARIO_LEVEL_SMALL;
 	untouchable = 0;
+	run_state = 0;
 	SetState(MARIO_STATE_IDLE);
 
 	start_x = x;
@@ -87,9 +88,14 @@ void CMario::Render()
 				if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
 				else ani = MARIO_ANI_BIG_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_BIG_WALKING_RIGHT;
-			else ani = MARIO_ANI_BIG_WALKING_LEFT;
+			else if (vx > 0) {
+				if (run_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				else ani = MARIO_ANI_BIG_RUNNING_RIGHT;
+			}
+			else {
+				if (run_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
+				else ani = MARIO_ANI_BIG_RUNNING_LEFT;
+			}
 		}
 		else if (level == MARIO_LEVEL_SMALL)
 		{
@@ -98,9 +104,14 @@ void CMario::Render()
 				if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
 				else ani = MARIO_ANI_SMALL_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-			else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+			else if (vx > 0) {
+				if (run_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				else ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
+			}
+			else {
+				if(run_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				else ani = MARIO_ANI_SMALL_RUNNING_LEFT;
+			}
 		}
 		else if (level == MARIO_LEVEL_TAIL)
 		{
@@ -109,9 +120,14 @@ void CMario::Render()
 				if (nx > 0) ani = MARIO_ANI_TAIL_IDLE_RIGHT;
 				else ani = MARIO_ANI_TAIL_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_TAIL_WALKING_RIGHT;
-			else ani = MARIO_ANI_TAIL_WALKING_LEFT;
+			else if (vx > 0) {
+				if (run_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+				else ani = MARIO_ANI_TAIL_RUNNING_RIGHT;
+			}
+			else {
+				if (run_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
+				else ani = MARIO_ANI_TAIL_RUNNING_LEFT;
+			}
 		}
 		else if (level == MARIO_LEVEL_FIRE)
 		{
@@ -120,9 +136,14 @@ void CMario::Render()
 				if (nx > 0) ani = MARIO_ANI_FIRE_IDLE_RIGHT;
 				else ani = MARIO_ANI_FIRE_IDLE_LEFT;
 			}
-			else if (vx > 0)
-				ani = MARIO_ANI_FIRE_WALKING_RIGHT;
-			else ani = MARIO_ANI_FIRE_WALKING_LEFT;
+			else if (vx > 0) {
+				if (run_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+				else ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
+			}
+			else {
+				if (run_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
+				else ani = MARIO_ANI_FIRE_RUNNING_LEFT;
+			}
 		}
 
 	int alpha = 255;
@@ -140,10 +161,12 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
+		run_state = 0;
 		vx = MARIO_WALKING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
+		run_state = 0;
 		vx = -MARIO_WALKING_SPEED;
 		nx = -1;
 		break;
@@ -159,10 +182,12 @@ void CMario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_RIGHT:
+		run_state = 1;
 		vx = MARIO_RUNNING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
+		run_state = 1;
 		vx = -MARIO_RUNNING_SPEED;
 		nx = -1;
 		break;

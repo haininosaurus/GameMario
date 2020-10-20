@@ -35,16 +35,16 @@
 #define MARIO_ANI_FIRE_WALKING_RIGHT		14
 #define MARIO_ANI_FIRE_WALKING_LEFT			15
 
-//#define MARIO_ANI_SMALL_RUNNING_RIGHT		16
-//#define MARIO_ANI_SMALL_RUNNING_LEFT		5
-//#define MARIO_ANI_BIG_RUNNING_RIGHT			6
-//#define MARIO_ANI_BIG_RUNNING_LEFT			7
-//#define MARIO_ANI_TAIL_RUNNING_RIGHT		10
-//#define MARIO_ANI_TAIL_RUNNING_LEFT			11
-//#define MARIO_ANI_FIRE_RUNNING_RIGHT		14
-//#define MARIO_ANI_FIRE_RUNNING_LEFT			15
+#define MARIO_ANI_SMALL_RUNNING_RIGHT		16
+#define MARIO_ANI_SMALL_RUNNING_LEFT		17
+#define MARIO_ANI_BIG_RUNNING_RIGHT			18
+#define MARIO_ANI_BIG_RUNNING_LEFT			19
+#define MARIO_ANI_TAIL_RUNNING_RIGHT		20
+#define MARIO_ANI_TAIL_RUNNING_LEFT			21
+#define MARIO_ANI_FIRE_RUNNING_RIGHT		22
+#define MARIO_ANI_FIRE_RUNNING_LEFT			23
 
-#define MARIO_ANI_DIE				16
+#define MARIO_ANI_DIE				24
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -74,6 +74,8 @@ class CMario : public CGameObject
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
+
+	int run_state;
 public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -81,6 +83,8 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
+	int GetLevel() { return level; }
+	//void SetRunState(int r);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	void Reset();
