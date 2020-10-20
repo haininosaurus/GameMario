@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "PlayScence.h"
 #include "Utils.h"
@@ -266,12 +267,11 @@ void CPlayScene::Update(DWORD dt)
 		else {
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(cx, -20.0f /*cy*/);
+			CGame::GetInstance()->SetCamPos(round(cx), -20.0f /*cy*/);
 		}
 
 	}
 	else {
-
 		CGame::GetInstance()->SetCamPos(0.0f, -20.0f /*cy*/);
 	}
 
@@ -307,7 +307,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+		if (mario->GetJumpState() == 0) 
+			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_D:
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL) {

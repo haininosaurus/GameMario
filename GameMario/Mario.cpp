@@ -11,6 +11,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	level = MARIO_LEVEL_SMALL;
 	untouchable = 0;
 	run_state = 0;
+	jump_state = 0;
 	SetState(MARIO_STATE_IDLE);
 
 	start_x = x;
@@ -68,6 +69,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+		if (vy == 0) jump_state = 0;
 		
 	}
 
@@ -106,10 +108,12 @@ void CMario::Render()
 			}
 			else if (vx > 0) {
 				if (run_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				//else if(jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
 				else ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
 			}
 			else {
 				if(run_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				//else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
 				else ani = MARIO_ANI_SMALL_RUNNING_LEFT;
 			}
 		}
@@ -172,6 +176,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
+		jump_state = 1;
 		vy = -MARIO_JUMP_SPEED_Y;
 		//DebugOut(L"[INFO] Vy %d\n", vy);
 		break;

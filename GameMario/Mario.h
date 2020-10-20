@@ -16,6 +16,8 @@
 #define MARIO_STATE_DIE				400
 #define MARIO_STATE_RUNNING_RIGHT	500
 #define MARIO_STATE_RUNNING_LEFT	600
+#define MARIO_STATE_JUMP_RIGHT		700
+#define MARIO_STATE_JUMP_LEFT		800
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT		0
 #define MARIO_ANI_SMALL_IDLE_LEFT		1
@@ -43,8 +45,10 @@
 #define MARIO_ANI_TAIL_RUNNING_LEFT			21
 #define MARIO_ANI_FIRE_RUNNING_RIGHT		22
 #define MARIO_ANI_FIRE_RUNNING_LEFT			23
+#define MARIO_ANI_SMALL_JUMPING_RIGHT		24
+#define MARIO_ANI_SMALL_JUMPING_LEFT		25
 
-#define MARIO_ANI_DIE				24
+#define MARIO_ANI_DIE				26
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -76,6 +80,7 @@ class CMario : public CGameObject
 	float start_y;
 
 	int run_state;
+	int jump_state;
 public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -84,6 +89,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	int GetLevel() { return level; }
+	int GetJumpState() { return jump_state; }
 	//void SetRunState(int r);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
