@@ -10,6 +10,7 @@
 #include "ColorBrick.h"
 #include "Pipe.h"
 #include "WoodBlock.h"
+#include "Goombas.h"
 #include "BackgroundObject.h"
 
 

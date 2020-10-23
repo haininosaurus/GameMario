@@ -1,38 +1,64 @@
 #include "Goombas.h"
-#include "Game.h"
-
-//CGoombas::CGoombas(float x, float y, float vx) :CGameObject(x, y)
-//{
-//	this->vx = vx;
-//};
-
-void CGoombas::Update(DWORD dt)
+CGoomba::CGoomba()
 {
-	//x += vx * dt;
-
-	//int BackBufferWidth = CGame::GetInstance()->GetBackBufferWidth();
-	//if (x <= 0 || x >= BackBufferWidth - GOOMBAS_WIDTH) {
-
-	//	vx = -vx;
-
-	//	if (x <= 0)
-	//	{
-	//		x = 0;
-	//	}
-	//	else if (x >= BackBufferWidth - GOOMBAS_WIDTH)
-	//	{
-	//		x = (float)(BackBufferWidth - GOOMBAS_WIDTH);
-	//	}
-	//}
+	SetState(GOOMBA_STATE_WALKING);
 }
 
-void CGoombas::Render()
+void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	LPANIMATION ani;
+	left = x;
+	top = y;
+	right = x + GOOMBA_BBOX_WIDTH;
 
-	//[RED FLAG][TODO]: Student needs to think about how to associate this animation/asset to Mario!!
-	ani = CAnimations::GetInstance()->Get(503);
+	if (state == GOOMBA_STATE_DIE)
+		bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+	else
+		bottom = y + GOOMBA_BBOX_HEIGHT;
+}
 
+void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CGameObject::Update(dt, coObjects);
 
-	ani->Render(x, y);
+	//
+	// TO-DO: make sure Goomba can interact with the world and to each of them too!
+	// 
+
+	x += dx;
+	y += dy;
+
+	if (vx < 0 && x < 0) {
+		x = 0; vx = -vx;
+	}
+
+	if (vx > 0 && x > 290) {
+		x = 290; vx = -vx;
+	}
+}
+
+void CGoomba::Render()
+{
+	int ani = GOOMBA_ANI_WALKING;
+	if (state == GOOMBA_STATE_DIE) {
+		ani = GOOMBA_ANI_DIE;
+	}
+
+	animation_set->at(ani)->Render(x, y);
+
+	//RenderBoundingBox();
+}
+
+void CGoomba::SetState(int state)
+{
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case GOOMBA_STATE_DIE:
+		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE + 1;
+		vx = 0;
+		vy = 0;
+		break;
+	case GOOMBA_STATE_WALKING:
+		vx = -GOOMBA_WALKING_SPEED;
+	}
 }

@@ -7,13 +7,8 @@
 #define SIZE 16
 class CPipe : public CGameObject
 {
-	int h;
-	int w;
-	INT checkHead;
-
 public:
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
-	virtual void renderBlock(INT checkHead, int w, int h, int x, int y);
 };
 

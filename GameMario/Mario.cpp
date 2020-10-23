@@ -5,6 +5,8 @@
 #include "Mario.h"
 #include "Game.h"
 #include "Utils.h"
+#include "Goombas.h"
+#include "ColorBrick.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -71,6 +73,56 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (ny != 0) vy = 0;
 		if (vy == 0) jump_state = 0;
 		
+
+
+		//
+		// Collision logic with other objects
+		//
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			//if (dynamic_cast<CColorBrick*>(e->obj)) {
+			//	CColorBrick* colorbrick = dynamic_cast<CColorBrick*>(e->obj);
+			//	if(e->ny < 0)
+			//}
+
+			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			//{
+			//	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+			//	// jump on top >> kill Goomba and deflect a bit 
+			//	if (e->ny < 0)
+			//	{
+			//		if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//		{
+			//			goomba->SetState(GOOMBA_STATE_DIE);
+			//			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			//		}
+			//	}
+			//	else if (e->nx != 0)
+			//	{
+			//		if (untouchable == 0)
+			//		{
+			//			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//			{
+			//				if (level > MARIO_LEVEL_SMALL)
+			//				{
+			//					level = MARIO_LEVEL_SMALL;
+			//					StartUntouchable();
+			//				}
+			//				else
+			//					SetState(MARIO_STATE_DIE);
+			//			}
+			//		}
+			//	}
+			//} // if Goomba
+			//else if (dynamic_cast<CPortal*>(e->obj))
+			//{
+			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
+			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			//}
+		}
 	}
 
 	// clean up collision events
@@ -87,15 +139,23 @@ void CMario::Render()
 		{
 			if (vx == 0)
 			{
-				if (nx > 0) ani = MARIO_ANI_BIG_IDLE_RIGHT;
-				else ani = MARIO_ANI_BIG_IDLE_LEFT;
+				if (nx > 0) {
+					if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
+					else ani = MARIO_ANI_BIG_IDLE_RIGHT;
+				}
+				else {
+					if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
+					else ani = MARIO_ANI_BIG_IDLE_LEFT;
+				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				if (run_state == 0 && jump_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
 				else ani = MARIO_ANI_BIG_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
+				if (run_state == 0 && jump_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
 				else ani = MARIO_ANI_BIG_RUNNING_LEFT;
 			}
 		}
@@ -103,17 +163,23 @@ void CMario::Render()
 		{
 			if (vx == 0)
 			{
-				if (nx > 0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
-				else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+				if (nx > 0) {
+					if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
+					else ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+				}
+				else {
+					if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
+					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-				//else if(jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
+				if (run_state == 0 && jump_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				else if(jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
 				else ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
 			}
 			else {
-				if(run_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
-				//else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
+				if(run_state == 0 && jump_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
 				else ani = MARIO_ANI_SMALL_RUNNING_LEFT;
 			}
 		}
@@ -121,15 +187,23 @@ void CMario::Render()
 		{
 			if (vx == 0)
 			{
-				if (nx > 0) ani = MARIO_ANI_TAIL_IDLE_RIGHT;
-				else ani = MARIO_ANI_TAIL_IDLE_LEFT;
+				if (nx > 0) {
+					if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
+					else ani = MARIO_ANI_TAIL_IDLE_RIGHT;
+				}
+				else {
+					if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
+					else ani = MARIO_ANI_TAIL_IDLE_LEFT;
+				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+				if (run_state == 0 && jump_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
 				else ani = MARIO_ANI_TAIL_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
+				if (run_state == 0 && jump_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
 				else ani = MARIO_ANI_TAIL_RUNNING_LEFT;
 			}
 		}
@@ -137,15 +211,23 @@ void CMario::Render()
 		{
 			if (vx == 0)
 			{
-				if (nx > 0) ani = MARIO_ANI_FIRE_IDLE_RIGHT;
-				else ani = MARIO_ANI_FIRE_IDLE_LEFT;
+				if (nx > 0) {
+					if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
+					else ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+				}
+				else {
+					if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
+					else ani = MARIO_ANI_FIRE_IDLE_LEFT;
+				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+				if (run_state == 0 && jump_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 				else ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
+				if (run_state == 0 && jump_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 				else ani = MARIO_ANI_FIRE_RUNNING_LEFT;
 			}
 		}

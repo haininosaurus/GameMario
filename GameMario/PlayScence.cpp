@@ -29,13 +29,15 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_OBJECTS	6
 
 #define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_BRICK	3
 #define OBJECT_TYPE_ROAD	2
 #define OBJECT_TYPE_QUESTION_BLOCK	4
-#define OBJECT_TYPE_BACKGROUND 3
+#define OBJECT_TYPE_BACKGROUND 6
 #define OBJECT_TYPE_COLOR_BRICK 5
-#define OBJECT_TYPE_PIPE 6
+#define OBJECT_TYPE_PIPE 8
 #define OBJECT_TYPE_WOOD_BLOCK 7
+#define OBJECT_TYPE_GOOMBA 1
+#define OBJECT_TYPE_COLOR_BRICK_TOP 9
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -159,6 +161,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
+	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
@@ -166,6 +169,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
+	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
+
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "ColorBrick.h"
 
 CGameObject::CGameObject()
 {
@@ -97,21 +98,43 @@ void CGameObject::FilterCollision(
 
 	nx = 0.0f;
 	ny = 0.0f;
-
 	coEventsResult.clear();
+
+	//for (UINT i = 0; i < coEventsResult.size(); i++)
+	//{
+	//	LPCOLLISIONEVENT e = coEventsResult[i];
+	//	if (dynamic_cast<CColorBrick*>(e->obj)) {
+	//		CColorBrick* colorbrick = dynamic_cast<CColorBrick*>(e->obj);
+	//		if (e->ny < 0) {
+
+	//		}
+	//	}
+	//}
+
+
 
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
+		if (dynamic_cast<CColorBrick*>(c->obj)) {}
+		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
+			if (c->ny < 0) {
+				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+			}
+		}
+		else {
+			if (c->t < min_tx && c->nx != 0) {
+				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+			}
 
-		if (c->t < min_tx && c->nx != 0) {
-			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+			if (c->t < min_ty && c->ny != 0) {
+				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+			}
 		}
 
-		if (c->t < min_ty && c->ny != 0) {
-			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-		}
 	}
+
+
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
