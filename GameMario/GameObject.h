@@ -76,7 +76,7 @@ public:
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
-	void FilterCollision(
+	virtual void FilterCollision(
 		vector<LPCOLLISIONEVENT>& coEvents,
 		vector<LPCOLLISIONEVENT>& coEventsResult,
 		float& min_tx,
@@ -84,7 +84,7 @@ public:
 		float& nx,
 		float& ny,
 		float& rdx,
-		float& rdy);
+		float& rdy) {};
 
 	CGameObject();
 

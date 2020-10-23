@@ -95,10 +95,18 @@ public:
 	void SetLevel(int l) { level = l; }
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
-	//void SetRunState(int r);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	void Reset();
 
+	virtual void FilterCollision(
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny,
+		float& rdx,
+		float& rdy);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

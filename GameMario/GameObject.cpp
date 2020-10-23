@@ -85,60 +85,7 @@ void CGameObject::CalcPotentialCollisions(
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
-void CGameObject::FilterCollision(
-	vector<LPCOLLISIONEVENT>& coEvents,
-	vector<LPCOLLISIONEVENT>& coEventsResult,
-	float& min_tx, float& min_ty,
-	float& nx, float& ny, float& rdx, float& rdy)
-{
-	min_tx = 1.0f;
-	min_ty = 1.0f;
-	int min_ix = -1;
-	int min_iy = -1;
 
-	nx = 0.0f;
-	ny = 0.0f;
-	coEventsResult.clear();
-
-	//for (UINT i = 0; i < coEventsResult.size(); i++)
-	//{
-	//	LPCOLLISIONEVENT e = coEventsResult[i];
-	//	if (dynamic_cast<CColorBrick*>(e->obj)) {
-	//		CColorBrick* colorbrick = dynamic_cast<CColorBrick*>(e->obj);
-	//		if (e->ny < 0) {
-
-	//		}
-	//	}
-	//}
-
-
-
-	for (UINT i = 0; i < coEvents.size(); i++)
-	{
-		LPCOLLISIONEVENT c = coEvents[i];
-		if (dynamic_cast<CColorBrick*>(c->obj)) {}
-		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
-			if (c->ny < 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-			}
-		}
-		else {
-			if (c->t < min_tx && c->nx != 0) {
-				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
-			}
-
-			if (c->t < min_ty && c->ny != 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-			}
-		}
-
-	}
-
-
-
-	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
-	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
-}
 
 
 void CGameObject::RenderBoundingBox()
@@ -162,5 +109,5 @@ void CGameObject::RenderBoundingBox()
 
 CGameObject::~CGameObject()
 {
-
+	
 }

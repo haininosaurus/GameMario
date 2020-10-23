@@ -13,11 +13,24 @@
 #define GOOMBA_ANI_WALKING 0
 #define GOOMBA_ANI_DIE 1
 
+#define GOOMBA_GRAVITY 0.002f
+
 class CGoomba : public CGameObject
 {
+	bool isDead = false;
+	DWORD timeDestroy = 0;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	//virtual void FilterCollision(
+	//	vector<LPCOLLISIONEVENT>& coEvents,
+	//	vector<LPCOLLISIONEVENT>& coEventsResult,
+	//	float& min_tx,
+	//	float& min_ty,
+	//	float& nx,
+	//	float& ny,
+	//	float& rdx,
+	//	float& rdy);
 
 public:
 	CGoomba();

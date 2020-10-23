@@ -315,13 +315,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->GetJumpState() == 0) 
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
-	case DIK_D:
+	case DIK_S:
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL) {
 			mario->SetPosition(mario->x, mario->y - MARIO_SMALL_BBOX_HEIGHT);
 			mario->SetLevel(MARIO_LEVEL_BIG);
 		}
 		else if (mario->GetLevel() == MARIO_LEVEL_BIG) {
-			mario->SetPosition(mario->x, mario->y - MARIO_SMALL_BBOX_HEIGHT);
+			mario->SetPosition(mario->x, mario->y - 1);
 			mario->SetLevel(MARIO_LEVEL_TAIL);
 		}
 		else if (mario->GetLevel() == MARIO_LEVEL_TAIL) {
