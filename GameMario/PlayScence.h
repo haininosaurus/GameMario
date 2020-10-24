@@ -11,6 +11,7 @@
 #include "Pipe.h"
 #include "WoodBlock.h"
 #include "Goombas.h"
+#include "Koopas.h"
 #include "BackgroundObject.h"
 
 

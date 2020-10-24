@@ -38,6 +38,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_WOOD_BLOCK 7
 #define OBJECT_TYPE_GOOMBA 1
 #define OBJECT_TYPE_COLOR_BRICK_TOP 9
+#define OBJECT_TYPE_KOOPA 10
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -162,6 +163,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	case OBJECT_TYPE_KOOPA: obj = new CKoopa(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
