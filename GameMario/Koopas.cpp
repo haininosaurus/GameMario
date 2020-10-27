@@ -6,10 +6,12 @@ CKoopa::CKoopa() {
 void CKoopa::Render()
 {
 	int ani = KOOPA_ANI_WALKING_RIGHT;
-	if(vx < 0)
+	if (vx < 0 && GetState() != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
 		ani = KOOPA_ANI_WALKING_LEFT;
-
-
+	else if (state == KOOPA_STATE_HIDE)
+		ani = KOOPA_ANI_HIDE;
+	else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
+		ani = KOOPA_ANI_SPIN;
 	animation_set->at(ani)->Render(x, y);
 }
 
@@ -48,5 +50,24 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_WALKING_LEFT:
 		vx = -KOOPA_WALKING_SPEED;
 		break;
+	case KOOPA_STATE_HIDE:
+		if(isSpin == 0)	y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HIDE_HEIGHT + 1;
+		vx = 0;
+		vy = 0;
+		isSpin = 0;
+		break;
+	case KOOPA_STATE_SPIN_RIGHT:
+		//y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_SPIN_HEIGHT + 1;
+		isSpin = 1;
+		vx = KOOPA_SPINNING_SPEED;
+		break;
+	case KOOPA_STATE_SPIN_LEFT:
+		//y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_SPIN_HEIGHT + 1;
+		isSpin = 1;
+		vx = - KOOPA_SPINNING_SPEED;
+		break;
 	}
+}
+int CKoopa::GetState() {
+	return CGameObject::GetState();
 }

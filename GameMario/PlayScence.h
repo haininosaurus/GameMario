@@ -12,6 +12,7 @@
 #include "WoodBlock.h"
 #include "Goombas.h"
 #include "Koopas.h"
+#include "Coin.h"
 #include "BackgroundObject.h"
 
 

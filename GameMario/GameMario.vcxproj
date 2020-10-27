@@ -22,6 +22,7 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="ColorBrick.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Coin.h" />
     <ClInclude Include="ColorBrick.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

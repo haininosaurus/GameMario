@@ -6,6 +6,7 @@
 3	Textures\tiles-2.png	255	128	192
 4	Textures\1-1.png	156	252	240
 5	Textures\enemies-1.png	0	0	0
+6	Textures\tiles-3.png	176	224	248
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -14,7 +15,7 @@
 10001	217	89	229	104	0
 # walk
 10002	217	89	229	104	0		
-10003	256	89	271	105	0
+10003	257	89	272	105	0
 # jump
 10004	335	89	351	105	0
 # idle small left
@@ -92,6 +93,14 @@
 #walking left
 20031	102	50	118	77	5
 20032	152	51	168	77	5
+
+#hide
+20041	71	75	89	91	1
+
+#spin
+20051	29	97	45	113	1
+20052	50	96	66	112	1
+20053	71	96	87	112	1
 
 
 
@@ -211,7 +220,11 @@
 40038	120	52	136	68	3
 
 
-
+#COIN
+50001	183	110	197	126	6
+50002	201	110	215	126	6
+50003	219	110	233	126	6
+50004	237	110	251	126	6
 
 						
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
@@ -234,9 +247,9 @@
 #idle fire left
 407	10071	100
 #walk right small
-500	10002	100	10003	100
+500	10003	60	10002	60
 #walk left small
-501	10012	100	10013	100
+501	10013	60	10012	60
 #walk right big
 502	10021	100	10022	100	10023	100
 #walk left big
@@ -292,6 +305,8 @@
 # ==== KOOPA =======
 621	20021	100	20022	100
 631	20031	100	20032	100
+641	20041	100
+651	20051	50	20052	50	20053	50
 
 # ==== BRICK =========
 701	30001	100
@@ -395,7 +410,8 @@
 836	40036	100
 837	40037	100
 838	40038	100
-
+# === COIN ==========
+101	50001	100	50002	100	50003	100	50004	100
 #
 # id	ani1	ani2	ani3
 #
@@ -405,7 +421,7 @@
 # GOOMBA
 2	601	611
 # KOOPA
-3	621	631
+3	621	631	641	651
 # BRICK 
 4	701
 #ROAD
@@ -497,16 +513,20 @@
 137	837
 138	838
 
+#COIN
+
+201	101
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , Goomba = 1, 3 = Brick, 2 = Road,  4 = question block, 5 = color brick, 6 = background, 7 = wood brick, 8 = pipe, 9 = color brick top
+# type: 0 = Mario , Goomba = 1, 3 = Brick, 2 = Road,  4 = question block, 5 = color brick, 6 = background, 7 = wood brick, 8 = pipe, 9 = color brick top, 10 = koopa, 11 = coin
 # MARIO
 0	80.0	0	1
 #GOOMBA
-1	200	134	2
+1	200	133	2
 #KOOPA
 10	350	123	3
+
 # ROAD 
 # --- platform (hint: I created the list using Excel!) ----
 2	0	149	13
@@ -1305,7 +1325,8 @@
 7	2272	37	91
 7	2288	37	91
 
-
+#coin
+11	50	50	201
 
 
 

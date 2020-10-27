@@ -17,22 +17,23 @@
 
 class CGoomba : public CGameObject
 {
-	bool isDead = false;
+	bool isDestroy = false;
 	DWORD timeDestroy = 0;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	//virtual void FilterCollision(
-	//	vector<LPCOLLISIONEVENT>& coEvents,
-	//	vector<LPCOLLISIONEVENT>& coEventsResult,
-	//	float& min_tx,
-	//	float& min_ty,
-	//	float& nx,
-	//	float& ny,
-	//	float& rdx,
-	//	float& rdy);
+	virtual void FilterCollision(
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny,
+		float& rdx,
+		float& rdy);
 
 public:
 	CGoomba();
 	virtual void SetState(int state);
+	virtual int GetState();
 };

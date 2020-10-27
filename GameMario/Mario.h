@@ -5,7 +5,7 @@
 #define MARIO_RUNNING_SPEED		0.3f
 //0.1f
 #define MARIO_JUMP_SPEED_Y		0.5f
-#define MARIO_JUMP_DEFLECT_SPEED 0.2f
+#define MARIO_JUMP_DEFLECT_SPEED 0.35f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
 
@@ -58,7 +58,7 @@
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
 #define MARIO_LEVEL_TAIL	3
-#define MARIO_LEVEL_FIRE 4
+#define MARIO_LEVEL_FIRE	 4
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 27
@@ -96,6 +96,7 @@ public:
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	int GetCurrentWidthMario();
 
 	void Reset();
 
@@ -108,5 +109,7 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
 };

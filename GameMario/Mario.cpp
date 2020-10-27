@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "Utils.h"
 #include "Goombas.h"
+#include "Koopas.h"
 #include "ColorBrick.h"
 
 CMario::CMario(float x, float y) : CGameObject()
@@ -20,6 +21,18 @@ CMario::CMario(float x, float y) : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+}
+
+int CMario::GetCurrentWidthMario()
+{
+	if (level == MARIO_LEVEL_SMALL)
+		return MARIO_SMALL_BBOX_WIDTH;
+	else if (level == MARIO_LEVEL_BIG)
+		return MARIO_BIG_BBOX_WIDTH;
+	else if (level == MARIO_LEVEL_TAIL)
+		return MARIO_TAIL_BBOX_WIDTH;
+	else if (level == MARIO_LEVEL_FIRE)
+		return MARIO_FIRE_BBOX_WIDTH;
 }
 void CMario::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,
@@ -56,8 +69,6 @@ void CMario::FilterCollision(
 		}
 
 	}
-
-
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
@@ -103,8 +114,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CMario::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+		if (rdx != 0 && rdx!=dx)
+			x += nx*abs(rdx); 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -134,6 +145,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						goomba->SetState(GOOMBA_STATE_DIE);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						jump_state = 1;
 					}
 				}
 				else if (e->nx != 0)
@@ -153,6 +165,64 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			} // if Goomba
+
+			if (dynamic_cast<CKoopa*>(e->obj)) // if e->obj is Koopa
+			{
+				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+				if (e->ny < 0)
+				{
+					if (koopa->GetState() != KOOPA_STATE_HIDE && koopa->GetState() != KOOPA_STATE_SPIN_LEFT && koopa->GetState() != KOOPA_STATE_SPIN_RIGHT)
+					{
+						koopa->SetState(KOOPA_STATE_HIDE);
+						jump_state = 1;
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else if (koopa->GetState() == KOOPA_STATE_HIDE) {
+
+						if(round(x + CMario::GetCurrentWidthMario()/2 ) < koopa->x + round(KOOPA_BBOX_WIDTH/2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
+						else koopa->SetState(KOOPA_STATE_SPIN_LEFT);
+						jump_state = 1;
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT) {
+						koopa->SetState(KOOPA_STATE_HIDE);
+						jump_state = 1;
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+				}
+				else if (e->nx != 0)
+				{
+					//if (koopa->GetState() != KOOPA_STATE_HIDE)
+					//{
+						if (untouchable == 0)
+						{
+							if (koopa->GetState() != KOOPA_STATE_HIDE)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level = MARIO_LEVEL_SMALL;
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+							else
+							{
+								if (e->nx < 0)
+								{
+									koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
+								}
+								else
+								{
+									koopa->SetState(KOOPA_STATE_SPIN_LEFT);
+								}
+							}
+						}
+
+				//	}
+					
+				}
+			}
 			//else if (dynamic_cast<CPortal*>(e->obj))
 			//{
 			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
@@ -269,7 +339,7 @@ void CMario::Render()
 		}
 
 	int alpha = 255;
-	if (untouchable) alpha = 128;
+	if (untouchable) alpha = 100;
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
@@ -345,6 +415,8 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
 }
+
+
 
 /*
 	Reset Mario status to the beginning state of a scene

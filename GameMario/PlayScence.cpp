@@ -39,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_GOOMBA 1
 #define OBJECT_TYPE_COLOR_BRICK_TOP 9
 #define OBJECT_TYPE_KOOPA 10
+#define OBJECT_TYPE_COIN 11
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -172,6 +173,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
+	case OBJECT_TYPE_COIN: obj = new CCoin(); break;
 
 
 	default:
@@ -270,20 +272,17 @@ void CPlayScene::Update(DWORD dt)
 	if (cx < 0)	player->SetPosition(0, cy);
 	if (cx > 2800) player->SetPosition(2800, cy);
 	if (cx > game->GetScreenWidth()/2) {
-		if (cx >= 2672) CGame::GetInstance()->SetCamPos(2512.0f, -20.0f /*cy*/);
+		if (cx >= 2672) CGame::GetInstance()->SetCamPos(2512.0f, -40.0f /*cy*/);
 		else {
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(round(cx), -20.0f /*cy*/);
+			CGame::GetInstance()->SetCamPos(round(cx), -40.0f /*cy*/);
 		}
 
 	}
 	else {
-		CGame::GetInstance()->SetCamPos(0.0f, -20.0f /*cy*/);
+		CGame::GetInstance()->SetCamPos(0.0f, -40.0f /*cy*/);
 	}
-
-
-
 }
 
 void CPlayScene::Render()
