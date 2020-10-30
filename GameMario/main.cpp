@@ -19,18 +19,22 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
+#include "resource.h"
 
-#include "Mario.h"
-#include "Brick.h"
+
 
 #include "PlayScence.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
-#define MAIN_WINDOW_TITLE L"MARIO"
+#define MAIN_WINDOW_TITLE L"MARIO BROS 3"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(107, 255, 249)
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
+
+
+
+
 
 #define MAX_FRAME_RATE 120
 
@@ -96,12 +100,13 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = NULL;
+	wc.hIcon = LoadIcon(NULL, MAKEINTRESOURCE(MARIO_PNG));
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = WINDOW_CLASS_NAME;
-	wc.hIconSm = NULL;
+	wc.hIconSm = LoadIcon(NULL, MAKEINTRESOURCE(MARIO_PNG));;
+
 
 	RegisterClassEx(&wc);
 

@@ -27,6 +27,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATIONS 4
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
+#define SCENE_SECTION_QUESTION_OBJECTS	7
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	3
@@ -40,6 +41,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_COLOR_BRICK_TOP 9
 #define OBJECT_TYPE_KOOPA 10
 #define OBJECT_TYPE_COIN 11
+#define OBJECT_TYPE_TRANS 12
+#define OBJECT_TYPE_HEADROAD 13
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -174,6 +177,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(); break;
+	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
+	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 
 
 	default:
@@ -183,13 +188,39 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	// General object setup
 	obj->SetPosition(x, y);
-	DebugOut(L"[INFO] Object x is: %d\n", x);
-	DebugOut(L"[INFO] Object y is: %d\n", y);
+
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
+
 }
+//
+//void CPlayScene::_ParseSection_QUESTION_OBJECTS(string line)
+//{
+//	vector<string> tokens = split(line);
+//
+//	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+//
+//	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+//
+//	int object_type = atoi(tokens[0].c_str());
+//	float x = atof(tokens[1].c_str());
+//	float y = atof(tokens[2].c_str());
+//
+//	int ani_set_id = atoi(tokens[3].c_str());
+//	int state = atoi(tokens[4].c_str());
+//
+//	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+//	CGameObject* obj = new CQuestionBlock(state);
+//
+//	obj->SetPosition(x, y);
+//
+//	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+//
+//	obj->SetAnimationSet(ani_set);
+//	objects.push_back(obj);
+//}
 
 
 void CPlayScene::Load()
@@ -222,6 +253,9 @@ void CPlayScene::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
+		if (line == "[QUESTION_OBJECTS]") {
+			section = SCENE_SECTION_QUESTION_OBJECTS; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -234,6 +268,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		//case SCENE_SECTION_QUESTION_OBJECTS: _ParseSection_QUESTION_OBJECTS(line); break;
 		}
 	}
 
@@ -251,28 +286,48 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
+	//vector<LPGAMEOBJECT> quesObjects;
+
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
 
+	//for (size_t i = 1; i < questionBlocks.size(); i++)
+	//{
+	//	quesObjects.push_back(questionBlocks[i]);
+	//}
+
+
+	//for (size_t i = 0; i < questionBlocks.size(); i++)
+	//{
+
+	//	questionBlocks[i]->Update(dt, NULL, &quesObjects);
+
+	//}
+	//DebugOut(L"questionblocks: %d\n", questionBlocks.size());
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+
 		objects[i]->Update(dt, &coObjects);
+
 	}
+
+
 
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
 	// Update camera to follow mario
 	float cx, cy;
+	 
 	player->GetPosition(cx, cy);
 
 	CGame* game = CGame::GetInstance();
 	if (cx < 0)	player->SetPosition(0, cy);
-	if (cx > 2800) player->SetPosition(2800, cy);
+	if (cx > 2816) player->SetPosition(2816, cy);
 	if (cx > game->GetScreenWidth()/2) {
-		if (cx >= 2672) CGame::GetInstance()->SetCamPos(2512.0f, -40.0f /*cy*/);
+		if (cx >= 2672) CGame::GetInstance()->SetCamPos(2528.0f, -40.0f /*cy*/);
 		else {
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
@@ -287,8 +342,12 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
+
 	for (int i = objects.size()-1; i >= 0 ; i--)
 		objects[i]->Render();
+	//for (int i = questionBlocks.size() - 1; i >= 0; i--)
+	//	questionBlocks[i]->Render();
+	//player->Render();
 }
 
 /*
@@ -313,8 +372,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		if (mario->GetJumpState() == 0) 
+
+		if (mario->GetJumpState() == 0) {
+			mario->SettJumpStart();
+			mario->SetJumpState();
 			mario->SetState(MARIO_STATE_JUMP);
+		}
 		break;
 	case DIK_S:
 		if (mario->GetLevel() == MARIO_LEVEL_SMALL) {
@@ -334,8 +397,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->Reset();
 		break;
+		
 	}
 }
+
 
 void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
@@ -354,6 +419,14 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		if (game->IsKeyDown(DIK_LSHIFT)) mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		else mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
-	else
-		mario->SetState(MARIO_STATE_IDLE);
+	else mario->SetState(MARIO_STATE_IDLE);
+	if (game->IsKeyDown(DIK_SPACE)) {
+		//if (mario->GetJumpState() == 0) {
+		if (GetTickCount() - mario->GetJumpStart() < 300) {
+			if (mario->GetSpeechJump() < 0.2)
+				mario->SetSpeechJump();
+			mario->SetState(MARIO_STATE_JUMP);
+		}
+	}
+
 }

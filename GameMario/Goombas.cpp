@@ -1,6 +1,9 @@
 #include "Goombas.h"
 #include "synchapi.h"
 #include "Road.h"
+#include "Pipe.h"
+#include "TransObject.h"
+#include "Koopas.h"
 CGoomba::CGoomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
@@ -36,7 +39,8 @@ void CGoomba::FilterCollision(
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
 
-		if (dynamic_cast<CRoad*>(c->obj)) {
+		if (dynamic_cast<CRoad*>(c->obj) || dynamic_cast<CPipe*>(c->obj)
+			|| dynamic_cast<CKoopa*>(c->obj)) {
 			if (c->t < min_tx && c->nx != 0) {
 				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
 			}
@@ -45,10 +49,18 @@ void CGoomba::FilterCollision(
 				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 			}
 		}
+		else if (dynamic_cast<CHeadRoad*>(c->obj))
+		{
+			if (c->t < min_tx && c->nx != 0) {
+				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+			}
+		}
 	}
+	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
+	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
 {
 	CGameObject::Update(dt, coObjects);
 
@@ -58,23 +70,13 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
 		coEvents.clear();
-		if (state != GOOMBA_STATE_DIE)
+		if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_THROWN)
 			CalcPotentialCollisions(coObjects, coEvents);
 
 		if (coEvents.size() == 0)
 		{
 			x += dx;
 			y += dy;
-
-			if (vx < 0 && x < 0)
-			{
-				x = 0; vx = -vx;
-			}
-
-			if (vx > 0 && x > 290)
-			{
-				x = 290; vx = -vx;
-			}
 
 		}
 		else
@@ -89,6 +91,49 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			y += min_ty * dy + ny * 0.4f;
 
 			if (ny != 0) vy = 0;
+			//if (nx != 0) vx = 0;
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj)) // if e->obj is Goomba 
+				{
+					if (e->nx > 0)
+					{
+						vx = +GOOMBA_WALKING_SPEED;
+					}
+					if (e->nx < 0)
+					{
+						vx = -GOOMBA_WALKING_SPEED;
+					}
+				}
+				if (dynamic_cast<CKoopa*>(e->obj))
+				{
+					CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+					if (state != GOOMBA_STATE_THROWN) {
+						if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT)
+						{
+							SetState(GOOMBA_STATE_THROWN);
+						}
+					}
+
+				}
+				//if (dynamic_cast<CRoad*>(e->obj)) // if e->obj is Goomba 
+				//{
+				//	//CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+				//	// jump on top >> kill Goomba and deflect a bit 
+				//	if (e->nx > 0)
+				//	{
+				//		vx = +GOOMBA_WALKING_SPEED;
+				//	}
+				//	if (e->nx < 0)
+				//	{
+				//		vx = -GOOMBA_WALKING_SPEED;
+				//	}
+				//}
+			}
+
 		}
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -117,6 +162,10 @@ void CGoomba::Render()
 		if (state == GOOMBA_STATE_DIE) {
 			ani = GOOMBA_ANI_DIE;
 		}
+		else if (state == GOOMBA_STATE_THROWN) {
+			ani = GOOMBA_ANI_THROWN;
+		}
+
 
 		animation_set->at(ani)->Render(x, y);
 }
@@ -133,7 +182,13 @@ void CGoomba::SetState(int state)
 		break;
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;
+		break;
+	case GOOMBA_STATE_THROWN:
+		//vx = 0;
+		vy = -GOONBA_JUMP_DEFLECT_SPEED;
+		break;
 	}
+
 }
 
 int CGoomba::GetState() {

@@ -10,3 +10,11 @@ public:
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 };
+
+class CHeadRoad : public CGameObject
+{
+public:
+
+	virtual void Render();
+	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+};

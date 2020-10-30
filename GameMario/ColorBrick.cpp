@@ -25,3 +25,4 @@ void CColorBrickTop::GetBoundingBox(float& l, float& t, float& r, float& b)
 	r = x + COLOR_BRICK_BBOX_WIDTH;
 	b = y + COLOR_BRICK_BBOX_HEIGHT;
 }
+

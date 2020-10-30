@@ -4,8 +4,8 @@
 #define MARIO_WALKING_SPEED		0.15f 
 #define MARIO_RUNNING_SPEED		0.3f
 //0.1f
-#define MARIO_JUMP_SPEED_Y		0.5f
-#define MARIO_JUMP_DEFLECT_SPEED 0.35f
+#define MARIO_JUMP_SPEED_Y		0.2f
+#define MARIO_JUMP_DEFLECT_SPEED 0.3f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
 
@@ -45,6 +45,7 @@
 #define MARIO_ANI_TAIL_RUNNING_LEFT			21
 #define MARIO_ANI_FIRE_RUNNING_RIGHT		22
 #define MARIO_ANI_FIRE_RUNNING_LEFT			23
+
 #define MARIO_ANI_SMALL_JUMPING_RIGHT		24
 #define MARIO_ANI_SMALL_JUMPING_LEFT		25
 #define MARIO_ANI_BIG_JUMPING_RIGHT			26
@@ -53,7 +54,11 @@
 #define MARIO_ANI_TAIL_JUMPING_LEFT			29
 #define MARIO_ANI_FIRE_JUMPING_RIGHT		30
 #define MARIO_ANI_FIRE_JUMPING_LEFT			31
-#define MARIO_ANI_DIE				32
+
+#define MARIO_ANI_SMALL_KICK_RIGHT			32
+#define MARIO_ANI_SMALL_KICK_LEFT			33
+
+#define MARIO_ANI_DIE				99
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -75,6 +80,7 @@
 #define MARIO_UNTOUCHABLE_TIME 5000
 
 
+
 class CMario : public CGameObject
 {
 	int level;
@@ -86,9 +92,11 @@ class CMario : public CGameObject
 
 	int run_state;
 	int jump_state;
+	DWORD jump_start;
+	float speech_Jump;
 public:
 	CMario(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL/*, vector<LPGAMEOBJECT>* quesObjects = NULL*/);
 	virtual void Render();
 
 	void SetState(int state);
@@ -96,6 +104,13 @@ public:
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+
+	void SettJumpStart(){ jump_start = GetTickCount(); }
+	void SetJumpState() { jump_state = 1; }
+	DWORD GetJumpStart() { return jump_start; }
+	void SetSpeechJump() { speech_Jump += 0.0025; }
+	float GetSpeechJump() { return speech_Jump; }
+
 	int GetCurrentWidthMario();
 
 	void Reset();

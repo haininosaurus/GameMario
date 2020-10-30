@@ -1,8 +1,10 @@
 #pragma once
 #include "GameObject.h"
 
+#define KOOPA_GRAVITY 0.002f
+
 #define KOOPA_WALKING_SPEED 0.05f;
-#define KOOPA_SPINNING_SPEED 0.15f;
+#define KOOPA_SPINNING_SPEED 0.25f;
 #define KOOPA_BBOX_WIDTH 16
 #define KOOPA_BBOX_HEIGHT 26
 #define KOOPA_BBOX_HIDE_WIDTH 18
@@ -25,8 +27,17 @@ class CKoopa : public CGameObject
 {
 	int isSpin = 0;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/);
 	virtual void Render();
+	virtual void FilterCollision(
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny,
+		float& rdx,
+		float& rdy);
 
 public:
 	CKoopa();

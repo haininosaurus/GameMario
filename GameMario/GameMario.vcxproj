@@ -28,8 +28,10 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goombas.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MushroomRed.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
@@ -37,6 +39,7 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="TransObject.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WoodBlock.cpp" />
   </ItemGroup>
@@ -51,16 +54,29 @@
     <ClInclude Include="Goombas.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="MushroomRed.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="QuestionBlock.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="TransObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WoodBlock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+    <ResourceCompile Include="Resource1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\ic_mario.png" />
+    <Image Include="Textures\mario.jpg" />
+    <Image Include="Textures\mario_ic.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -13,6 +13,7 @@
 #include "Goombas.h"
 #include "Koopas.h"
 #include "Coin.h"
+#include "TransObject.h"
 #include "BackgroundObject.h"
 
 
@@ -23,12 +24,14 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> questionBlocks;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
+	//void _ParseSection_QUESTION_OBJECTS(string line);
 	//void _ParseSection_BACKGROUND_OBJECTS(string line);
 
 
@@ -42,7 +45,7 @@ public:
 
 	CMario* GetPlayer() { return player; }
 
-	//friend class CPlayScenceKeyHandler;
+	friend class CPlayScenceKeyHandler;
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

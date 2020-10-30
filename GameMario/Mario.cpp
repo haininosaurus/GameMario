@@ -8,6 +8,10 @@
 #include "Goombas.h"
 #include "Koopas.h"
 #include "ColorBrick.h"
+#include "Coin.h"
+#include "QuestionBlock.h"
+#include "TransObject.h"
+#include "Road.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -53,6 +57,7 @@ void CMario::FilterCollision(
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
 		if (dynamic_cast<CColorBrick*>(c->obj)) {}
+		else if (dynamic_cast<CTransObject*>(c->obj)){}
 		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
 			if (c->ny < 0) {
 				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
@@ -74,30 +79,28 @@ void CMario::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
 {
 	// Calculate dx, dy 
 	//DebugOut(L"[INFO] bef-Vy in update %f\n", vy);
 	CGameObject::Update(dt);
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
+	vector<LPCOLLISIONEVENT> coQuesEvents;
+	vector<LPCOLLISIONEVENT> coQuesEventsResult;
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
+	//if (coObjects != NULL) {
+	//	
+	//}
 	coEvents.clear();
 
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
-	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
-	{
-		untouchable_start = 0;
-		untouchable = 0;
-	}
-
-	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -114,8 +117,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CMario::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		if (rdx != 0 && rdx!=dx)
-			x += nx*abs(rdx); 
+		if (rdx != 0 && rdx != dx)
+			x += nx * abs(rdx);
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -124,7 +127,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 		if (vy == 0) jump_state = 0;
-		
+
 
 
 		//
@@ -171,7 +174,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 				if (e->ny < 0)
 				{
-					if (koopa->GetState() != KOOPA_STATE_HIDE && koopa->GetState() != KOOPA_STATE_SPIN_LEFT && koopa->GetState() != KOOPA_STATE_SPIN_RIGHT)
+					if (koopa->GetState() != KOOPA_STATE_HIDE)
 					{
 						koopa->SetState(KOOPA_STATE_HIDE);
 						jump_state = 1;
@@ -179,60 +182,87 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else if (koopa->GetState() == KOOPA_STATE_HIDE) {
 
-						if(round(x + CMario::GetCurrentWidthMario()/2 ) < koopa->x + round(KOOPA_BBOX_WIDTH/2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
+						if (round(x + CMario::GetCurrentWidthMario() / 2) < koopa->x + round(KOOPA_BBOX_WIDTH / 2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
 						else koopa->SetState(KOOPA_STATE_SPIN_LEFT);
 						jump_state = 1;
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
-					else if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT) {
-						koopa->SetState(KOOPA_STATE_HIDE);
-						jump_state = 1;
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
+
 				}
 				else if (e->nx != 0)
 				{
-					//if (koopa->GetState() != KOOPA_STATE_HIDE)
-					//{
-						if (untouchable == 0)
+					if (untouchable == 0)
+					{
+						if (koopa->GetState() != KOOPA_STATE_HIDE)
 						{
-							if (koopa->GetState() != KOOPA_STATE_HIDE)
+							if (level > MARIO_LEVEL_SMALL)
 							{
-								if (level > MARIO_LEVEL_SMALL)
-								{
-									level = MARIO_LEVEL_SMALL;
-									StartUntouchable();
-								}
-								else
-									SetState(MARIO_STATE_DIE);
+								level = MARIO_LEVEL_SMALL;
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+						else
+						{
+							if (e->nx < 0)
+							{
+								koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
 							}
 							else
 							{
-								if (e->nx < 0)
-								{
-									koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
-								}
-								else
-								{
-									koopa->SetState(KOOPA_STATE_SPIN_LEFT);
-								}
+								koopa->SetState(KOOPA_STATE_SPIN_LEFT);
 							}
 						}
-
-				//	}
-					
+					}
 				}
 			}
-			//else if (dynamic_cast<CPortal*>(e->obj))
-			//{
-			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
-			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			//}
+
+			if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Koopa
+			{
+				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+
+				if (e->ny > 0)
+				{
+					if (coin->GetState() == COIN_STATE_HIDE)
+					{
+						coin->SetPosition(coin->x, coin->y - 16);
+						coin->SetState(COIN_STATE_NORMAL);
+
+					}
+				}
+			}
+
+			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block
+			{
+					CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
+					if (e->ny > 0)
+					{
+						if (quesBlock->GetState() == QUESTIONBLOCK_STATE_QUESTION)
+						{
+							quesBlock->SetState(QUESTIONBLOCK_STATE_NORMAL);
+
+							//quesBlock->CreateQuestionObject();
+						}
+
+
+					}
+			}
 		}
 	}
 
 	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];	
+
+	// reset untouchable timer if untouchable time has passed
+	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+	{
+		untouchable_start = 0;
+		untouchable = 0;
+	}
+
+	// No collision occured, proceed normally
+
 }
 
 void CMario::Render()
@@ -354,33 +384,38 @@ void CMario::SetState(int state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
 		run_state = 0;
+		speech_Jump = 0;
 		vx = MARIO_WALKING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		run_state = 0;
+		speech_Jump = 0;
 		vx = -MARIO_WALKING_SPEED;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		jump_state = 1;
-		vy = -MARIO_JUMP_SPEED_Y;
+		//jump_state = 1;
+		vy = -MARIO_JUMP_SPEED_Y - speech_Jump;
 		//DebugOut(L"[INFO] Vy %d\n", vy);
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
+		speech_Jump = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_RIGHT:
 		run_state = 1;
+		speech_Jump = 0;
 		vx = MARIO_RUNNING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
 		run_state = 1;
+		speech_Jump = 0;
 		vx = -MARIO_RUNNING_SPEED;
 		nx = -1;
 		break;
