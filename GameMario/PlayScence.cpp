@@ -333,7 +333,6 @@ void CPlayScene::Update(DWORD dt)
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(round(cx), -40.0f /*cy*/);
 		}
-
 	}
 	else {
 		CGame::GetInstance()->SetCamPos(0.0f, -40.0f /*cy*/);
@@ -400,6 +399,21 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		
 	}
 }
+void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
+{
+	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	switch (KeyCode)
+	{
+	case DIK_LSHIFT:
+		if (mario->GetStateTakeTortoiseshell() == 1)
+		{
+			mario->SetState(MARIO_STATE_KICK);
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 
 void CPlayScenceKeyHandler::KeyState(BYTE* states)
@@ -422,7 +436,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else mario->SetState(MARIO_STATE_IDLE);
 	if (game->IsKeyDown(DIK_SPACE)) {
 		//if (mario->GetJumpState() == 0) {
-		if (GetTickCount() - mario->GetJumpStart() < 300) {
+		if (GetTickCount() - mario->GetJumpStart() < 300)
+		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();
 			mario->SetState(MARIO_STATE_JUMP);

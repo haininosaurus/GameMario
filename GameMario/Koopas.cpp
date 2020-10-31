@@ -19,6 +19,8 @@ void CKoopa::Render()
 		ani = KOOPA_ANI_HIDE;
 	else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
 		ani = KOOPA_ANI_SPIN;
+	else if (state == KOOPA_STATE_TAKEN)
+		ani = KOOPA_ANI_TAKEN;
 	animation_set->at(ani)->Render(x, y);
 }
 
@@ -74,7 +76,8 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	vy += KOOPA_GRAVITY * dt;
+	if(state != KOOPA_STATE_TAKEN)
+		vy += KOOPA_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -97,15 +100,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CKoopa::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 		//if (rdx != 0 && rdx != dx)
 		//	x += nx * abs(rdx);
-		DebugOut(L"coEventResult : %d\n", coEventsResult.size());
-		DebugOut(L"x : %f\n", x);
+		//DebugOut(L"coEventResult : %d\n", coEventsResult.size());
+		//DebugOut(L"x : %f\n", x);
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
 		if (ny != 0) vy = 0;
 		//if (nx != 0) vx = 0;
-		DebugOut(L"nx : %f\n", nx);
-		DebugOut(L"vx : %f\n", vx);
+		//DebugOut(L"nx : %f\n", nx);
+		//DebugOut(L"vx : %f\n", vx);
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -207,6 +210,12 @@ void CKoopa::SetState(int state)
 		isSpin = 1;
 		vx = - KOOPA_SPINNING_SPEED;
 		break;
+	case KOOPA_STATE_TAKEN:
+		vx = 0;
+		vy = 0;
+		isSpin = 0;
+		break;
+		
 	}
 }
 int CKoopa::GetState() {
