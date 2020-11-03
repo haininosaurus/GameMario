@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Collision.h"
 
 #define GOOMBA_WALKING_SPEED 0.05f;
 #define GOONBA_JUMP_DEFLECT_SPEED 0.2f
@@ -34,6 +35,8 @@ class CGoomba : public CGameObject
 		float& ny,
 		float& rdx,
 		float& rdy);
+	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 public:
 	CGoomba();

@@ -12,6 +12,7 @@
 #include "QuestionBlock.h"
 #include "TransObject.h"
 #include "Road.h"
+#include "Pipe.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -19,6 +20,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	untouchable = 0;
 	run_state = 0;
 	jump_state = 0;
+	kick_state = 0;
+	turn_state = 0;
 	take_tortoistate_state = 0;
 	tortoiseshell = NULL;
 
@@ -41,6 +44,77 @@ int CMario::GetCurrentWidthMario()
 	else if (level == MARIO_LEVEL_FIRE)
 		return MARIO_FIRE_BBOX_WIDTH;
 }
+LPCOLLISIONEVENT CMario::SweptAABBEx(LPGAMEOBJECT coO)
+{
+	float sl, st, sr, sb;		// static object bbox
+	float ml, mt, mr, mb;		// moving object bbox
+	float t, nx, ny;
+
+	coO->GetBoundingBox(sl, st, sr, sb);
+
+	// deal with moving object: m speed = original m speed - collide object speed
+	float svx, svy;
+	coO->GetSpeed(svx, svy);
+
+	float sdx = svx * dt;
+	float sdy = svy * dt;
+
+	// (rdx, rdy) is RELATIVE movement distance/velocity 
+	float rdx = this->dx - sdx;
+	float rdy = this->dy - sdy;
+
+	GetBoundingBox(ml, mt, mr, mb);
+
+	CGame::SweptAABB(
+		ml, mt, mr, mb,
+		rdx, rdy,
+		sl, st, sr, sb,
+		t, nx, ny
+		);
+
+
+
+
+	//float magnitude = sqrt((vx * vx + vy * vy)) * remainingTime; 
+	//float dotprod = vx * ny + vy * nx;
+	//if (dotprod > 0.0f) 
+	//	dotprod = 1.0f;
+	//else if (dotprod < 0.0f)    
+	//	dotprod = -1.0f; 
+	//coO->vx = dotprod * ny * magnitude;
+	//coO->vy = dotprod * nx * magnitude;
+
+
+
+
+	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
+	return e;
+	return 0;
+}
+
+/*
+	Calculate potential collisions with the list of colliable objects
+
+	coObjects: the list of colliable objects
+	coEvents: list of potential collisions
+*/
+void CMario::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT>* coObjects,
+	vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+}
+
 void CMario::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,
 	vector<LPCOLLISIONEVENT>& coEventsResult,
@@ -82,7 +156,7 @@ void CMario::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	//DebugOut(L"[INFO] bef-Vy in update %f\n", vy);
@@ -99,6 +173,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 	//	
 	//}
 	coEvents.clear();
+	float t;
 
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
@@ -118,10 +193,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 
 		// TODO: This is a very ugly designed function!!!!
 		CMario::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		float remainingTime = 1.0f - min_tx;
+		//DebugOut(L"x: %f\n", x);
+		
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 		if (rdx != 0 && rdx != dx)
 			x += nx * abs(rdx);
+
+
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -131,7 +211,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 		if (ny != 0) vy = 0;
 		if (vy == 0) jump_state = 0;
 
-
+		// reset untouchable timer if untouchable time has passed
+		if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+		{
+			untouchable_start = 0;
+			untouchable = 0;
+		}
 
 		//
 		// Collision logic with other objects
@@ -185,12 +270,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 							jump_state = 1;
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}            
-						else if (koopa->GetState() == KOOPA_STATE_HIDE) {
+						else if (koopa->GetState() == KOOPA_STATE_HIDE)
+						{
 
 							if (round(x + CMario::GetCurrentWidthMario() / 2) < koopa->x + round(KOOPA_BBOX_WIDTH / 2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
 							else koopa->SetState(KOOPA_STATE_SPIN_LEFT);
 							jump_state = 1;
-							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
 
 					}
@@ -212,9 +297,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 							{
 								if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT)
 								{
+									kick_start = GetTickCount();
 									if (e->nx < 0)
 									{
 										SetState(MARIO_STATE_KICK);
+
 										koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
 									}
 									else
@@ -240,18 +327,43 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 			}
 			
 
-			if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Koopa
+			//if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Koopa
+			//{
+			//	CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+
+			//	if (e->ny > 0)
+			//	{
+			//		if (coin->GetState() == COIN_STATE_HIDE)
+			//		{
+			//			coin->SetPosition(coin->x, coin->y - 16);
+			//			coin->SetState(COIN_STATE_NORMAL);
+
+			//		}
+			//	}
+			//}
+			if (dynamic_cast<CPipe*>(e->obj)) 
 			{
-				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
 
-				if (e->ny > 0)
+				if (e->nx != 0)
 				{
-					if (coin->GetState() == COIN_STATE_HIDE)
-					{
-						coin->SetPosition(coin->x, coin->y - 16);
-						coin->SetState(COIN_STATE_NORMAL);
+					if (y < 133) {
+						x += vx * min_tx;
+						y += vy;
 
+						vx *= remainingTime;
+						vy *= remainingTime;
+
+						if (abs(nx) > 0.0001f)
+							vx = -vx;
+						if (abs(ny) > 0.0001f)
+							vy = -vy;
+
+						float dotprod = (vx * ny + vy * nx) * remainingTime;
+						vx = dotprod * ny;
+						vy = dotprod * nx;
 					}
+
 				}
 			}
 
@@ -275,6 +387,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];	
+
 	if (tortoiseshell != NULL) {
 		if (level == MARIO_LEVEL_SMALL)
 		{
@@ -341,14 +454,24 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOB
 		
 
 	}
+	//DebugOut(L"kick_state: %d\n", kick_state);
+
+	//if (kick_state == 1)
+	//{
+	//	if (GetTickCount() - kick_start > 1000) {
+	//		SetState(MARIO_STATE_KICK);
+	//		DebugOut(L"kick_state: %d\n", kick_state);
+	//	}
+
+	//	else {
+	//		DebugOut(L"else kick_state: %d\n", kick_state);
+	//		kick_state = 0;
+	//	}
+
+	//}
 
 
-	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
-	{
-		untouchable_start = 0;
-		untouchable = 0;
-	}
+
 
 	// No collision occured, proceed normally
 
@@ -376,14 +499,16 @@ void CMario::Render()
 				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_LEFT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_BIG_KICK_RIGHT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_RIGHT;
 				else ani = MARIO_ANI_BIG_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
+				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_RIGHT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_LEFT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_LEFT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_BIG_KICK_LEFT;
@@ -395,29 +520,35 @@ void CMario::Render()
 			if (vx == 0)
 			{
 				if (nx > 0) {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+
+					if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
+					else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 					else ani = MARIO_ANI_SMALL_IDLE_RIGHT;
 				}
 				else {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
+
+					if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
+					else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (kick_state == 1 && jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
 					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
 				}
 				//	if(state == MARIO_STATE_KICK_RIGHT)
 			}
 			else if (vx > 0) {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_SMALL_KICK_RIGHT;
+				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0 && kick_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				else if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
+				else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
+				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 				else ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_SMALL_KICK_LEFT;
+				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				else if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
+				else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
+				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
 				else ani = MARIO_ANI_SMALL_RUNNING_LEFT;
 			}
 		}
@@ -438,14 +569,16 @@ void CMario::Render()
 				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
+				if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_LEFT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_TAIL_KICK_RIGHT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_RIGHT;
 				else ani = MARIO_ANI_TAIL_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
+				if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_RIGHT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_LEFT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_TAIL_KICK_LEFT;
@@ -468,14 +601,16 @@ void CMario::Render()
 				}
 			}
 			else if (vx > 0) {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_FIRE_KICK_RIGHT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
 				else ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
 			}
 			else {
-				if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
+				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
+				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
 				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
 				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_FIRE_KICK_LEFT;
@@ -484,7 +619,7 @@ void CMario::Render()
 		}
 
 	int alpha = 255;
-	if (untouchable) alpha = 100;
+	if (untouchable) alpha = 128;
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
@@ -499,42 +634,57 @@ void CMario::SetState(int state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
 		run_state = 0;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		vx = MARIO_WALKING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
+		turn_state = 0;
 		run_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		vx = -MARIO_WALKING_SPEED;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		//jump_state = 1;
+		kick_state = 0;
+		turn_state = 0;
 		vy = -MARIO_JUMP_SPEED_Y - speech_Jump;
 		//DebugOut(L"[INFO] Vy %d\n", vy);
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_RIGHT:
 		run_state = 1;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		vx = MARIO_RUNNING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
 		run_state = 1;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		vx = -MARIO_RUNNING_SPEED;
 		nx = -1;
 		break;
 	case MARIO_STATE_KICK:
+		DebugOut(L"toi da vao state kick \n");
+		kick_state = 1;
+		turn_state = 0;
 		if (tortoiseshell != NULL) 
 		{
 			if (nx > 0) {
@@ -546,17 +696,32 @@ void CMario::SetState(int state)
 				tortoiseshell->x = x - KOOPA_BBOX_HIDE_WIDTH;
 				tortoiseshell->SetState(KOOPA_STATE_SPIN_LEFT);
 			}
+
 			take_tortoistate_state = 0;
+
 			tortoiseshell = NULL;
 		}
+
 		break;
 	case MARIO_STATE_TAKE_TORTOISESHELL_RIGHT:
 		take_tortoistate_state = 1;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
 		break;
 	case MARIO_STATE_TAKE_TORTOISESHELL_LEFT:
 		take_tortoistate_state = 1;
+		turn_state = 0;
 		speech_Jump = 0;
+		kick_state = 0;
+		break;
+	case MARIO_STATE_TURN_LEFT:
+		turn_state = 1;
+		vx = -MARIO_WALKING_SPEED;
+		break;
+	case MARIO_STATE_TURN_RIGHT:
+		turn_state = 1;
+		vx = MARIO_WALKING_SPEED;
 		break;
 	}
 

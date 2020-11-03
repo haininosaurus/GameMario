@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Collision.h"
 
 #define MARIO_WALKING_SPEED		0.15f 
 #define MARIO_RUNNING_SPEED		0.3f
@@ -21,6 +22,9 @@
 #define MARIO_STATE_KICK								500
 #define MARIO_STATE_TAKE_TORTOISESHELL_RIGHT			600
 #define MARIO_STATE_TAKE_TORTOISESHELL_LEFT				610
+#define MARIO_STATE_TURN_LEFT							700
+#define MARIO_STATE_TURN_RIGHT							710
+
 
 
 
@@ -97,7 +101,16 @@
 #define MARIO_ANI_FIRE_TAKE_TORTOISESHELL_JUMP_RIGHT	62
 #define MARIO_ANI_FIRE_TAKE_TORTOISESHELL_JUMP_LEFT		63
 
-#define MARIO_ANI_DIE									64
+#define MARIO_ANI_SMALL_TURN_LEFT						64
+#define MARIO_ANI_SMALL_TURN_RIGHT						65
+#define MARIO_ANI_BIG_TURN_LEFT							66
+#define MARIO_ANI_BIG_TURN_RIGHT						67
+#define MARIO_ANI_TAIL_TURN_LEFT						68
+#define MARIO_ANI_TAIL_TURN_RIGHT						69
+#define MARIO_ANI_FIRE_TURN_LEFT						70
+#define MARIO_ANI_FIRE_TURN_RIGHT						71
+
+#define MARIO_ANI_DIE									72
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -117,6 +130,7 @@
 #define MARIO_SMALL_BBOX_HEIGHT 15
 
 #define MARIO_UNTOUCHABLE_TIME 5000
+#define MARIO_SLIDE_WALKING_TIME 300
 
 
 
@@ -131,10 +145,16 @@ class CMario : public CGameObject
 
 	int run_state;
 	int jump_state;
+	int kick_state;
+	int turn_state;
 	int take_tortoistate_state;
 
 	CGameObject* tortoiseshell;
 	DWORD jump_start;
+	DWORD kick_start;
+	DWORD walking_time_right;
+	DWORD walking_time_left;
+
 	float speech_Jump;
 
 public:
@@ -144,16 +164,24 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
+
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
 	int GetStateTakeTortoiseshell(){ return take_tortoistate_state; }
+	int GetKickState() { return kick_state; }
+	float GetSpeechJump() { return speech_Jump; }
+	DWORD GetWalkRightTime() { return walking_time_right; }
+	DWORD GetWalkLeftTime() { return walking_time_left; }
+	DWORD GetJumpStart() { return jump_start; }
+
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	void SettJumpStart(){ jump_start = GetTickCount(); }
 	void SetJumpState() { jump_state = 1; }
-	DWORD GetJumpStart() { return jump_start; }
+	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
+	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
 	void SetSpeechJump() { speech_Jump += 0.0025; }
-	float GetSpeechJump() { return speech_Jump; }
+
 
 	int GetCurrentWidthMario();
 
@@ -168,6 +196,8 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
+	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
