@@ -407,6 +407,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_LSHIFT:
 		if (mario->GetStateTakeTortoiseshell() == 1)
 		{
+			mario->SetKickStart(GetTickCount());
 			mario->SetState(MARIO_STATE_KICK);
 		}
 		break;
@@ -424,23 +425,31 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT) ) {
-		mario->SetWalkRightTime(GetTickCount());
-		if (GetTickCount() - mario->GetWalkLeftTime() > 180)
-		{
-			if (game->IsKeyDown(DIK_LSHIFT)) mario->SetState(MARIO_STATE_RUNNING_RIGHT);
-			else mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		if (GetTickCount() - mario->GetKickStart() > 180) {
+			mario->SetWalkRightTime(GetTickCount());
+			if (GetTickCount() - mario->GetWalkLeftTime() > 180)
+			{
+				if (game->IsKeyDown(DIK_LSHIFT)) mario->SetState(MARIO_STATE_RUNNING_RIGHT);
+				else mario->SetState(MARIO_STATE_WALKING_RIGHT);
+			}
+			else mario->SetState(MARIO_STATE_TURN_LEFT);
 		}
-		else mario->SetState(MARIO_STATE_TURN_LEFT);
+		else mario->SetState(MARIO_STATE_KICK);
+
 	}
 	else if (game->IsKeyDown(DIK_LEFT)) {
-		mario->SetWalkLeftTime(GetTickCount());
-		if (GetTickCount() - mario->GetWalkRightTime() > 180)
+		if (GetTickCount() - mario->GetKickStart() > 150)
 		{
-			if (game->IsKeyDown(DIK_LSHIFT)) mario->SetState(MARIO_STATE_RUNNING_LEFT);
-			else mario->SetState(MARIO_STATE_WALKING_LEFT);
+			mario->SetWalkLeftTime(GetTickCount());
+			if (GetTickCount() - mario->GetWalkRightTime() > 150)
+			{
+				if (game->IsKeyDown(DIK_LSHIFT)) mario->SetState(MARIO_STATE_RUNNING_LEFT);
+				else mario->SetState(MARIO_STATE_WALKING_LEFT);
+			}
+			else mario->SetState(MARIO_STATE_TURN_RIGHT);
 		}
-		else mario->SetState(MARIO_STATE_TURN_RIGHT);
 
+		else mario->SetState(MARIO_STATE_KICK);
 	}
 	//else if (mario->GetKickState() == 1) mario->SetState(MARIO_STATE_KICK);
 	else mario->SetState(MARIO_STATE_IDLE);

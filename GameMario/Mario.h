@@ -173,10 +173,12 @@ public:
 	DWORD GetWalkRightTime() { return walking_time_right; }
 	DWORD GetWalkLeftTime() { return walking_time_left; }
 	DWORD GetJumpStart() { return jump_start; }
+	DWORD GetKickStart() { return kick_start; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	void SettJumpStart(){ jump_start = GetTickCount(); }
+	void SetKickStart(int t) { kick_start = t; }
 	void SetJumpState() { jump_state = 1; }
 	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
@@ -184,6 +186,7 @@ public:
 
 
 	int GetCurrentWidthMario();
+	int GetCurrentHeightMario();
 
 	void Reset();
 

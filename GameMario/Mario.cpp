@@ -44,6 +44,17 @@ int CMario::GetCurrentWidthMario()
 	else if (level == MARIO_LEVEL_FIRE)
 		return MARIO_FIRE_BBOX_WIDTH;
 }
+int CMario::GetCurrentHeightMario()
+{
+	if (level == MARIO_LEVEL_SMALL)
+		return MARIO_SMALL_BBOX_HEIGHT;
+	else if (level == MARIO_LEVEL_BIG)
+		return MARIO_BIG_BBOX_HEIGHT;
+	else if (level == MARIO_LEVEL_TAIL)
+		return MARIO_TAIL_BBOX_HEIGHT;
+	else if (level == MARIO_LEVEL_FIRE)
+		return MARIO_FIRE_BBOX_HEIGHT;
+}
 LPCOLLISIONEVENT CMario::SweptAABBEx(LPGAMEOBJECT coO)
 {
 	float sl, st, sr, sb;		// static object bbox
@@ -347,7 +358,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->nx != 0)
 				{
-					if (y < 133) {
+					if (y < 149 - GetCurrentHeightMario() - 5) {
 						x += vx * min_tx;
 						y += vy;
 
@@ -451,29 +462,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				tortoiseshell->y = y + 10;
 			}
 		}
-		
-
 	}
-	//DebugOut(L"kick_state: %d\n", kick_state);
 
-	//if (kick_state == 1)
-	//{
-	//	if (GetTickCount() - kick_start > 1000) {
-	//		SetState(MARIO_STATE_KICK);
-	//		DebugOut(L"kick_state: %d\n", kick_state);
-	//	}
-
-	//	else {
-	//		DebugOut(L"else kick_state: %d\n", kick_state);
-	//		kick_state = 0;
-	//	}
-
-	//}
-
-
-
-
-	// No collision occured, proceed normally
+	if (GetTickCount() - kick_start < 150)
+		SetState(MARIO_STATE_KICK);
 
 }
 
@@ -487,32 +479,37 @@ void CMario::Render()
 		{
 			if (vx == 0)
 			{
-				if (nx > 0) {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_RIGHT;
+				if (nx > 0)
+				{
+					if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
 					else ani = MARIO_ANI_BIG_IDLE_RIGHT;
 				}
-				else {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_LEFT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_LEFT;
+				else
+				{
+					if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
 					else ani = MARIO_ANI_BIG_IDLE_LEFT;
 				}
 			}
-			else if (vx > 0) {
+			else if (vx > 0)
+			{
 				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_LEFT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_BIG_WALKING_RIGHT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_BIG_KICK_RIGHT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_RIGHT;
-				else ani = MARIO_ANI_BIG_RUNNING_RIGHT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_RIGHT;
+				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
+				else if (run_state == 1)	ani = MARIO_ANI_BIG_RUNNING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
+				else ani = MARIO_ANI_BIG_WALKING_RIGHT;
 			}
 			else {
 				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_RIGHT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_WALKING_LEFT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_BIG_JUMPING_LEFT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_LEFT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_BIG_KICK_LEFT;
-				else ani = MARIO_ANI_BIG_RUNNING_LEFT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_LEFT;
+				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
+				else if (run_state == 1) ani = MARIO_ANI_BIG_RUNNING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
+				else ani = MARIO_ANI_BIG_WALKING_LEFT;
 			}
 		}
 		else if (level == MARIO_LEVEL_SMALL)
@@ -520,36 +517,33 @@ void CMario::Render()
 			if (vx == 0)
 			{
 				if (nx > 0) {
-
-					if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
-					else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
-					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
+					if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
 					else ani = MARIO_ANI_SMALL_IDLE_RIGHT;
 				}
 				else {
-
-					if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
-					else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
-					else if (kick_state == 1 && jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
+					if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
 					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
 				}
-				//	if(state == MARIO_STATE_KICK_RIGHT)
 			}
 			else if (vx > 0) {
 				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0 && kick_state == 0)	ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-				else if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
-				else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
-				else ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
+				else if (run_state == 1)	ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
+				else ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 			}
 			else {
 				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_WALKING_LEFT;
-				else if (jump_state == 1 && take_tortoistate_state == 0 && kick_state == 0) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
-				else if (jump_state == 0 && take_tortoistate_state == 1 && kick_state == 0) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
-				else ani = MARIO_ANI_SMALL_RUNNING_LEFT;
+				else if (run_state == 1) ani = MARIO_ANI_SMALL_RUNNING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
+				else ani = MARIO_ANI_SMALL_WALKING_LEFT;
 			}
 		}
 
@@ -558,31 +552,33 @@ void CMario::Render()
 			if (vx == 0)
 			{
 				if (nx > 0) {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_RIGHT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
 					else ani = MARIO_ANI_TAIL_IDLE_RIGHT;
 				}
 				else {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_LEFT;
+					if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_LEFT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
 					else ani = MARIO_ANI_TAIL_IDLE_LEFT;
 				}
 			}
 			else if (vx > 0) {
 				if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_LEFT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_TAIL_WALKING_RIGHT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_TAIL_KICK_RIGHT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_RIGHT;
-				else ani = MARIO_ANI_TAIL_RUNNING_RIGHT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_RIGHT;
+				else if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_RIGHT;
+				else if (run_state == 1)	ani = MARIO_ANI_TAIL_RUNNING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_RIGHT;
+				else ani = MARIO_ANI_TAIL_WALKING_RIGHT;
 			}
 			else {
 				if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_RIGHT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_WALKING_LEFT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_LEFT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_TAIL_KICK_LEFT;
-				else ani = MARIO_ANI_TAIL_RUNNING_LEFT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_LEFT;
+				else if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_LEFT;
+				else if (run_state == 1) ani = MARIO_ANI_TAIL_RUNNING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_TAIL_JUMPING_LEFT;
+				else ani = MARIO_ANI_TAIL_WALKING_LEFT;
 			}
 		}
 		else if (level == MARIO_LEVEL_FIRE)
@@ -590,31 +586,33 @@ void CMario::Render()
 			if (vx == 0)
 			{
 				if (nx > 0) {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 					else ani = MARIO_ANI_FIRE_IDLE_RIGHT;
 				}
 				else {
-					if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
-					else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_LEFT;
+					if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 					else ani = MARIO_ANI_FIRE_IDLE_LEFT;
 				}
 			}
 			else if (vx > 0) {
 				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0)	ani = MARIO_ANI_FIRE_WALKING_RIGHT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_FIRE_KICK_RIGHT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
-				else ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
+				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
+				else if (run_state == 1)	ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
+				else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
+				else ani = MARIO_ANI_FIRE_WALKING_RIGHT;
 			}
 			else {
 				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
-				else if (run_state == 0 && jump_state == 0 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_WALKING_LEFT;
-				else if (jump_state == 1 && take_tortoistate_state == 0) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
-				else if (jump_state == 0 && take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
-				else if (state == MARIO_STATE_KICK) ani = MARIO_ANI_FIRE_KICK_LEFT;
-				else ani = MARIO_ANI_FIRE_RUNNING_LEFT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
+				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
+				else if (run_state == 1) ani = MARIO_ANI_FIRE_RUNNING_LEFT;
+				else if (jump_state == 1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
+				else ani = MARIO_ANI_FIRE_WALKING_LEFT;
 			}
 		}
 
@@ -682,7 +680,6 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_KICK:
-		DebugOut(L"toi da vao state kick \n");
 		kick_state = 1;
 		turn_state = 0;
 		if (tortoiseshell != NULL) 
@@ -701,6 +698,9 @@ void CMario::SetState(int state)
 
 			tortoiseshell = NULL;
 		}
+
+		if (nx > 0) vx = MARIO_WALKING_SPEED;
+		else vx = -MARIO_WALKING_SPEED;
 
 		break;
 	case MARIO_STATE_TAKE_TORTOISESHELL_RIGHT:
