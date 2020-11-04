@@ -15,6 +15,7 @@
 #include "Coin.h"
 #include "TransObject.h"
 #include "BackgroundObject.h"
+#include "CloudBrick.h"
 
 
 

@@ -19,7 +19,6 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
-#include "resource.h"
 
 
 
@@ -100,12 +99,12 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = LoadIcon(NULL, MAKEINTRESOURCE(MARIO_PNG));
+	wc.hIcon = NULL;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = WINDOW_CLASS_NAME;
-	wc.hIconSm = LoadIcon(NULL, MAKEINTRESOURCE(MARIO_PNG));;
+	wc.hIconSm = NULL;
 
 
 	RegisterClassEx(&wc);

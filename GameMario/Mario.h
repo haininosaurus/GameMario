@@ -3,7 +3,7 @@
 #include "Collision.h"
 
 #define MARIO_WALKING_SPEED		0.15f 
-#define MARIO_RUNNING_SPEED		0.3f
+#define MARIO_RUNNING_SPEED		0.2f
 //0.1f
 #define MARIO_JUMP_SPEED_Y		0.2f
 #define MARIO_JUMP_DEFLECT_SPEED 0.3f
@@ -24,6 +24,9 @@
 #define MARIO_STATE_TAKE_TORTOISESHELL_LEFT				610
 #define MARIO_STATE_TURN_LEFT							700
 #define MARIO_STATE_TURN_RIGHT							710
+#define MARIO_STATE_FIGHT								800
+#define MARIO_STATE_RUNNING_RIGHT_FAST					420
+#define MARIO_STATE_RUNNING_LEFT_FAST					430
 
 
 
@@ -110,7 +113,18 @@
 #define MARIO_ANI_FIRE_TURN_LEFT						70
 #define MARIO_ANI_FIRE_TURN_RIGHT						71
 
-#define MARIO_ANI_DIE									72
+#define MARIO_ANI_TAIL_FIGHT							72
+
+#define MARIO_ANI_SMALL_RUNNING_RIGHT_FAST				73
+#define MARIO_ANI_SMALL_RUNNING_LEFT_FAST				74
+#define MARIO_ANI_BIG_RUNNING_RIGHT_FAST				75
+#define MARIO_ANI_BIG_RUNNING_LEFT_FAST					76
+#define MARIO_ANI_TAIL_RUNNING_RIGHT_FAST				77
+#define MARIO_ANI_TAIL_RUNNING_LEFT_FAST				78
+#define MARIO_ANI_FIRE_RUNNING_RIGHT_FAST				79
+#define MARIO_ANI_FIRE_RUNNING_LEFT_FAST				80
+
+#define MARIO_ANI_DIE									81
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -144,14 +158,20 @@ class CMario : public CGameObject
 	float start_y;
 
 	int run_state;
+	int run_fast_state;
 	int jump_state;
 	int kick_state;
 	int turn_state;
+	int fight_state;
+	int fall_state;
 	int take_tortoistate_state;
 
 	CGameObject* tortoiseshell;
 	DWORD jump_start;
 	DWORD kick_start;
+	DWORD fight_start;
+	DWORD running_time_right;
+	DWORD running_time_left;
 	DWORD walking_time_right;
 	DWORD walking_time_left;
 
@@ -169,20 +189,29 @@ public:
 	int GetJumpState() { return jump_state; }
 	int GetStateTakeTortoiseshell(){ return take_tortoistate_state; }
 	int GetKickState() { return kick_state; }
+	int GetFightState() { return fight_state; }
+	int GetRunState() { return run_state; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
 	DWORD GetWalkLeftTime() { return walking_time_left; }
+	DWORD GetRunningRightTime() { return running_time_right; }
+	DWORD GetRunningLeftTime() { return running_time_left; }
 	DWORD GetJumpStart() { return jump_start; }
 	DWORD GetKickStart() { return kick_start; }
+	DWORD GetFightStart() { return fight_start; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
-	void SettJumpStart(){ jump_start = GetTickCount(); }
+	void SetJumpStart(DWORD t){ jump_start = t; }
 	void SetKickStart(int t) { kick_start = t; }
-	void SetJumpState() { jump_state = 1; }
+	void SetJumpState(int j) { jump_state = j; }
+	void SetFightState(int f) { fight_state = f; }
 	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
+	void SetRunningRightTime(DWORD t) { running_time_right = t; }
+	void SetRunningLeftTime(DWORD t) { running_time_left = t; }
 	void SetSpeechJump() { speech_Jump += 0.0025; }
+	void SetFightStart(DWORD t) { fight_start = t; }
 
 
 	int GetCurrentWidthMario();
