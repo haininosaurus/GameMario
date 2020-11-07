@@ -4,8 +4,10 @@
 
 #define MARIO_WALKING_SPEED		0.15f 
 #define MARIO_RUNNING_SPEED		0.2f
+
 //0.1f
 #define MARIO_JUMP_SPEED_Y		0.2f
+#define MARIO_FLYING_SPEED_Y	0.05f
 #define MARIO_JUMP_DEFLECT_SPEED 0.3f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
@@ -27,7 +29,11 @@
 #define MARIO_STATE_FIGHT								800
 #define MARIO_STATE_RUNNING_RIGHT_FAST					420
 #define MARIO_STATE_RUNNING_LEFT_FAST					430
-
+#define MARIO_STATE_FLYING_LOW_RIGHT					900
+#define MARIO_STATE_FLYING_LOW_LEFT						910
+#define MARIO_STATE_FLYING_HIGH_RIGHT					920
+#define MARIO_STATE_FLYING_HIGH_LEFT					930
+#define MARIO_STATE_SIT									940
 
 
 
@@ -124,7 +130,20 @@
 #define MARIO_ANI_FIRE_RUNNING_RIGHT_FAST				79
 #define MARIO_ANI_FIRE_RUNNING_LEFT_FAST				80
 
-#define MARIO_ANI_DIE									81
+#define MARIO_ANI_FLY_LOW_RIGHT							81
+#define MARIO_ANI_FLY_LOW_LEFT							82
+
+#define MARIO_ANI_FLY_HIGH_RIGHT						83
+#define MARIO_ANI_FLY_HIGH_LEFT							84
+
+#define MARIO_ANI_BIG_SIT_RIGHT							85
+#define MARIO_ANI_BIG_SIT_LEFT							86
+#define MARIO_ANI_TAIL_SIT_RIGHT						87
+#define MARIO_ANI_TAIL_SIT_LEFT							88
+#define MARIO_ANI_FIRE_SIT_RIGHT						89
+#define MARIO_ANI_FIRE_SIT_LEFT							90
+
+#define MARIO_ANI_DIE									91
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -133,12 +152,18 @@
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 27
+#define MARIO_BIG_SIT_BBOX_WIDTH	14
+#define MARIO_BIG_SIT_BBOX_HEIGHT	18
 
 #define MARIO_TAIL_BBOX_WIDTH 21
 #define MARIO_TAIL_BBOX_HEIGHT 28
+#define MARIO_TAIL_SIT_BBOX_WIDTH	22
+#define MARIO_TAIL_SIT_BBOX_HEIGHT	18
 
 #define MARIO_FIRE_BBOX_WIDTH 14
 #define MARIO_FIRE_BBOX_HEIGHT 27
+#define MARIO_FIRE_SIT_BBOX_WIDTH	14
+#define MARIO_FIRE_SIT_BBOX_HEIGHT	18
 
 #define MARIO_SMALL_BBOX_WIDTH  12
 #define MARIO_SMALL_BBOX_HEIGHT 15
@@ -157,6 +182,7 @@ class CMario : public CGameObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
+	bool is_high;
 	int run_state;
 	int run_fast_state;
 	int jump_state;
@@ -164,20 +190,28 @@ class CMario : public CGameObject
 	int turn_state;
 	int fight_state;
 	int fall_state;
+	int fly_low_state;
+	int fly_high_state;
+	int sit_state;
+
 	int take_tortoistate_state;
 
 	CGameObject* tortoiseshell;
 	DWORD jump_start;
 	DWORD kick_start;
 	DWORD fight_start;
+	DWORD fly_low_start;
+	DWORD fly_high_start;
 	DWORD running_time_right;
 	DWORD running_time_left;
 	DWORD walking_time_right;
 	DWORD walking_time_left;
 
+
 	float speech_Jump;
 
 public:
+	float pcy;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL/*, vector<LPGAMEOBJECT>* quesObjects = NULL*/);
 	virtual void Render();
@@ -191,6 +225,10 @@ public:
 	int GetKickState() { return kick_state; }
 	int GetFightState() { return fight_state; }
 	int GetRunState() { return run_state; }
+	int GetFlyLowState() { return fly_low_state; }
+	int GetFlyHighState() { return fly_high_state; }
+	int GetSitState() { return sit_state; }
+	bool GetIsHigh() { return is_high; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
 	DWORD GetWalkLeftTime() { return walking_time_left; }
@@ -199,6 +237,8 @@ public:
 	DWORD GetJumpStart() { return jump_start; }
 	DWORD GetKickStart() { return kick_start; }
 	DWORD GetFightStart() { return fight_start; }
+	DWORD GetFlyLowStart() { return fly_low_start; }
+	DWORD GetFlyHighStart() { return fly_high_start; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
@@ -206,16 +246,21 @@ public:
 	void SetKickStart(int t) { kick_start = t; }
 	void SetJumpState(int j) { jump_state = j; }
 	void SetFightState(int f) { fight_state = f; }
+	void SetSitState(int s) { sit_state = s; }
 	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
 	void SetRunningRightTime(DWORD t) { running_time_right = t; }
 	void SetRunningLeftTime(DWORD t) { running_time_left = t; }
 	void SetSpeechJump() { speech_Jump += 0.0025; }
 	void SetFightStart(DWORD t) { fight_start = t; }
+	void SetFlyLowStart(DWORD t) { fly_low_start = t; }
+	void SetFlyHighStart(DWORD t) { fly_high_start = t; }
 
 
 	int GetCurrentWidthMario();
 	int GetCurrentHeightMario();
+	double GetCenterWidthMario();
+	double GetCenterHeightMario();
 
 	void Reset();
 
