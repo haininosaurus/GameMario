@@ -16,6 +16,7 @@
 #include "TransObject.h"
 #include "BackgroundObject.h"
 #include "CloudBrick.h"
+#include "FireBullet.h"
 
 
 

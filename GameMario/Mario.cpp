@@ -13,6 +13,7 @@
 #include "TransObject.h"
 #include "Road.h"
 #include "Pipe.h"
+#include "FireBullet.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -28,6 +29,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	pcy = 0;
 	take_tortoistate_state = 0;
 	tortoiseshell = NULL;
+	for (int i = 0; i < 2; i++)
+		fire_bullet[i] = NULL;
 
 	SetState(MARIO_STATE_IDLE);
 
@@ -186,6 +189,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	coEvents.clear();
 	float t;
 
+	//DebugOut(L"coobject: %d\n", coObjects->size());
+	//if(dynamic_cast<CFireBullet* >())
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
@@ -240,7 +245,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
+			
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -272,7 +277,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			} // if Goomba
-
+			//if (dynamic_cast<CFireBullet*>(e->obj))
+			//{
+			//	CFireBullet* fireBullet = dynamic_cast<CFireBullet*>(e->obj);
+			//	CreateFireBullet(fireBullet);
+			//	
+			//}
 			if (dynamic_cast<CKoopa*>(e->obj)) // if e->obj is Koopa
 			{
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
@@ -473,6 +483,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (GetTickCount() - fight_start < 300)
 		SetState(MARIO_STATE_FIGHT);
+	if (GetTickCount() - shoot_fire_bullet_start < 200)
+	{
+		if(nx > 0) 	SetState(MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT);
+		else SetState(MARIO_STATE_SHOOT_FIRE_BULLET_LEFT);
+	}
+
+	else
+	{
+		shoot_fire_bullet_state = 0;
+		CreateFireBullet(NULL);
+	}
 
 	if (state == MARIO_STATE_RUNNING_RIGHT && running_time_right == -1) running_time_right = GetTickCount();
 	else if (state == MARIO_STATE_RUNNING_LEFT && running_time_left == -1) running_time_left = GetTickCount();
@@ -512,6 +533,49 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
+
+void CMario::CreateFireBullet(CGameObject* fireBullet)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (fire_bullet[i] == NULL)
+		{
+			fire_bullet[i] = fireBullet;
+			break;
+		}
+		else if (fire_bullet[i]->GetState() == FIREBULLET_DESTROY_STATE)
+		{
+			fire_bullet[i]->SetState(FIREBULLET_TRANSPARENT_STATE);
+		}
+	}
+}
+
+void CMario::ShootFireBullet()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (fire_bullet[i]->GetState() != FIREBULLET_SHOOTED_RIGHT_STATE &&
+			fire_bullet[i]->GetState() != FIREBULLET_SHOOTED_LEFT_STATE)
+		{
+			if (nx > 0)
+			{
+				fire_bullet[i]->SetPosition(x + 14, y);
+				fire_bullet[i]->SetState(FIREBULLET_SHOOTED_RIGHT_STATE);
+			}
+
+			else 
+			{
+				fire_bullet[i]->SetPosition(x, y);
+				fire_bullet[i]->SetState(FIREBULLET_SHOOTED_LEFT_STATE);
+			}
+
+
+			break;
+		}
+	}
+
+}
+
 
 void CMario::Render()
 {
@@ -669,7 +733,8 @@ void CMario::Render()
 			if (vx == 0)
 			{
 				if (nx > 0) {
-					if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
+					if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_RIGHT;
+					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_RIGHT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
@@ -677,7 +742,8 @@ void CMario::Render()
 					else ani = MARIO_ANI_FIRE_IDLE_RIGHT;
 				}
 				else {
-					if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
+					if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_LEFT;
+					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_LEFT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
@@ -686,7 +752,8 @@ void CMario::Render()
 				}
 			}
 			else if (vx > 0) {
-				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
+				if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_RIGHT;
+				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
 				//else if (fall_state) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
@@ -696,7 +763,8 @@ void CMario::Render()
 				else ani = MARIO_ANI_FIRE_WALKING_RIGHT;
 			}
 			else {
-				if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
+				if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_LEFT;
+				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
 				//else if (fall_state) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
@@ -926,6 +994,14 @@ void CMario::SetState(int state)
 		
 		sit_state = 1;
 		
+		break;
+	case MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT:
+		nx = 1;
+		shoot_fire_bullet_state = 1;
+		break;
+	case MARIO_STATE_SHOOT_FIRE_BULLET_LEFT:
+		nx = 0;
+		shoot_fire_bullet_state = 1;
 		break;
 	}
 	

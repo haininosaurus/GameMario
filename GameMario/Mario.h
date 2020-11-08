@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Collision.h"
 
+
 #define MARIO_WALKING_SPEED		0.15f 
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -34,6 +35,8 @@
 #define MARIO_STATE_FLYING_HIGH_RIGHT					920
 #define MARIO_STATE_FLYING_HIGH_LEFT					930
 #define MARIO_STATE_SIT									940
+#define MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT				950
+#define MARIO_STATE_SHOOT_FIRE_BULLET_LEFT				960
 
 
 
@@ -143,7 +146,10 @@
 #define MARIO_ANI_FIRE_SIT_RIGHT						89
 #define MARIO_ANI_FIRE_SIT_LEFT							90
 
-#define MARIO_ANI_DIE									91
+#define MARIO_ANI_SHOOT_FIRE_BULLET_RIGHT				91
+#define MARIO_ANI_SHOOT_FIRE_BULLET_LEFT				92
+
+#define MARIO_ANI_DIE									93
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -193,12 +199,15 @@ class CMario : public CGameObject
 	int fly_low_state;
 	int fly_high_state;
 	int sit_state;
+	int shoot_fire_bullet_state;
 
 	int take_tortoistate_state;
 
 	CGameObject* tortoiseshell;
+	CGameObject* fire_bullet[2];
 	DWORD jump_start;
 	DWORD kick_start;
+	DWORD shoot_fire_bullet_start;
 	DWORD fight_start;
 	DWORD fly_low_start;
 	DWORD fly_high_start;
@@ -213,7 +222,7 @@ class CMario : public CGameObject
 public:
 	float pcy;
 	CMario(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL/*, vector<LPGAMEOBJECT>* quesObjects = NULL*/);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
 	void SetState(int state);
@@ -228,6 +237,7 @@ public:
 	int GetFlyLowState() { return fly_low_state; }
 	int GetFlyHighState() { return fly_high_state; }
 	int GetSitState() { return sit_state; }
+	int GetShootFireBulletState() { return shoot_fire_bullet_state; }
 	bool GetIsHigh() { return is_high; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
@@ -239,6 +249,7 @@ public:
 	DWORD GetFightStart() { return fight_start; }
 	DWORD GetFlyLowStart() { return fly_low_start; }
 	DWORD GetFlyHighStart() { return fly_high_start; }
+	DWORD GetShootFireBulletStart() { return shoot_fire_bullet_start; }
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
@@ -247,15 +258,19 @@ public:
 	void SetJumpState(int j) { jump_state = j; }
 	void SetFightState(int f) { fight_state = f; }
 	void SetSitState(int s) { sit_state = s; }
+	void SetShootFireBulletState(int s) { shoot_fire_bullet_state = s; }
 	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
 	void SetRunningRightTime(DWORD t) { running_time_right = t; }
 	void SetRunningLeftTime(DWORD t) { running_time_left = t; }
+	void SetShootFireBulletStart(DWORD t) { shoot_fire_bullet_start = t; }
 	void SetSpeechJump() { speech_Jump += 0.0025; }
 	void SetFightStart(DWORD t) { fight_start = t; }
 	void SetFlyLowStart(DWORD t) { fly_low_start = t; }
 	void SetFlyHighStart(DWORD t) { fly_high_start = t; }
 
+	void CreateFireBullet(CGameObject* fireBullet);
+	void ShootFireBullet();
 
 	int GetCurrentWidthMario();
 	int GetCurrentHeightMario();
