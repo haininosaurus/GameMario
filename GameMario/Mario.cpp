@@ -27,6 +27,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	run_fast_state = 0;
 	fall_state = 0;
 	pcy = 0;
+	walking_right_speech = 0;
+	walking_right_speech = 0;
 	take_tortoistate_state = 0;
 	tortoiseshell = NULL;
 	for (int i = 0; i < 2; i++)
@@ -179,18 +181,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
-	//vector<LPCOLLISIONEVENT> coQuesEvents;
-	//vector<LPCOLLISIONEVENT> coQuesEventsResult;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
-
 	coEvents.clear();
 	float t;
 
-	//DebugOut(L"coobject: %d\n", coObjects->size());
-	//if(dynamic_cast<CFireBullet* >())
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
@@ -212,12 +209,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		if (rdx != 0 && rdx != dx)
-			x += nx * abs(rdx);
+		//if (rdx != 0 && rdx != dx)
+		//	x += nx * abs(rdx);
 
 
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		x += min_tx * dx + nx * 0.2f;
+		y += min_ty * dy + ny * 0.2f;
+
 
 		if (nx != 0) vx = 0;
 		if (ny != 0)
@@ -276,13 +274,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-			} // if Goomba
-			//if (dynamic_cast<CFireBullet*>(e->obj))
-			//{
-			//	CFireBullet* fireBullet = dynamic_cast<CFireBullet*>(e->obj);
-			//	CreateFireBullet(fireBullet);
-			//	
-			//}
+			} 
+
 			if (dynamic_cast<CKoopa*>(e->obj)) // if e->obj is Koopa
 			{
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
@@ -512,23 +505,70 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (fly_high_state && y < 28) is_high = 1;
 	if (y >= 28) is_high = 0;
-	//if (nx > 0)
-	//{
-	//	if (GetTickCount() - GetWalkRightTime() < 1500)
-	//	{
-	//		SetState(MARIO_STATE_WALKING_RIGHT);
-	//		DebugOut(L"vx right: %f\n", vx);
-	//	}
-	//}
-	//else
-	//{
-	//	if (GetTickCount() - GetWalkLeftTime() < 1500)
-	//	{
-	//		SetState(MARIO_STATE_WALKING_LEFT);
-	//		DebugOut(L"vx left: %f\n", vx);
-	//	}
-	//}
 
+	if (turn_state == 0 && run_state == 0)
+	{
+		if (nx > 0)
+		{
+			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			{
+				SetState(MARIO_STATE_WALKING_RIGHT);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+		else
+		{
+			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			{
+				SetState(MARIO_STATE_WALKING_LEFT);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+	}
+	else if (!turn_state && !run_fast_state)
+	{
+		if (nx > 0)
+		{
+			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			{
+				SetState(MARIO_STATE_RUNNING_RIGHT);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+		else
+		{
+			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			{
+				SetState(MARIO_STATE_RUNNING_LEFT);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+	}
+	else if (!turn_state && run_state)
+	{
+		if (nx > 0)
+		{
+			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			{
+				SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+		else
+		{
+			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			{
+				SetState(MARIO_STATE_RUNNING_LEFT_FAST);
+				slide_state = 1;
+			}
+			else slide_state = 0;
+		}
+	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -633,6 +673,7 @@ void CMario::Render()
 		}
 		else if (level == MARIO_LEVEL_SMALL)
 		{
+			DebugOut(L"run state: %d\n", run_state);
 			if (vx == 0)
 			{
 				if (nx > 0) {
@@ -801,7 +842,7 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = MARIO_WALKING_SPEED;
+		vx = walking_right_speech;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
@@ -816,11 +857,10 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = -MARIO_WALKING_SPEED;
+		vx = -walking_left_speech;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		//fly_low_state = 0;
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		jump_state = 1;
 		kick_state = 0;
@@ -830,11 +870,20 @@ void CMario::SetState(int state)
 		running_time_right = -1;
 		running_time_left = -1;
 		vy = -MARIO_JUMP_SPEED_Y - speech_Jump;
-		//DebugOut(L"[INFO] Vy %d\n", vy);
+		if (slide_state)
+		{
+			if (nx > 0) vx = walking_right_speech;
+			else vx = -walking_left_speech;
+		}
 		break;
 	case MARIO_STATE_IDLE:
 		fly_low_state = 0;
-		vx = 0;
+		if (slide_state)
+		{
+			if (nx > 0) vx = walking_right_speech;
+			else vx = -walking_left_speech;
+		}
+		else vx = 0;
 		turn_state = 0;
 		speech_Jump = 0;
 		kick_state = 0;
@@ -927,7 +976,7 @@ void CMario::SetState(int state)
 		turn_state = 1;
 		running_time_right = -1;
 		running_time_left = -1;
-		if (run_state == 0)	vx = -MARIO_WALKING_SPEED;
+		if (run_state == 0)	vx = -walking_left_speech;
 		else vx = -MARIO_RUNNING_SPEED;
 		break;
 	case MARIO_STATE_TURN_RIGHT:
@@ -935,7 +984,7 @@ void CMario::SetState(int state)
 		turn_state = 1;
 		running_time_right = -1;
 		running_time_left = -1;
-		if (run_state == 0)	vx = MARIO_WALKING_SPEED;
+		if (run_state == 0)	vx = walking_right_speech;
 		else vx = MARIO_RUNNING_SPEED;
 		break;
 	case MARIO_STATE_FIGHT:
@@ -952,7 +1001,7 @@ void CMario::SetState(int state)
 		speech_Jump = 0;
 		kick_state = 0;
 		fight_state = 0;
-		vx = MARIO_RUNNING_SPEED;
+		vx = MARIO_RUNNING_FAST_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_LEFT_FAST:
 		fly_high_state = 0;
@@ -963,7 +1012,7 @@ void CMario::SetState(int state)
 		speech_Jump = 0;
 		kick_state = 0;
 		fight_state = 0;
-		vx = -MARIO_RUNNING_SPEED;
+		vx = -MARIO_RUNNING_FAST_SPEED;
 		break;
 	case MARIO_STATE_FLYING_LOW_RIGHT:
 		nx = 1;

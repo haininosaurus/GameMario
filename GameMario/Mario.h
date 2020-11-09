@@ -3,15 +3,15 @@
 #include "Collision.h"
 
 
-#define MARIO_WALKING_SPEED		0.15f 
-#define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_WALKING_SPEED								0.1f 
+#define MARIO_RUNNING_SPEED								0.15f
+#define MARIO_RUNNING_FAST_SPEED						0.2f
 
-//0.1f
-#define MARIO_JUMP_SPEED_Y		0.2f
-#define MARIO_FLYING_SPEED_Y	0.05f
-#define MARIO_JUMP_DEFLECT_SPEED 0.3f
-#define MARIO_GRAVITY			0.002f
-#define MARIO_DIE_DEFLECT_SPEED	 0.5f
+#define MARIO_JUMP_SPEED_Y								0.15f
+#define MARIO_FLYING_SPEED_Y							0.03f
+#define MARIO_JUMP_DEFLECT_SPEED						0.3f
+#define MARIO_GRAVITY									0.001f
+#define MARIO_DIE_DEFLECT_SPEED							0.5f
 
 #define MARIO_STATE_IDLE								0
 #define MARIO_STATE_WALKING_RIGHT						100
@@ -199,7 +199,12 @@ class CMario : public CGameObject
 	int fly_low_state;
 	int fly_high_state;
 	int sit_state;
+	int slide_state;
 	int shoot_fire_bullet_state;
+
+	
+	float walking_right_speech;
+	float walking_left_speech;
 
 	int take_tortoistate_state;
 
@@ -216,6 +221,9 @@ class CMario : public CGameObject
 	DWORD walking_time_right;
 	DWORD walking_time_left;
 
+	DWORD sliding_time_right;
+	DWORD sliding_time_left;
+
 
 	float speech_Jump;
 
@@ -230,7 +238,7 @@ public:
 
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
-	int GetStateTakeTortoiseshell(){ return take_tortoistate_state; }
+	int GetStateTakeTortoiseshell() { return take_tortoistate_state; }
 	int GetKickState() { return kick_state; }
 	int GetFightState() { return fight_state; }
 	int GetRunState() { return run_state; }
@@ -238,6 +246,9 @@ public:
 	int GetFlyHighState() { return fly_high_state; }
 	int GetSitState() { return sit_state; }
 	int GetShootFireBulletState() { return shoot_fire_bullet_state; }
+	int GetSlideState(){return slide_state;}
+	float GetWalkingRightSpeech() { return walking_right_speech; }
+	float GetWalkingLeftSpeech() { return walking_left_speech; }
 	bool GetIsHigh() { return is_high; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
@@ -263,6 +274,17 @@ public:
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }
 	void SetRunningRightTime(DWORD t) { running_time_right = t; }
 	void SetRunningLeftTime(DWORD t) { running_time_left = t; }
+	void SetWalkingRightSpeech() {walking_right_speech += 0.005f;}
+	void ResetWalkingRightSpeech() { walking_right_speech = 0; }
+	void ResetWalkingLeftSpeech() { walking_left_speech = 0; }
+	void SetWalkingLeftSpeech() { walking_left_speech += 0.005f;}
+	void SetSlidingTimeRight() { sliding_time_right += 20; }
+	void SetSlidingTimeLeft() { sliding_time_left += 20; }
+	DWORD GetSlidingTimeRight() { return sliding_time_right; }
+	DWORD GetSlidingTimeLeft() { return sliding_time_left; }
+	void ResetSlidingTimeRight() { sliding_time_right = 0; }
+	void ResetSlidingTimeLeft() { sliding_time_left = 0; }
+
 	void SetShootFireBulletStart(DWORD t) { shoot_fire_bullet_start = t; }
 	void SetSpeechJump() { speech_Jump += 0.0025; }
 	void SetFightStart(DWORD t) { fight_start = t; }

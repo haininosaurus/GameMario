@@ -160,7 +160,6 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			}
 
-
 		}
 
 
