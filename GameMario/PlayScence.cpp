@@ -336,50 +336,19 @@ void CPlayScene::Update(DWORD dt)
 	if (cx < 0)	player->SetPosition(0, cy);
 	if (cx > 2816) player->SetPosition(2816, cy);
 
-	else if (cx > game->GetScreenWidth()/2) {
-		if (cx >= 2672) CGame::GetInstance()->SetCamPos(2528.0f, -10.0f);
-		else {
-			cy = player->GetCenterHeightMario();
-			if (cy < 28 && player->GetIsHigh())
-			{
-				if (player->GetState() == MARIO_STATE_FLYING_HIGH_RIGHT && player->vy < 0
-					|| player->GetState() == MARIO_STATE_FLYING_HIGH_LEFT && player->vy < 0)
-				{
-							cx -= game->GetScreenWidth() / 2;
-							cy -= game->GetScreenHeight() / 10 + 20.0f;
-							player->pcy = cy;
-							DebugOut(L"cy: %f\n", cy);
-							DebugOut(L"pcy: %f\n", player->pcy);
-							CGame::GetInstance()->SetCamPos(round(cx), round(cy));
-				}
-				else
-				{
-					DebugOut(L"da vao\n");
-					DebugOut(L"cy: %f\n", cy);
-					DebugOut(L"pcy: %f\n", player->pcy);
-					if (abs(player->y) < abs(player->pcy/ 2))
-					{
-						cx -= game->GetScreenWidth() / 2;
-						cy -= game->GetScreenHeight() / 2;
-						//player->pcy = cy;
-						CGame::GetInstance()->SetCamPos(round(cx), round(cy));
-					}
-					else
-					{
+	else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth()/2) {
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
+		CGame::GetInstance()->SetCamPos(round(cx), round(cy) - 10.0f);
 
-					}
-				}
-			}
+	}
 
-			else
-			{
-				cx -= game->GetScreenWidth() / 2;
-				cy -= game->GetScreenHeight() / 2;
-				player->pcy = cy;
-				CGame::GetInstance()->SetCamPos(round(cx), -10.0f);
-			}
-
-		}
+	else if (cx > game->GetScreenWidth() / 2)
+	{
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
+		CGame::GetInstance()->SetCamPos(round(cx), -10.0f);
+		
 	}
 	else {
 		CGame::GetInstance()->SetCamPos(0.0f, -10.0f);
@@ -437,7 +406,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				else mario->SetState(MARIO_STATE_FLYING_HIGH_LEFT);
 			}
 
-			else if (mario->vy != 0)
+			else if (mario->vy != 0 && mario->GetJumpState())
 			{
 				mario->SetFlyLowStart(GetTickCount());
 				if (mario->nx > 0)
@@ -445,11 +414,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				else mario->SetState(MARIO_STATE_FLYING_LOW_LEFT);
 			}
 
-		}
-		
+		}		
 		break;
 	case DIK_Z:
-		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->GetFightState() == 0)
+		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->GetFightState() == 0 &&
+			GetTickCount() - mario->GetFightStart() > 500)
 		{
 			mario->SetFightStart(GetTickCount());
 			mario->SetState(MARIO_STATE_FIGHT);
@@ -526,70 +495,69 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
-
-	//if key right is down, disable key left and key down
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
+	//Mario sit
+	if (game->IsKeyDown(DIK_DOWN))
 	{
-		//mario doesn't kick
-		if (GetTickCount() - mario->GetKickStart() > 180)
+		if (mario->GetLevel() != MARIO_LEVEL_SMALL &&
+			mario->GetState() == MARIO_STATE_IDLE)
 		{
-			mario->SetWalkRightTime(GetTickCount());
-			//mario doesn't turn left
-			if (GetTickCount() - mario->GetWalkLeftTime() > 180)
-			{
-				//mario runs right or runs fast right
-				if (game->IsKeyDown(DIK_Z))
-				{
-					//mario run fast right
-					if (GetTickCount() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
-						mario->SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
-					else mario->SetState(MARIO_STATE_RUNNING_RIGHT); 					//mario run right
-				}
-				else //mario walks right
-				{
-					mario->ResetWalkingLeftSpeech();
-					if(mario->GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
-						mario->SetWalkingRightSpeech();
-					mario->SetState(MARIO_STATE_WALKING_RIGHT);
-				}
-				mario->ResetSlidingTimeLeft();
-				if (mario->GetSlidingTimeRight() <= 500)
-					mario->SetSlidingTimeRight();
-			}
-			else mario->SetState(MARIO_STATE_TURN_LEFT); 			//mario turns left
+			mario->SetState(MARIO_STATE_SIT);
+			
 		}
-		else mario->SetState(MARIO_STATE_KICK);						//mario kicks right
+	}
+	//if key right is down, disable key left and key down
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
+	{
+		mario->SetWalkRightTime(GetTickCount());
+		//mario doesn't turn left
+		if (GetTickCount() - mario->GetWalkLeftTime() > 200)
+		{
+			//mario runs right or runs fast right
+			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
+			{
+				//mario run fast right
+				if (GetTickCount() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
+					mario->SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
+				else mario->SetState(MARIO_STATE_RUNNING_RIGHT); 					//mario run right
+			}
+			else //mario walks right
+			{
+				mario->ResetWalkingLeftSpeech();
+				if (mario->GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
+					mario->SetWalkingRightSpeech();
+				mario->SetState(MARIO_STATE_WALKING_RIGHT);
+			}
+			mario->ResetSlidingTimeLeft();
+			if (mario->GetSlidingTimeRight() <= 500)
+				mario->SetSlidingTimeRight();
+		}
+		else mario->SetState(MARIO_STATE_TURN_LEFT); 			//mario turns left
 
 	}
 	//if key left is down, disable key right and key down
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && !game->IsKeyDown(DIK_RIGHT))
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT))
 	{
-		if (GetTickCount() - mario->GetKickStart() > 180)
+		mario->SetWalkLeftTime(GetTickCount());
+		if (GetTickCount() - mario->GetWalkRightTime() > 200)
 		{
-			mario->SetWalkLeftTime(GetTickCount());
-			if (GetTickCount() - mario->GetWalkRightTime() > 180)
+			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
-				if (game->IsKeyDown(DIK_Z))
-				{
-					if (GetTickCount() - mario->GetRunningLeftTime() > 1000 && mario->GetRunningLeftTime() != -1)
-						mario->SetState(MARIO_STATE_RUNNING_LEFT_FAST);
-					else mario->SetState(MARIO_STATE_RUNNING_LEFT);
-				}
-				else
-				{
-					mario->ResetWalkingRightSpeech();
-					if (mario->GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
-						mario->SetWalkingLeftSpeech();
-					mario->SetState(MARIO_STATE_WALKING_LEFT);
-				}
-				mario->ResetSlidingTimeRight();
-				if (mario->GetSlidingTimeLeft() <= 500)
-					mario->SetSlidingTimeLeft();
+				if (GetTickCount() - mario->GetRunningLeftTime() > 1000 && mario->GetRunningLeftTime() != -1)
+					mario->SetState(MARIO_STATE_RUNNING_LEFT_FAST);
+				else mario->SetState(MARIO_STATE_RUNNING_LEFT);
 			}
-			else mario->SetState(MARIO_STATE_TURN_RIGHT);
+			else
+			{
+				mario->ResetWalkingRightSpeech();
+				if (mario->GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
+					mario->SetWalkingLeftSpeech();
+				mario->SetState(MARIO_STATE_WALKING_LEFT);
+			}
+			mario->ResetSlidingTimeRight();
+			if (mario->GetSlidingTimeLeft() <= 500)
+				mario->SetSlidingTimeLeft();
 		}
-
-		else mario->SetState(MARIO_STATE_KICK);
+		else mario->SetState(MARIO_STATE_TURN_RIGHT);
 	}
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
@@ -602,14 +570,4 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 			if (mario->GetJumpState() != -1) mario->SetState(MARIO_STATE_JUMP);
 		}
 	}
-
-	//Mario sit
-	if (game->IsKeyDown(DIK_DOWN))
-	{
-		if (mario->GetLevel() != MARIO_LEVEL_SMALL)
-		{
-			mario->SetState(MARIO_STATE_SIT);
-		}
-	}
-
 }

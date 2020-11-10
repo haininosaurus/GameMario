@@ -249,6 +249,7 @@ public:
 	int GetSlideState(){return slide_state;}
 	float GetWalkingRightSpeech() { return walking_right_speech; }
 	float GetWalkingLeftSpeech() { return walking_left_speech; }
+	int GetFallState() { return fall_state; }
 	bool GetIsHigh() { return is_high; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
