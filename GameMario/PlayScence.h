@@ -17,6 +17,8 @@
 #include "BackgroundObject.h"
 #include "CloudBrick.h"
 #include "FireBullet.h"
+#include "FirePiranhaPlant.h"
+#include "FirePlantBullet.h"
 
 
 
@@ -24,9 +26,10 @@ class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
+	CFirePiranhaPlant* firePiranhaPlant[1];
+	CFirePlantBullet* firePlantBullet[1];
 
 	vector<LPGAMEOBJECT> objects;
-	vector<LPGAMEOBJECT> questionBlocks;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

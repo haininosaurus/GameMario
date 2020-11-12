@@ -22,34 +22,36 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	See scene1.txt, scene2.txt for detail format specification
 */
 
-#define SCENE_SECTION_UNKNOWN -1
-#define SCENE_SECTION_TEXTURES 2
-#define SCENE_SECTION_SPRITES 3
-#define SCENE_SECTION_ANIMATIONS 4
-#define SCENE_SECTION_ANIMATION_SETS	5
-#define SCENE_SECTION_OBJECTS	6
-#define SCENE_SECTION_QUESTION_OBJECTS	7
+#define SCENE_SECTION_UNKNOWN				-1
+#define SCENE_SECTION_TEXTURES				2
+#define SCENE_SECTION_SPRITES				3
+#define SCENE_SECTION_ANIMATIONS			4
+#define SCENE_SECTION_ANIMATION_SETS		5
+#define SCENE_SECTION_OBJECTS				6
+#define SCENE_SECTION_QUESTION_OBJECTS		7
 
-#define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_BRICK	3
-#define OBJECT_TYPE_ROAD	2
-#define OBJECT_TYPE_QUESTION_BLOCK	4
-#define OBJECT_TYPE_BACKGROUND 6
-#define OBJECT_TYPE_COLOR_BRICK 5
-#define OBJECT_TYPE_PIPE 8
-#define OBJECT_TYPE_WOOD_BLOCK 7
-#define OBJECT_TYPE_GOOMBA 1
-#define OBJECT_TYPE_COLOR_BRICK_TOP 9
-#define OBJECT_TYPE_KOOPA 10
-#define OBJECT_TYPE_COIN 11
-#define OBJECT_TYPE_TRANS 12
-#define OBJECT_TYPE_HEADROAD 13
-#define OBJECT_TYPE_CLOUD_BRICK 14
-#define OBJECT_TYPE_MARIO_FIRE_BULLET 15
+#define OBJECT_TYPE_MARIO					0
+#define OBJECT_TYPE_BRICK					3
+#define OBJECT_TYPE_ROAD					2
+#define OBJECT_TYPE_QUESTION_BLOCK			4
+#define OBJECT_TYPE_BACKGROUND				6
+#define OBJECT_TYPE_COLOR_BRICK				5
+#define OBJECT_TYPE_PIPE					8
+#define OBJECT_TYPE_WOOD_BLOCK				7
+#define OBJECT_TYPE_GOOMBA					1
+#define OBJECT_TYPE_COLOR_BRICK_TOP			9
+#define OBJECT_TYPE_KOOPA					10
+#define OBJECT_TYPE_COIN					11
+#define OBJECT_TYPE_TRANS					12
+#define OBJECT_TYPE_HEADROAD				13
+#define OBJECT_TYPE_CLOUD_BRICK				14
+#define OBJECT_TYPE_MARIO_FIRE_BULLET		15
+#define OBJECT_TYPE_FIREPIRANHAPLANT		16
+#define OBJECT_TYPE_FIRE_PLANT_BULLET		17
 
-#define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_PORTAL					50
 
-#define MAX_SCENE_LINE 1024
+#define MAX_SCENE_LINE						1024
 
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -183,13 +185,33 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
-	case OBJECT_TYPE_MARIO_FIRE_BULLET:
-		
+	case OBJECT_TYPE_MARIO_FIRE_BULLET:		
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
 		break;
 
-
+	case OBJECT_TYPE_FIREPIRANHAPLANT:
+		obj = new CFirePiranhaPlant(player);
+		for (int i = 0; i < 2; i++)
+		{
+			if (firePiranhaPlant[i] == NULL) {
+				firePiranhaPlant[i] = (CFirePiranhaPlant*)obj;
+				break;
+			}
+		}
+		break;
+	case OBJECT_TYPE_FIRE_PLANT_BULLET:
+		DebugOut(L"da tao bullet\n");
+		obj = new CFirePlantBullet();
+		for (int i = 0; i < 1; i++)
+		{
+			if (firePlantBullet[i] == NULL) {
+				firePlantBullet[i] = (CFirePlantBullet*)obj;
+				firePiranhaPlant[i]->CreateFirePlantBullet(firePlantBullet[i]);
+				break;
+			}
+		}
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -351,7 +373,12 @@ void CPlayScene::Update(DWORD dt)
 		
 	}
 	else {
-		CGame::GetInstance()->SetCamPos(0.0f, -10.0f);
+		if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
+		{
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(0.0f, round(cy) - 10.0f);
+		}
+		else CGame::GetInstance()->SetCamPos(0.0f, -10.0f);
 	}
 }
 
