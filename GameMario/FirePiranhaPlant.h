@@ -56,7 +56,7 @@ class CFirePiranhaPlant : public CGameObject
 		float& rdy);
 	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
-
+	
 public:
 	void CreateFirePlantBullet(CGameObject* fireplantbullet);
 	void ShootFirePlantBullet();

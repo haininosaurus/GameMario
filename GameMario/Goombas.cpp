@@ -6,6 +6,11 @@
 #include "TransObject.h"
 #include "Game.h"
 #include "Koopas.h"
+#include "FireBullet.h"
+#include "Mario.h"
+#include "Utils.h"
+#include "QuestionBlock.h"
+#include "ColorBrick.h"
 CGoomba::CGoomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
@@ -88,8 +93,6 @@ void CGoomba::FilterCollision(
 {
 	min_tx = 1.0f;
 	min_ty = 1.0f;
-	int min_ix = -1;
-	int min_iy = -1;
 
 	nx = 0.0f;
 	ny = 0.0f;
@@ -98,29 +101,66 @@ void CGoomba::FilterCollision(
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
-
-		if (dynamic_cast<CRoad*>(c->obj) || dynamic_cast<CPipe*>(c->obj)
-			|| dynamic_cast<CKoopa*>(c->obj)) {
-			if (c->t < min_tx && c->nx != 0) {
-				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
-			}
-
-			if (c->t < min_ty && c->ny != 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-			}
-		}
-		else if (dynamic_cast<CHeadRoad*>(c->obj))
+		if (dynamic_cast<CMario*>(c->obj))
 		{
-			if (c->t < min_tx && c->nx != 0) {
-				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+			DebugOut(L"collision with mario\n");
+			if (c->nx != 0)
+			{
+				if (c->t < 1.0f)
+				{
+					min_tx = c->t; nx = c->nx; rdx = c->dx;
+					coEventsResult.push_back(coEvents[i]);
+				}
+			}
+
+			if (c->ny != 0)
+			{
+				if (c->t < 1.0f)
+				{
+					min_ty = c->t; ny = c->ny; rdy = c->dy;
+					coEventsResult.push_back(coEvents[i]);
+				}
 			}
 		}
+		if (dynamic_cast<CRoad*>(c->obj) || dynamic_cast<CPipe*>(c->obj)
+			|| dynamic_cast<CKoopa*>(c->obj) || dynamic_cast<CFireBullet*>(c->obj)
+			|| dynamic_cast<CGoomba*>(c->obj)
+			|| dynamic_cast<CQuestionBlock*>(c->obj)) {
+			if (c->nx != 0)
+			{
+				if (c->t < 1.0f)
+				{
+					min_tx = c->t; nx = c->nx; rdx = c->dx;
+					coEventsResult.push_back(coEvents[i]);
+				}
+			}
+
+			if (c->ny != 0)
+			{
+				if (c->t < 1.0f)
+				{
+					min_ty = c->t; ny = c->ny; rdy = c->dy;
+					coEventsResult.push_back(coEvents[i]);
+				}
+			}
+		}
+		if (dynamic_cast<CHeadRoad*>(c->obj))
+		{
+			if (c->nx != 0) {
+				if (c->t < 1.0f)
+				{
+					min_tx = c->t; nx = c->nx; rdx = c->dx;
+					coEventsResult.push_back(coEvents[i]);
+				}
+			}
+		}
+
 	}
-	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
-	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
+	//if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
+	//if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
+void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
@@ -156,7 +196,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEO
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
 
-				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj)) // if e->obj is Goomba 
+				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj))
 				{
 					if (e->nx > 0)
 					{
@@ -178,20 +218,41 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEO
 					}
 
 				}
-				//if (dynamic_cast<CRoad*>(e->obj)) // if e->obj is Goomba 
-				//{
-				//	//CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+				if (dynamic_cast<CFireBullet*>(e->obj)) 
+				{
+					CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
 
-				//	// jump on top >> kill Goomba and deflect a bit 
-				//	if (e->nx > 0)
-				//	{
-				//		vx = +GOOMBA_WALKING_SPEED;
-				//	}
-				//	if (e->nx < 0)
-				//	{
-				//		vx = -GOOMBA_WALKING_SPEED;
-				//	}
-				//}
+					SetState(GOOMBA_STATE_THROWN);
+					bullet->SetState(FIREBULLET_DESTROY_STATE);
+				}
+
+				if (dynamic_cast<CGoomba*>(e->obj))
+				{
+					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+					if (e->nx > 0)
+					{
+						vx = GOOMBA_WALKING_SPEED;
+						goomba->vx = -GOOMBA_WALKING_SPEED;
+					}
+					if (e->nx < 0)
+					{
+						vx = -GOOMBA_WALKING_SPEED;
+						goomba->vx = GOOMBA_WALKING_SPEED;
+					}
+				}
+				if (dynamic_cast<CMario*>(e->obj))
+				{
+					CMario* mario = dynamic_cast<CMario*>(e->obj);
+					if (e->nx > 0)
+					{
+						vx = +GOOMBA_WALKING_SPEED;
+					}
+					if (e->nx < 0)
+					{
+						vx = -GOOMBA_WALKING_SPEED;
+					}
+					mario->SetLevel(MARIO_LEVEL_BIG);
+				}
 			}
 
 		}
@@ -206,14 +267,9 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEO
 		if (timeDestroy >= dt * 15)
 		{
 			SetPosition(-50, 50);
-			isDestroy == true;
+			isDestroy = true;
 		}
 	}
-
-
-
-
-
 }
 
 void CGoomba::Render()

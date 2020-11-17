@@ -152,7 +152,7 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
 
-				if (dynamic_cast<CRoad*>(e->obj))
+				if (dynamic_cast<CRoad*>(e->obj) || dynamic_cast<CColorBrickTop*>(e->obj))
 				{
 					vy = -FIRE_BULLET_DEFLECT_SPEED;
 

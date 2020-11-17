@@ -107,7 +107,7 @@ void CFirePiranhaPlant::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
+void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
@@ -210,41 +210,6 @@ void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vect
 		}
 
 	}
-
-	//vy += GOOMBA_GRAVITY * dt;
-	//vector<LPCOLLISIONEVENT> coEvents;
-	//vector<LPCOLLISIONEVENT> coEventsResult;
-
-	//coEvents.clear();
-	//if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_THROWN)
-	//	CalcPotentialCollisions(coObjects, coEvents);
-
-	//if (coEvents.size() == 0)
-	//{
-
-
-	//}
-	//else
-	//{
-	//	float min_tx, min_ty, nx = 0, ny;
-	//	float rdx = 0;
-	//	float rdy = 0;
-
-	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-	//	x += min_tx * dx + nx * 0.4f;
-	//	y += min_ty * dy + ny * 0.4f;
-
-	//	if (ny != 0) vy = 0;
-	//	//if (nx != 0) vx = 0;
-	//	for (UINT i = 0; i < coEventsResult.size(); i++)
-	//	{
-	//		LPCOLLISIONEVENT e = coEventsResult[i];
-	//	}
-
-
-	//	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//}
 }
 
 void CFirePiranhaPlant::Render()
@@ -265,7 +230,6 @@ void CFirePiranhaPlant::Render()
 
 void CFirePiranhaPlant::CreateFirePlantBullet(CGameObject* fireplantbullet)
 {
-	DebugOut(L"da tao dan\n");
 	if (fire_plant_bullet == NULL)
 		fire_plant_bullet = fireplantbullet;
 	else if (fire_plant_bullet->GetState() == FIREPLANTBULLET_DESTROY_STATE)
@@ -274,11 +238,9 @@ void CFirePiranhaPlant::CreateFirePlantBullet(CGameObject* fireplantbullet)
 
 void CFirePiranhaPlant::ShootFirePlantBullet()
 {
-	DebugOut(L"da ban\n");
 	if (fire_plant_bullet->GetState() == FIREPLANTBULLET_TRANSPARENT_STATE)
 	{
 
-		DebugOut(L"tan: %f\n", tan);
 		if (nx > 0)
 		{
 			fire_plant_bullet->SetPosition(x + 20, y);

@@ -14,6 +14,7 @@
 #include "Road.h"
 #include "Pipe.h"
 #include "FireBullet.h"
+#include "FirePlantBullet.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -120,7 +121,7 @@ void CMario::CalcPotentialCollisions(
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
-		if (e->t > 0 && e->t <= 1.0f)
+		if (e->t >= 0 && e->t <= 1.0f)
 			coEvents.push_back(e);
 		else
 			delete e;
@@ -137,8 +138,6 @@ void CMario::FilterCollision(
 {
 	min_tx = 1.0f;
 	min_ty = 1.0f;
-	int min_ix = -1;
-	int min_iy = -1;
 
 	nx = 0.0f;
 	ny = 0.0f;
@@ -147,37 +146,37 @@ void CMario::FilterCollision(
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
-		if (dynamic_cast<CColorBrick*>(c->obj)) {}
-		else if (dynamic_cast<CTransObject*>(c->obj)){}
-		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
-			if (c->ny < 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+
+		if (dynamic_cast<CColorBrickTop*>(c->obj))
+		{
+			if (c->ny < 0 && c->t < 1.0f)
+			{
+				min_ty = c->t; ny = c->ny; rdy = c->dy;
+				coEventsResult.push_back(coEvents[i]);
 			}
 		}
-		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
-			if (c->ny < 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-			}
-		}
-		else {
-			if (c->t < min_tx && c->nx != 0) {
-				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+		else if (!dynamic_cast<CColorBrick*>(c->obj) && !dynamic_cast<CTransObject*>(c->obj) && !dynamic_cast<CFireBullet*>(c->obj))
+		{
+			if (c->nx != 0 && c->t < 1.0f)
+			{
+				min_tx = c->t; nx = c->nx; rdx = c->dx;
+				coEventsResult.push_back(coEvents[i]);
 			}
 
-			if (c->t < min_ty && c->ny != 0) {
-				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+			if (c->ny != 0 && c->t < 1.0f)
+			{
+				min_ty = c->t; ny = c->ny; rdy = c->dy;
+				coEventsResult.push_back(coEvents[i]);
 			}
+
 		}
 
 	}
-
-	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
-	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
+	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
@@ -203,22 +202,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float min_tx, min_ty, nx = 0, ny = 0;
 		float rdx = 0;
 		float rdy = 0;
-
+		//DebugOut(L"coevent: %d\n", coEvents.size());
 		CMario::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		//DebugOut(L"coeventresult: %d\n\n", coEventsResult.size());
 		float remainingTime = 1.0f - min_tx;
 		
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx != dx)
-		//	x += nx * abs(rdx);
+		if (rdx != 0 && rdx != dx)
+			x += nx * abs(rdx);
 
-
+		//DebugOut(L"min_tx: %f\n", min_tx);
+		//DebugOut(L"min_ty: %f\n", min_ty);
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
-		//DebugOut(L"pre-vy: %f\n", vy);
 		if (vy < 0.02 && vy >= 0) {
 			jump_state = 0;
 			fall_state = 0;
@@ -255,16 +255,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						jump_state = 1;
 					}
 				}
+
 				else if (e->nx != 0)
 				{
 					if (untouchable == 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL)
+							if (level > MARIO_LEVEL_SMALL && !fight_state)
 							{
 								level = MARIO_LEVEL_SMALL;
 								StartUntouchable();
+							}
+							else if (fight_state)
+							{
+								goomba->SetState(GOOMBA_STATE_THROWN);
 							}
 							else
 								SetState(MARIO_STATE_DIE);
@@ -389,14 +394,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny > 0)
 				{
 					vy = 0;
-					if (quesBlock->GetState() == QUESTIONBLOCK_STATE_QUESTION)
+					if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
 					{
-						quesBlock->SetState(QUESTIONBLOCK_STATE_NORMAL);
-
+						//quesBlock->SetDeflectStart(GetTickCount());
+						quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
 						//quesBlock->CreateQuestionObject();
 					}
-
-
 				}
 			}
 
@@ -409,6 +412,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = 0;
 					fall_state = 0;
 				}
+			}
+
+			if (dynamic_cast<CFirePlantBullet*>(e->obj))
+			{
+				SetLevel(MARIO_LEVEL_SMALL);
 			}
 		}
 	}
@@ -830,7 +838,7 @@ void CMario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -1033,8 +1041,12 @@ void CMario::SetState(int state)
 		vy = -MARIO_FLYING_SPEED_Y;
 		break;
 	case MARIO_STATE_SIT:
-		
-		sit_state = 1;
+		if (!sit_state)
+		{
+			y = y + 9;
+			sit_state = 1;
+		}
+
 		
 		break;
 	case MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT:
@@ -1058,7 +1070,6 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	{
 		if (sit_state)
 		{
-			top = y + MARIO_BIG_BBOX_HEIGHT - MARIO_BIG_SIT_BBOX_HEIGHT;
 			right = x + MARIO_BIG_SIT_BBOX_WIDTH;
 			bottom = y + MARIO_BIG_SIT_BBOX_HEIGHT;
 		}

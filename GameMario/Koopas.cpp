@@ -8,6 +8,7 @@
 #include "Utils.h"
 #include "Goombas.h"
 #include "Game.h"
+#include "FireBullet.h"
 
 CKoopa::CKoopa() {
 	SetState(KOOPA_STATE_WALKING_LEFT);
@@ -159,17 +160,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float rdy = 0;
 
 		CKoopa::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-		//if (rdx != 0 && rdx != dx)
-		//	x += nx * abs(rdx);
-		//DebugOut(L"coEventResult : %d\n", coEventsResult.size());
-		//DebugOut(L"x : %f\n", x);
+
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
 		if (ny != 0) vy = 0;
-		//if (nx != 0) vx = 0;
-		//DebugOut(L"nx : %f\n", nx);
-		//DebugOut(L"vx : %f\n", vx);
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -178,17 +173,21 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				if (dynamic_cast<CTransObject*>(e->obj))
 				{
-					//CTransObject* trans = dynamic_cast<CTransObject*>(e->obj);
-					//DebugOut(L"e->nx: %f\n", e->nx);
 					if (e->nx > 0) {
 
-						//vx = KOOPA_WALKING_SPEED;
 						SetState(KOOPA_STATE_WALKING_RIGHT);
 					}
 					else if (e->nx < 0) SetState(KOOPA_STATE_WALKING_LEFT);
+
+				}
+
+				if (dynamic_cast<CFireBullet*>(e->obj))
+				{
+					CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
+					SetState(KOOPA_STATE_HIDE);
+					bullet->SetState(FIREBULLET_DESTROY_STATE);
 				}
 			}
-		//	DebugOut(L"coenventobject: %d\n", coEventsResult.size());
 			if (state == KOOPA_STATE_SPIN_LEFT)
 			{
 				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
@@ -196,9 +195,9 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					if (e->nx > 0) {
 						SetState(KOOPA_STATE_SPIN_RIGHT);
-						//DebugOut(L"e->nx left: %f\n", e->nx);
 					}
 				}
+
 
 			}
 			else if (state == KOOPA_STATE_SPIN_RIGHT)

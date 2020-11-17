@@ -195,12 +195,10 @@ void CFirePlantBullet::SetState(int state)
 		vy = -FIRE_PLANT_BULLET_FLYING_SPEECH_Y + 0.05f;
 		break;
 	case FIREPLANTBULLET_SHOOTED_RIGHT_30_STATE:
-		DebugOut(L"da vao right 30\n");
 		vx = FIRE_PLANT_BULLET_FLYING_SPEECH_X - 0.01f;
 		vy = FIRE_PLANT_BULLET_FLYING_SPEECH_Y;
 		break;
 	case FIREPLANTBULLET_SHOOTED_RIGHT_60_STATE:
-		DebugOut(L"da vao right 60\n");
 		vx = FIRE_PLANT_BULLET_FLYING_SPEECH_X + 0.01f;
 		vy = FIRE_PLANT_BULLET_FLYING_SPEECH_Y - 0.05f;
 		break;

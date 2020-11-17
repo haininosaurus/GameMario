@@ -20,7 +20,8 @@
 #include "FirePiranhaPlant.h"
 #include "FirePlantBullet.h"
 
-
+#define QUESTIONBLOCK_AMOUNT	8
+#define ITEM_QUESTIONBLOCK_AMOUNT	8
 
 class CPlayScene : public CScene
 {
@@ -28,6 +29,8 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CFirePiranhaPlant* firePiranhaPlant[1];
 	CFirePlantBullet* firePlantBullet[1];
+	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];
+	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
 
 	vector<LPGAMEOBJECT> objects;
 

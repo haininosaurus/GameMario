@@ -185,7 +185,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
-	case OBJECT_TYPE_MARIO_FIRE_BULLET:		
+	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
 		break;
@@ -201,7 +201,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	case OBJECT_TYPE_FIRE_PLANT_BULLET:
-		DebugOut(L"da tao bullet\n");
 		obj = new CFirePlantBullet();
 		for (int i = 0; i < 1; i++)
 		{
@@ -387,9 +386,7 @@ void CPlayScene::Render()
 
 	for (int i = objects.size()-1; i >= 0 ; i--)
 		objects[i]->Render();
-	//for (int i = questionBlocks.size() - 1; i >= 0; i--)
-	//	questionBlocks[i]->Render();
-	//player->Render();
+
 }
 
 /*

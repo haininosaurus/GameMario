@@ -17,16 +17,16 @@ CGameObject::CGameObject()
 	nx = 1;
 }
 
-void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/)
+void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	this->dt = dt;
 	dx = vx * dt;
 	dy = vy * dt;
 }
+
 /*
 	Extension of original SweptAABB to deal with two moving objects
 */
-
 
 
 
