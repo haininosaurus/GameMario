@@ -8,6 +8,7 @@
 5	Textures\enemies-1.png	0	0	0
 6	Textures\tiles-3.png	176	224	248
 7	Textures\enemies.png	0	0	0
+8	Textures\misc.png	166	185	255	
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -379,10 +380,12 @@
 
 
 #COIN
-50001	183	110	197	126	6
-50002	201	110	215	126	6
-50003	219	110	233	126	6
-50004	237	110	251	126	6
+50001	294	101	302	116	8
+50002	311	101	312	116	8
+50003	321	101	325	116	8
+50004	334	101	348	116	8
+50005	357	101	363	116	8
+50006	372	101	382	116	8
 
 #CLOUD BRICK
 60001	18	52	34	68	2
@@ -729,7 +732,8 @@
 # === TRANS OBJECT =======
 999	90099	100
 # === COIN ==========
-101	50001	100	50002	100	50003	100	50004	100
+101	50004	100	50005	100	50006	100	50001	100
+102	50001	50	50002	50	50003	50
 #
 # id	ani1	ani2	ani3
 #
@@ -849,16 +853,8 @@
 
 #COIN
 
-201	101
+201	101	102
 
-[QUESTION_OBJECTS]
-# type x	y	aniset_id	question_id
-# type: question_block 0
-# question_id: coin = 0, mushroom = 1
-#4	-20	0	6	1
-
-#11	176	85	201	1
-#11	192	85	201	1
 
 
 
@@ -873,7 +869,6 @@
 #GOOMBA
 1	352	133	2
 1	544	133	2
-1	608	133	2
 
 1	720	117	2
 1	1088	117	2
@@ -983,18 +978,7 @@
 
 4	1488	101	6
 
-#QUESTION OBJECTS
-11	176	85	201
-11	192	85	201
 
-11	224	37	201
-11	240	37	201
-11	432	53	201
-
-11	672	117	201
-11	720	85	201
-
-11	1488	101	201
 
 # ROAD 
 # --- platform (hint: I created the list using Excel!) ----
@@ -1778,3 +1762,20 @@
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 50	300	98	0	316	150	2
+
+[ITEM_QUESTION_OBJECTS]
+# type x	y	aniset_id	question_id
+# type: question_block 0
+# question_id: coin = 0, mushroom = 1
+
+11	-176	85	201	0
+11	-192	85	201	0
+
+11	-224	37	201	0
+11	-240	37	201	0
+11	-432	53	201	0
+
+11	-672	117	201	0
+11	-720	85	201	0
+
+11	-1488	101	201	0

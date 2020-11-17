@@ -25,6 +25,8 @@ class CQuestionBlock : public CGameObject
 
 public:
 	CQuestionBlock() { check_init_location = false; }
+	void AddItemQuestionBlock(CGameObject* item);
+	void SetStateItem(int state);
 	void SetDeflectStart(DWORD deflectstart) { deflect_start = deflectstart; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

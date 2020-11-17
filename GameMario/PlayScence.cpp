@@ -28,7 +28,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATIONS			4
 #define SCENE_SECTION_ANIMATION_SETS		5
 #define SCENE_SECTION_OBJECTS				6
-#define SCENE_SECTION_QUESTION_OBJECTS		7
+#define SCENE_SECTION_ITEM_QUESTION_OBJECTS		7
 
 #define OBJECT_TYPE_MARIO					0
 #define OBJECT_TYPE_BRICK					3
@@ -176,12 +176,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
-	case OBJECT_TYPE_QUESTION_BLOCK: obj = new CQuestionBlock(); break;
+	case OBJECT_TYPE_QUESTION_BLOCK:
+		obj = new CQuestionBlock();
+		DebugOut(L"question block: \n");
+		for (int i = 0; i < 8; i++)
+		{
+			DebugOut(L"question block: %d\n", i);
+			if (questionBlock[i] == NULL) {
+				questionBlock[i] = (CQuestionBlock*)obj;
+				break;
+			}
+		}
+		break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(); break;
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
@@ -226,31 +236,55 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 }
 //
-//void CPlayScene::_ParseSection_QUESTION_OBJECTS(string line)
-//{
-//	vector<string> tokens = split(line);
-//
-//	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-//
-//	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
-//
-//	int object_type = atoi(tokens[0].c_str());
-//	float x = atof(tokens[1].c_str());
-//	float y = atof(tokens[2].c_str());
-//
-//	int ani_set_id = atoi(tokens[3].c_str());
-//	int state = atoi(tokens[4].c_str());
-//
-//	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-//	CGameObject* obj = new CQuestionBlock(state);
-//
-//	obj->SetPosition(x, y);
-//
-//	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-//
-//	obj->SetAnimationSet(ani_set);
-//	objects.push_back(obj);
-//}
+void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
+{
+	vector<string> tokens = split(line);
+
+
+	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+
+	int object_type = atoi(tokens[0].c_str());
+	float x = atof(tokens[1].c_str());
+	float y = atof(tokens[2].c_str());
+
+	int ani_set_id = atoi(tokens[3].c_str());
+	int state = atoi(tokens[4].c_str());
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+
+	switch (object_type)
+	{
+	case OBJECT_TYPE_COIN:
+		obj = new CCoin();
+		DebugOut(L"state item: %d\n", state);
+		if (state == 0)
+		{
+
+			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			{
+				if (itemQuestionBlock[i] == NULL)
+				{
+					DebugOut(L"dangtao coin\n");
+					itemQuestionBlock[i] = (CCoin*)obj;
+					itemQuestionBlock[i]->SetState(state);
+					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
+					break;
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+	obj->SetPosition(x, y);
+
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+	obj->SetAnimationSet(ani_set);
+	objects.push_back(obj);
+}
 
 
 void CPlayScene::Load()
@@ -283,8 +317,8 @@ void CPlayScene::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
-		if (line == "[QUESTION_OBJECTS]") {
-			section = SCENE_SECTION_QUESTION_OBJECTS; continue;
+		if (line == "[ITEM_QUESTION_OBJECTS]") {
+			section = SCENE_SECTION_ITEM_QUESTION_OBJECTS; continue;
 		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
@@ -298,7 +332,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-		//case SCENE_SECTION_QUESTION_OBJECTS: _ParseSection_QUESTION_OBJECTS(line); break;
+		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_QUESTION_OBJECTS(line); break;
 		}
 	}
 
@@ -586,7 +620,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
 	if (game->IsKeyDown(DIK_X)) {
-
+		DebugOut(L"vy: %f\n", mario->vy);
 		if (GetTickCount() - mario->GetJumpStart() < 380)
 		{
 			if (mario->GetSpeechJump() < 0.2)

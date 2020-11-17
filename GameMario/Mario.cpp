@@ -398,6 +398,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						//quesBlock->SetDeflectStart(GetTickCount());
 						quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
+						quesBlock->SetStateItem(COIN_STATE_EFFECT);
 						//quesBlock->CreateQuestionObject();
 					}
 				}

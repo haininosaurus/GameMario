@@ -19,6 +19,32 @@ void CQuestionBlock::Render()
 	else animation_set->at(1)->Render(x, y);
 }
 
+void CQuestionBlock::AddItemQuestionBlock(CGameObject* itemqusblock)
+{
+	DebugOut(L"Da tao coin\n");
+	for (int i = 0; i < ITEM_AMOUNT; i++)
+	{
+		if (item[i] == NULL)
+		{
+			item[i] = itemqusblock;
+			return;
+		}
+	}
+}
+
+void CQuestionBlock::SetStateItem(int state)
+{
+	for (int i = 0; i < ITEM_AMOUNT; i++)
+	{
+		if (item[i]->GetState() == COIN_STATE_HIDEN)
+		{
+			item[i]->SetPosition(x + 4, y - 16);
+			item[i]->SetState(state);
+			break;
+		}
+	}
+}
+
 void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
