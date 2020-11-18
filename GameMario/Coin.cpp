@@ -16,7 +16,7 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	if (state == COIN_STATE_EFFECT)
+	if (state == EFFECT_STATE)
 	{
 		if (GetTickCount() - effect_time_start < 500)
 		{
@@ -53,7 +53,7 @@ void CCoin::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case COIN_STATE_EFFECT:
+	case EFFECT_STATE:
 		if (effect_state == 0)
 		{
 			effect_state = 1;

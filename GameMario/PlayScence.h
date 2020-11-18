@@ -19,6 +19,7 @@
 #include "FireBullet.h"
 #include "FirePiranhaPlant.h"
 #include "FirePlantBullet.h"
+#include "Mushroom.h"
 
 #define QUESTIONBLOCK_AMOUNT	8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8

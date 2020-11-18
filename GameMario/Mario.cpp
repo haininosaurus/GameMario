@@ -15,6 +15,7 @@
 #include "Pipe.h"
 #include "FireBullet.h"
 #include "FirePlantBullet.h"
+#include "Mushroom.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -394,7 +395,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
 					{
 						quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
-						quesBlock->SetStateItem(COIN_STATE_EFFECT);
+						quesBlock->SetStateItem(EFFECT_STATE);
 					}
 				}
 			}
@@ -413,6 +414,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CFirePlantBullet*>(e->obj))
 			{
 				SetLevel(MARIO_LEVEL_SMALL);
+			}
+
+			if (dynamic_cast<CMushroom*>(e->obj))
+			{
+				CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
+				if (!mushroom->IsHidenState())
+				{
+					mushroom->SetState(MUSHROOM_STATE_HIDEN);
+					SetLevel(MARIO_LEVEL_BIG);
+				}
+
 			}
 		}
 	}

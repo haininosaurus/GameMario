@@ -103,7 +103,6 @@ void CGoomba::FilterCollision(
 		LPCOLLISIONEVENT c = coEvents[i];
 		if (dynamic_cast<CMario*>(c->obj))
 		{
-			DebugOut(L"collision with mario\n");
 			if (c->nx != 0)
 			{
 				if (c->t < 1.0f)

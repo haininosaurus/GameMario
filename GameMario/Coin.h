@@ -7,7 +7,7 @@
 #define COIN_SPEED_Y	0.2f
 
 #define COIN_STATE_HIDEN	0
-#define COIN_STATE_EFFECT	1
+#define EFFECT_STATE		1
 #define COIN_STATE_NORMAL	2
 
 #define COIN_NORMAL_ANI		0
@@ -18,8 +18,6 @@ class CCoin : public CGameObject
 	int effect_state;
 	DWORD effect_time_start;
 public:
-	CCoin(){}
-	CCoin(int stateCoin) { state = stateCoin; }
 	void SetState(int state);
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);

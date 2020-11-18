@@ -1,5 +1,6 @@
 #include "QuestionBlock.h"
 #include "Coin.h"
+#include "Mushroom.h"
 #include "Utils.h"
 
 
@@ -36,9 +37,15 @@ void CQuestionBlock::SetStateItem(int state)
 {
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
-		if (item[i]->GetState() == COIN_STATE_HIDEN)
+		if (item[i]->GetState() == COIN_STATE_HIDEN && dynamic_cast<CCoin*>(item[i]))
 		{
 			item[i]->SetPosition(x + 4, y - 16);
+			item[i]->SetState(state);
+			break;
+		}
+		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
+		{
+			item[i]->SetPosition(x, y - 4);
 			item[i]->SetState(state);
 			break;
 		}
