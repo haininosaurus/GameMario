@@ -35,9 +35,17 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + COIN_BBOX_WIDTH;
-	b = y + COIN_BBOX_HEIGHT;
 
+	if (state == COIN_STATE_HIDEN)
+	{
+		r = 0;
+		b = 0;
+	}
+	else
+	{
+		r = x + COIN_BBOX_WIDTH;
+		b = y + COIN_BBOX_HEIGHT;
+	}
 }
 
 void CCoin::SetState(int state)

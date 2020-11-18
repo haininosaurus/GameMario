@@ -348,20 +348,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			
 
-			//if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Koopa
-			//{
-			//	CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+			if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Koopa
+			{
+				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
 
-			//	if (e->ny > 0)
-			//	{
-			//		if (coin->GetState() == COIN_STATE_HIDE)
-			//		{
-			//			coin->SetPosition(coin->x, coin->y - 16);
-			//			coin->SetState(COIN_STATE_NORMAL);
+				if (coin->GetState() == COIN_STATE_NORMAL)
+				{
+					coin->SetState(COIN_STATE_HIDEN);
 
-			//		}
-			//	}
-			//}
+				}			
+			}
+
 			if (dynamic_cast<CPipe*>(e->obj)) 
 			{
 				CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
@@ -396,10 +393,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = 0;
 					if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
 					{
-						//quesBlock->SetDeflectStart(GetTickCount());
 						quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
 						quesBlock->SetStateItem(COIN_STATE_EFFECT);
-						//quesBlock->CreateQuestionObject();
 					}
 				}
 			}
@@ -422,7 +417,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	//DebugOut(L"fall state: %d\n", fall_state);
 	if (tortoiseshell != NULL) {
 		if (level == MARIO_LEVEL_SMALL)
 		{

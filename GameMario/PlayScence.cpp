@@ -257,7 +257,7 @@ void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 	{
 	case OBJECT_TYPE_COIN:
 		obj = new CCoin();
-		DebugOut(L"state item: %d\n", state);
+		obj->SetState(state);
 		if (state == 0)
 		{
 
@@ -265,9 +265,8 @@ void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 			{
 				if (itemQuestionBlock[i] == NULL)
 				{
-					DebugOut(L"dangtao coin\n");
 					itemQuestionBlock[i] = (CCoin*)obj;
-					itemQuestionBlock[i]->SetState(state);
+					//itemQuestionBlock[i]->SetState(state);
 					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
 					break;
 				}
@@ -357,19 +356,6 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	//for (size_t i = 1; i < questionBlocks.size(); i++)
-	//{
-	//	quesObjects.push_back(questionBlocks[i]);
-	//}
-
-
-	//for (size_t i = 0; i < questionBlocks.size(); i++)
-	//{
-
-	//	questionBlocks[i]->Update(dt, NULL, &quesObjects);
-
-	//}
-	//DebugOut(L"questionblocks: %d\n", questionBlocks.size());
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 
@@ -448,8 +434,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 		if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
 			mario->SetJumpStart(GetTickCount());
-			//DebugOut(L"da vao\n");
-			//mario->SetState(MARIO_STATE_JUMP);
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
@@ -620,7 +604,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
 	if (game->IsKeyDown(DIK_X)) {
-		DebugOut(L"vy: %f\n", mario->vy);
 		if (GetTickCount() - mario->GetJumpStart() < 380)
 		{
 			if (mario->GetSpeechJump() < 0.2)
