@@ -433,7 +433,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (!mushroom->IsHidenState())
 				{
 					mushroom->SetState(MUSHROOM_STATE_HIDEN);
-					SetLevel(MARIO_LEVEL_BIG);
+					SetPosition(x, y - 2);
+					SetLevel(GetLevel() + 1);
 				}
 
 			}

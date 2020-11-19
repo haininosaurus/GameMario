@@ -1,17 +1,8 @@
 #include "QuestionBlock.h"
 #include "Coin.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 #include "Utils.h"
-
-
-//CQuestionBlock::CQuestionBlock(int ques_id)
-//{
-//	if (ques_id == 0) {
-//		quesObj = new CCoin();
-//
-//	}
-//	DebugOut(L"quesid: %d\n", ques_id);
-//}
 
 void CQuestionBlock::Render()
 {
@@ -22,7 +13,6 @@ void CQuestionBlock::Render()
 
 void CQuestionBlock::AddItemQuestionBlock(CGameObject* itemqusblock)
 {
-	DebugOut(L"Da tao coin\n");
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
 		if (item[i] == NULL)
@@ -44,6 +34,12 @@ void CQuestionBlock::SetStateItem(int state)
 			break;
 		}
 		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
+		{
+			item[i]->SetPosition(x, y - 4);
+			item[i]->SetState(state);
+			break;
+		}
+		else if (item[i]->GetState() == LEAF_STATE_HIDEN && dynamic_cast<CLeaf*>(item[i]))
 		{
 			item[i]->SetPosition(x, y - 4);
 			item[i]->SetState(state);

@@ -49,6 +49,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FIREPIRANHAPLANT		16
 #define OBJECT_TYPE_FIRE_PLANT_BULLET		17
 #define OBJECT_TYPE_MUSHROOM				18
+#define OBJECT_TYPE_LEAF					19
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -282,6 +283,22 @@ void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 				if (itemQuestionBlock[i] == NULL)
 				{
 					itemQuestionBlock[i] = (CMushroom*)obj;
+					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
+					break;
+				}
+			}
+		}
+		break;
+	case OBJECT_TYPE_LEAF:
+		obj = new CLeaf();
+		obj->SetState(state);
+		if (state == 0)
+		{
+			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			{
+				if (itemQuestionBlock[i] == NULL)
+				{
+					itemQuestionBlock[i] = (CLeaf*)obj;
 					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
 					break;
 				}

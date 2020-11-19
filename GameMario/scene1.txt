@@ -9,6 +9,7 @@
 6	Textures\tiles-3.png	176	224	248
 7	Textures\enemies.png	0	0	0
 8	Textures\misc.png	166	185	255	
+9	Textures\misc-1.png	166	185	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -390,6 +391,10 @@
 #MUSHROOM
 50011	156	121	172	137	8
 
+#LEAF
+50021	180	123	196	137	8
+50022	233	123	249	137	9
+
 #CLOUD BRICK
 60001	18	52	34	68	2
 
@@ -737,8 +742,13 @@
 # === COIN ==========
 101	50004	100	50005	100	50006	100	50001	100
 102	50001	50	50002	50	50003	50
-#==== MUSHROOM ==========
+
+# ==== MUSHROOM ==========
 111	50011	100
+
+# === LEAF ========
+121	50021	100
+122	50022	100
 #
 # id	ani1	ani2	ani3
 #
@@ -751,6 +761,8 @@
 3	621	631	641	651	661
 # FIRE PLANT
 333	671	673	675	677
+
+
 # BRICK 
 4	701
 #ROAD
@@ -863,6 +875,10 @@
 #MUSHROOM
 211	111
 
+#LEAF
+221	121	122
+
+
 
 
 
@@ -870,7 +886,8 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , Goomba = 1, 3 = Brick, 2 = Road,  4 = question block, 5 = color brick, 6 = background, 7 = wood brick, 8 = pipe, 9 = color brick top, 10 = koopa, 11 = coin,12 = trans, 14 = cloud, 15 = mario fire bullet
 # MARIO
-0	80.0	0	1
+0	1488	0	1
+
 # MARIO FIRE BULLET
 15	80	0	901
 15	80	0	901
@@ -1275,10 +1292,10 @@
 11	-240	37	201	0
 
 
-11	-672	117	201	0
+19	-672	117	211	0
 11	-720	85	201	0
 
-11	-1488	101	201	0
+19	-1488	101	221	0
 
 11	1088	53	201	2
 11	1120	21	201	2
