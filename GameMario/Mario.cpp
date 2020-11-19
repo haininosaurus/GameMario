@@ -265,7 +265,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL && !fight_state)
 							{
-								level = MARIO_LEVEL_SMALL;
+								SetLevel(GetLevel() - 1);
 								StartUntouchable();
 							}
 							else if (fight_state)
@@ -413,7 +413,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CFirePlantBullet*>(e->obj))
 			{
-				SetLevel(MARIO_LEVEL_SMALL);
+				CFirePlantBullet* fireplantbullet = dynamic_cast<CFirePlantBullet*>(e->obj);
+				if (fireplantbullet->GetState() != FIREBULLET_DESTROY_STATE && fireplantbullet->GetState() != FIREBULLET_TRANSPARENT_STATE)
+				{
+					if (level > MARIO_LEVEL_SMALL)
+					{
+						SetLevel(GetLevel() - 1);
+						fireplantbullet->SetState(FIREBULLET_DESTROY_STATE);
+						StartUntouchable();
+					}
+					else
+						SetState(MARIO_STATE_DIE);
+				}
 			}
 
 			if (dynamic_cast<CMushroom*>(e->obj))

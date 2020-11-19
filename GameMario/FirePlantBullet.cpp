@@ -136,17 +136,6 @@ void CFirePlantBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			x += min_tx * dx + nx * 0.4f;
 			y += min_ty * dy + ny * 0.4f;
 
-			//if (ny != 0) vy = 0;
-			//for (UINT i = 0; i < coEventsResult.size(); i++)
-			//{
-			//	LPCOLLISIONEVENT e = coEventsResult[i];
-
-			//	if (dynamic_cast<CRoad*>(e->obj))
-			//	{
-
-			//	}
-
-			//}
 
 		}
 		if (GetTickCount() - shoot_start > 2000)
@@ -166,8 +155,18 @@ void CFirePlantBullet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + FIREPLANTBULLET_BBOX_WIDTH;
-	b = y + FIREPLANTBULLET_BBOX_HEIGHT;
+
+	if (state == FIREPLANTBULLET_TRANSPARENT_STATE)
+	{
+		r = 0;
+		b = 0;
+	}
+	else
+	{
+		r = x + FIREPLANTBULLET_BBOX_WIDTH;
+		b = y + FIREPLANTBULLET_BBOX_HEIGHT;
+	}
+
 }
 
 void CFirePlantBullet::SetState(int state)
