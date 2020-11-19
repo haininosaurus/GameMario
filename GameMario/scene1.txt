@@ -886,7 +886,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , Goomba = 1, 3 = Brick, 2 = Road,  4 = question block, 5 = color brick, 6 = background, 7 = wood brick, 8 = pipe, 9 = color brick top, 10 = koopa, 11 = coin,12 = trans, 14 = cloud, 15 = mario fire bullet
 # MARIO
-0	1488	0	1
+0	80	0	1
 
 # MARIO FIRE BULLET
 15	80	0	901
