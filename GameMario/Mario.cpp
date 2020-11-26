@@ -288,7 +288,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (koopa->GetState() != KOOPA_STATE_HIDE)
 						{
-							koopa->SetState(KOOPA_STATE_HIDE);
+							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM)
+								koopa->SetForm(KOOPA_GREEN_FORM);
+							else koopa->SetState(KOOPA_STATE_HIDE);
 							jump_state = 1;
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}            

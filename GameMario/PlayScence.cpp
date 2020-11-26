@@ -174,8 +174,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
-	case OBJECT_TYPE_KOOPA: obj = new CKoopa(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
@@ -338,6 +336,7 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(state); break;
+	case OBJECT_TYPE_KOOPA: obj = new CKoopa(state); break;
 	default:
 		break;
 	}

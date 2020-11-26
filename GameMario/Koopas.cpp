@@ -10,20 +10,43 @@
 #include "Game.h"
 #include "FireBullet.h"
 
-CKoopa::CKoopa() {
+CKoopa::CKoopa(int form) : CGameObject::CGameObject()
+{
+	SetForm(form);
 	SetState(KOOPA_STATE_WALKING_LEFT);
 }
 void CKoopa::Render()
 {
-	int ani = KOOPA_ANI_WALKING_RIGHT;
-	if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
-		ani = KOOPA_ANI_WALKING_LEFT;
-	else if (state == KOOPA_STATE_HIDE)
-		ani = KOOPA_ANI_HIDE;
-	else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
-		ani = KOOPA_ANI_SPIN;
-	else if (state == KOOPA_STATE_TAKEN)
-		ani = KOOPA_ANI_TAKEN;
+	int ani = KOOPA_ANI_RED_WALKING_RIGHT;
+	if (form == KOOPA_RED_FORM)
+	{
+		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
+			ani = KOOPA_ANI_RED_WALKING_LEFT;
+		else if (state == KOOPA_STATE_HIDE)
+			ani = KOOPA_ANI_RED_HIDE;
+		else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
+			ani = KOOPA_ANI_RED_SPIN;
+		else if (state == KOOPA_STATE_TAKEN)
+			ani = KOOPA_ANI_RED_TAKEN;
+	}
+	else if(form == KOOPA_GREEN_FORM)
+	{
+		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
+			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
+		else if (state == KOOPA_STATE_HIDE)
+			ani = KOOPA_ANI_GREEN_HIDE;
+		else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
+			ani = KOOPA_ANI_GREEN_SPIN;
+		else if (state == KOOPA_STATE_TAKEN)
+			ani = KOOPA_ANI_GREEN_TAKEN;
+		else ani = KOOPA_ANI_GREEN_WALKING_RIGHT;
+	}
+	else if (form == PARAKOOPA_GREEN_FORM)
+	{
+		if (vx < 0) ani = PARAKOOPA_ANI_GREEN_JUMPING_LEFT;
+		else ani = PARAKOOPA_ANI_GREEN_JUMPING_RIGHT;
+	}
+
 	animation_set->at(ani)->Render(x, y);
 }
 
@@ -161,56 +184,63 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		CKoopa::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		x += min_tx * dx + nx * 0.2f;
+		y += min_ty * dy + ny * 0.2f;
 
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (state == KOOPA_STATE_WALKING_LEFT || state == KOOPA_STATE_WALKING_RIGHT)
+			if (form != PARAKOOPA_GREEN_FORM)
 			{
-				if (dynamic_cast<CTransObject*>(e->obj))
+				if (state == KOOPA_STATE_WALKING_LEFT || state == KOOPA_STATE_WALKING_RIGHT)
 				{
-					if (e->nx > 0) {
+					if (dynamic_cast<CTransObject*>(e->obj))
+					{
+						if (e->nx > 0) {
 
-						SetState(KOOPA_STATE_WALKING_RIGHT);
+							SetState(KOOPA_STATE_WALKING_RIGHT);
+						}
+						else if (e->nx < 0) SetState(KOOPA_STATE_WALKING_LEFT);
+
 					}
-					else if (e->nx < 0) SetState(KOOPA_STATE_WALKING_LEFT);
 
-				}
-
-				if (dynamic_cast<CFireBullet*>(e->obj))
-				{
-					CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
-					SetState(KOOPA_STATE_HIDE);
-					bullet->SetState(FIREBULLET_DESTROY_STATE);
-				}
-			}
-			if (state == KOOPA_STATE_SPIN_LEFT)
-			{
-				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
-				{
-
-					if (e->nx > 0) {
-						SetState(KOOPA_STATE_SPIN_RIGHT);
+					if (dynamic_cast<CFireBullet*>(e->obj))
+					{
+						CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
+						SetState(KOOPA_STATE_HIDE);
+						bullet->SetState(FIREBULLET_DESTROY_STATE);
 					}
 				}
-
-
-			}
-			else if (state == KOOPA_STATE_SPIN_RIGHT)
-			{
-				if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
+				if (state == KOOPA_STATE_SPIN_LEFT)
 				{
-					if (e->nx < 0) {
-						DebugOut(L"e->nx right: %f\n", e->nx);
-						SetState(KOOPA_STATE_SPIN_LEFT);
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
+					{
+
+						if (e->nx > 0) {
+							SetState(KOOPA_STATE_SPIN_RIGHT);
+						}
+					}
+
+
+				}
+				else if (state == KOOPA_STATE_SPIN_RIGHT)
+				{
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
+					{
+						if (e->nx < 0) {
+							SetState(KOOPA_STATE_SPIN_LEFT);
+						}
 					}
 				}
-
 			}
+			else
+			{
+				if (e->ny < 0)
+					vy = -PARAKOOPA_JUMP_SPEED;
+			}
+			
 		}
 	}
 
