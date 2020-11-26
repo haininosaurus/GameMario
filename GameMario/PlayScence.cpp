@@ -22,13 +22,14 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	See scene1.txt, scene2.txt for detail format specification
 */
 
-#define SCENE_SECTION_UNKNOWN				-1
-#define SCENE_SECTION_TEXTURES				2
-#define SCENE_SECTION_SPRITES				3
-#define SCENE_SECTION_ANIMATIONS			4
-#define SCENE_SECTION_ANIMATION_SETS		5
-#define SCENE_SECTION_OBJECTS				6
+#define SCENE_SECTION_UNKNOWN					-1
+#define SCENE_SECTION_TEXTURES					2
+#define SCENE_SECTION_SPRITES					3
+#define SCENE_SECTION_ANIMATIONS				4
+#define SCENE_SECTION_ANIMATION_SETS			5
+#define SCENE_SECTION_OBJECTS					6
 #define SCENE_SECTION_ITEM_QUESTION_OBJECTS		7
+#define SCENE_SECTION_ENEMIES					8
 
 #define OBJECT_TYPE_MARIO					0
 #define OBJECT_TYPE_BRICK					3
@@ -173,7 +174,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	//case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
 	case OBJECT_TYPE_KOOPA: obj = new CKoopa(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
@@ -237,7 +238,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	objects.push_back(obj);
 
 }
-//
+
 void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
@@ -317,6 +318,37 @@ void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 	objects.push_back(obj);
 }
 
+void CPlayScene::_ParseSection_ENEMIES(string line)
+{
+	vector<string> tokens = split(line);
+
+
+	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+
+	int object_type = atoi(tokens[0].c_str());
+	float x = atof(tokens[1].c_str());
+	float y = atof(tokens[2].c_str());
+
+	int ani_set_id = atoi(tokens[3].c_str());
+	int state = atoi(tokens[4].c_str());
+
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+
+	switch (object_type)
+	{
+	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(state); break;
+	default:
+		break;
+	}
+	obj->SetPosition(x, y);
+
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+	obj->SetAnimationSet(ani_set);
+	objects.push_back(obj);
+}
+
 
 void CPlayScene::Load()
 {
@@ -351,6 +383,9 @@ void CPlayScene::Load()
 		if (line == "[ITEM_QUESTION_OBJECTS]") {
 			section = SCENE_SECTION_ITEM_QUESTION_OBJECTS; continue;
 		}
+		if (line == "[ENEMIES]") {
+			section = SCENE_SECTION_ENEMIES; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -364,6 +399,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_QUESTION_OBJECTS(line); break;
+		case SCENE_SECTION_ENEMIES: _ParseSection_ENEMIES(line); break;
 		}
 	}
 
@@ -640,7 +676,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();
-			if (mario->GetJumpState() != -1) mario->SetState(MARIO_STATE_JUMP);
+			if (mario->GetJumpState() != -1 && mario->vy <= 0) mario->SetState(MARIO_STATE_JUMP);
 		}
 	}
 }

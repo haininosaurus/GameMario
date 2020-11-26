@@ -42,6 +42,7 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_ITEM_QUESTION_OBJECTS(string line);
+	void _ParseSection_ENEMIES(string line);
 	//void _ParseSection_BACKGROUND_OBJECTS(string line);
 
 

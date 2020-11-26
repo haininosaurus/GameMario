@@ -212,8 +212,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (rdx != 0 && rdx != dx)
 			x += nx * abs(rdx);
 
-		//DebugOut(L"min_tx: %f\n", min_tx);
-		//DebugOut(L"min_ty: %f\n", min_ty);
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
@@ -251,7 +249,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
-						goomba->SetState(GOOMBA_STATE_DIE);
+						if (goomba->GetForm() != PARAGOOMBA_BROWN_FORM)
+							goomba->SetState(GOOMBA_STATE_DIE);
+						else goomba->SetForm(GOOMBA_BROWN_FORM);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 						jump_state = 1;
 					}
@@ -299,7 +299,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							else koopa->SetState(KOOPA_STATE_SPIN_LEFT);
 							jump_state = 1;
 						}
-
 					}
 					else if (e->nx != 0)
 					{
