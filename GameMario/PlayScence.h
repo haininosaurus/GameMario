@@ -21,6 +21,7 @@
 #include "FirePlantBullet.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "BlueBrick.h"
 
 #define QUESTIONBLOCK_AMOUNT	8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -43,6 +44,7 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_ITEM_QUESTION_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
+	//void _ParseSection_STATIC_OBJECTS(string line);
 	//void _ParseSection_BACKGROUND_OBJECTS(string line);
 
 

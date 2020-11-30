@@ -51,6 +51,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FIRE_PLANT_BULLET		17
 #define OBJECT_TYPE_MUSHROOM				18
 #define OBJECT_TYPE_LEAF					19
+#define OBJECT_TYPE_BLUE_BRICK				20
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -196,6 +197,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
+	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
@@ -347,6 +349,32 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
 }
+//void CPlayScene::_ParseSection_STATIC_OBJECTS(string line)
+//{
+//	vector<string> tokens = split(line);
+//
+//
+//	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+//
+//	int object_type = atoi(tokens[0].c_str());
+//	float x = atof(tokens[1].c_str());
+//	float y = atof(tokens[2].c_str());
+//
+//	int ani_set_id = atoi(tokens[3].c_str());
+//	int type = atoi(tokens[4].c_str());
+//
+//	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+//	CGameObject* obj = NULL;
+//
+//	obj = new CStaticObject(type);
+//
+//	obj->SetPosition(x, y);
+//
+//	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+//
+//	obj->SetAnimationSet(ani_set);
+//	objects.push_back(obj);
+//}
 
 
 void CPlayScene::Load()
@@ -450,13 +478,18 @@ void CPlayScene::Update(DWORD dt)
 		CGame::GetInstance()->SetCamPos(round(cx), round(cy) - 10.0f);
 
 	}
+	else if (cx > game->GetScreenWidth() / 2 && cy > 165)
+	{
+		cx -= game->GetScreenWidth() / 2 - 40;
+		cy -= game->GetScreenHeight() / 2;
+		CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
+	}
 
 	else if (cx > game->GetScreenWidth() / 2)
 	{
 		cx -= game->GetScreenWidth() / 2;
 		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), -10.0f);
-		
+		CGame::GetInstance()->SetCamPos(round(cx), round(cy)/*-10.0f*/);		
 	}
 	else {
 		if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
@@ -471,8 +504,19 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 
-	for (int i = objects.size()-1; i >= 0 ; i--)
-		objects[i]->Render();
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
+		if (!dynamic_cast<CPipe*>(objects[i]))
+			objects[i]->Render();
+	}
+
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
+		if (dynamic_cast<CPipe*>(objects[i]))
+			objects[i]->Render();
+	}
+
+
 
 }
 
