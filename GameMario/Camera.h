@@ -1,0 +1,19 @@
+#pragma once
+#include "Game.h"
+#include "GameObject.h"
+#include "Mario.h"
+
+class CCamera
+{
+	float cam_x, cam_y;
+	float cx, cy;
+	CMario* player;
+
+public: 
+	CCamera(CMario* p) {player = p; }
+	float GetCx() { return cam_x; }
+	float GetCy() { return cam_y; }
+	void SetCamPosition(float x, float y) { cam_x = x; cam_y = y; }
+	void UpdateCam();
+};
+

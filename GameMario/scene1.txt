@@ -10,6 +10,7 @@
 7	Textures\enemies.png	0	0	0
 8	Textures\misc.png	166	185	255	
 9	Textures\misc-1.png	166	185	255
+10	Textures\black-background.png	1	1	1
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -414,6 +415,8 @@
 40038	120	52	136	68	3
 
 
+
+
 #COIN
 50001	294	101	302	116	8
 50002	311	101	312	116	8
@@ -434,6 +437,9 @@
 
 #BlUE BRICK
 60002	35	52	51	68	2
+
+#BOARD
+70001	0	0	1000	64	10
 
 #TRANS OBJECT
 90099	545	635	561	651	2
@@ -783,6 +789,9 @@
 #BLUE BRICK
 851	60002	100
 
+#BOARD
+861	70001	100
+
 # === TRANS OBJECT =======
 999	90099	100
 # === COIN ==========
@@ -912,6 +921,9 @@
 #CLOUD BRICK
 141	841
 
+#BOARD
+161	861
+
 #TRANS OBJECT
 999	999
 
@@ -931,6 +943,7 @@
 #0	80	0	1
 0	2272	357	1
 
+21	0	149	161
 
 [ENEMIES]
 #GOOMBA

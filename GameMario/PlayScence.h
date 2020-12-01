@@ -22,6 +22,8 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "BlueBrick.h"
+#include "Camera.h"
+#include "ScoreBoard.h"
 
 #define QUESTIONBLOCK_AMOUNT	8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -29,7 +31,10 @@
 class CPlayScene : public CScene
 {
 protected:
+
 	CMario* player;					// A play scene has to have player, right? 
+	CCamera* cam;
+	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[1];
 	CFirePlantBullet* firePlantBullet[1];
 	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];

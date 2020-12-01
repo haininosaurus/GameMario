@@ -55,7 +55,6 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		init_location_y = y;
 		check_init_location = true;
-		DebugOut(L"init location y: %d\n", init_location_y);
 	}
 
 	if (state != QUESTIONBLOCK_ITEM_STATE)

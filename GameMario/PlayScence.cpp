@@ -52,6 +52,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MUSHROOM				18
 #define OBJECT_TYPE_LEAF					19
 #define OBJECT_TYPE_BLUE_BRICK				20
+#define OBJECT_TYPE_SCORE_BOARD				21
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -180,10 +181,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_QUESTION_BLOCK:
 		obj = new CQuestionBlock();
-		DebugOut(L"question block: \n");
 		for (int i = 0; i < 8; i++)
 		{
-			DebugOut(L"question block: %d\n", i);
 			if (questionBlock[i] == NULL) {
 				questionBlock[i] = (CQuestionBlock*)obj;
 				break;
@@ -198,6 +197,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
+	case OBJECT_TYPE_SCORE_BOARD: 
+		obj = new CScoreBoard(); 
+		sb = (CScoreBoard*)obj;
+		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
@@ -379,7 +382,7 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 
 void CPlayScene::Load()
 {
-	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
+	//DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
 	f.open(sceneFilePath);
@@ -434,7 +437,7 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
-	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+	//DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -444,7 +447,6 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	//vector<LPGAMEOBJECT> quesObjects;
 
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -464,41 +466,12 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 
 	// Update camera to follow mario
-	float cx, cy;
-	 
-	player->GetPosition(cx, cy);
-
-	CGame* game = CGame::GetInstance();
-	if (cx < 0)	player->SetPosition(0, cy);
-	if (cx > 2816) player->SetPosition(2816, cy);
-
-	else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth()/2) {
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), round(cy) - 10.0f);
-
+	if (cam == NULL) {
+		cam = new CCamera(player);
+		sb->SetCam(cam);
 	}
-	else if (cx > game->GetScreenWidth() / 2 && cy > 165)
-	{
-		cx -= game->GetScreenWidth() / 2 - 40;
-		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
-	}
-
-	else if (cx > game->GetScreenWidth() / 2)
-	{
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), round(cy)/*-10.0f*/);		
-	}
-	else {
-		if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
-		{
-			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(0.0f, round(cy) - 10.0f);
-		}
-		else CGame::GetInstance()->SetCamPos(0.0f, -10.0f);
-	}
+	cam->UpdateCam();
+	
 }
 
 void CPlayScene::Render()
@@ -531,7 +504,7 @@ void CPlayScene::Unload()
 	objects.clear();
 	player = NULL;
 
-	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+	//DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
