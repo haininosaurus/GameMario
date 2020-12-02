@@ -452,6 +452,16 @@ void CPlayScene::Update(DWORD dt)
 
 	vector<LPGAMEOBJECT> coObjects;
 
+	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
+	if (player == NULL) return;
+
+	// Update camera to follow mario
+	if (cam == NULL) {
+		cam = new CCamera(player);
+		sb->SetCam(cam);
+	}
+	cam->UpdateCam();
+
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
@@ -466,15 +476,6 @@ void CPlayScene::Update(DWORD dt)
 
 
 
-	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
-
-	// Update camera to follow mario
-	if (cam == NULL) {
-		cam = new CCamera(player);
-		sb->SetCam(cam);
-	}
-	cam->UpdateCam();
 	
 }
 
@@ -483,15 +484,15 @@ void CPlayScene::Render()
 
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
-		if (!dynamic_cast<CPipe*>(objects[i]))
+		//if (!dynamic_cast<CPipe*>(objects[i]))
 			objects[i]->Render();
 	}
 
-	for (int i = objects.size() - 1; i >= 0; i--)
-	{
-		if (dynamic_cast<CPipe*>(objects[i]))
-			objects[i]->Render();
-	}
+	//for (int i = objects.size() - 1; i >= 0; i--)
+	//{
+	//	if (dynamic_cast<CPipe*>(objects[i]))
+	//		objects[i]->Render();
+	//}
 
 
 
