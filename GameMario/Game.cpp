@@ -36,7 +36,7 @@ void CGame::Init(HWND hWnd)
 	d3dpp.BackBufferWidth = r.right + 1;
 
 	screen_height = r.bottom + 1;
-	screen_width = r.right + 1;
+	screen_width = r.right  + 1;
 
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,

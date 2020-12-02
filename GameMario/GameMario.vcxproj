@@ -39,6 +39,7 @@
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Pipe.cpp" />
+    <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Road.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Pipe.h" />
+    <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="PlayScence.h" />
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Road.h" />

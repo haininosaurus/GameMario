@@ -53,6 +53,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LEAF					19
 #define OBJECT_TYPE_BLUE_BRICK				20
 #define OBJECT_TYPE_SCORE_BOARD				21
+#define OBJECT_TYPE_PIRANHA_PLANT			22
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -216,9 +217,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 		}
 		break;
+	case OBJECT_TYPE_PIRANHA_PLANT:
+		obj = new CPiranhaPlant(player);
+		break;
 	case OBJECT_TYPE_FIRE_PLANT_BULLET:
 		obj = new CFirePlantBullet();
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			if (firePlantBullet[i] == NULL) {
 				firePlantBullet[i] = (CFirePlantBullet*)obj;

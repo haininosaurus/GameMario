@@ -24,6 +24,7 @@
 #include "BlueBrick.h"
 #include "Camera.h"
 #include "ScoreBoard.h"
+#include "PiranhaPlant.h"
 
 #define QUESTIONBLOCK_AMOUNT	8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -35,8 +36,8 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CCamera* cam;
 	CScoreBoard* sb;
-	CFirePiranhaPlant* firePiranhaPlant[1];
-	CFirePlantBullet* firePlantBullet[1];
+	CFirePiranhaPlant* firePiranhaPlant[2];
+	CFirePlantBullet* firePlantBullet[2];
 	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
 

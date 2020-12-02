@@ -1,5 +1,6 @@
 #include "ScoreBoard.h"
 #include "Camera.h"
+#include "Mario.h"
 
 void CScoreBoard::Render()
 {
@@ -10,10 +11,7 @@ void CScoreBoard::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 	if(cam != NULL)
-		SetPosition(cam->GetCx() - 16, cam->GetCy() + 173);
+		SetPosition(cam->GetCx()-8.0f, cam->GetCy() + 165.0f);
 }
 
-void CScoreBoard::GetBoundingBox(float& l, float& t, float& r, float& b)
-{
-	return;
-}
+void CScoreBoard::GetBoundingBox(float& l, float& t, float& r, float& b) { return; }
