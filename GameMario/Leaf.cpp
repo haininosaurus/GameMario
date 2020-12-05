@@ -7,7 +7,7 @@
 void CLeaf::Render()
 {
 	int ani = isRight;
-	if (GetState() == LEAF_STATE_HIDEN) return;
+	if (GetState() == LEAF_STATE_HIDEN && hiden_state) return;
 	if (isRight) ani = LEAF_EFFECT_RIGHT_ANI;
 	else ani = LEAF_EFFECT_LEFT_ANI;
 	animation_set->at(ani)->Render(x, y);
@@ -90,6 +90,7 @@ void CLeaf::SetState(int state)
 	switch (state)
 	{
 	case EFFECT_STATE:
+		hiden_state = 0;
 		if (effect_state == 0)
 		{
 			effect_state = 1;
@@ -98,8 +99,10 @@ void CLeaf::SetState(int state)
 		break;
 	case LEAF_STATE_HIDEN:
 		effect_state = 0;
+		hiden_state = 1;
 		break;
 	case LEAF_STATE_NORMAL:
+		hiden_state = 0;
 		effect_state = 0;
 		break;
 	default:

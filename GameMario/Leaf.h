@@ -23,6 +23,7 @@ class CLeaf : public CGameObject
 	int effect_state;
 	DWORD effect_time;
 	DWORD effect_time_start;
+	int hiden_state;
 
 	DWORD effect_right_time;
 	DWORD effect_left_time;
@@ -35,6 +36,7 @@ public:
 		effect_left_time_start = 0;
 	}
 	void SetState(int state);
+	int IsHidenState() { return hiden_state; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);

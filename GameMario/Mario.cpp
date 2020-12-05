@@ -16,6 +16,7 @@
 #include "FireBullet.h"
 #include "FirePlantBullet.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -434,6 +435,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (!mushroom->IsHidenState())
 				{
 					mushroom->SetState(MUSHROOM_STATE_HIDEN);
+					SetPosition(x, y - 2);
+					SetLevel(GetLevel() + 1);
+				}
+
+			}
+			if (dynamic_cast<CLeaf*>(e->obj))
+			{
+				CLeaf* mushroom = dynamic_cast<CLeaf*>(e->obj);
+				if (!mushroom->IsHidenState())
+				{
+					mushroom->SetState(LEAF_STATE_HIDEN);
 					SetPosition(x, y - 2);
 					SetLevel(GetLevel() + 1);
 				}
