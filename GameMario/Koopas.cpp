@@ -9,6 +9,7 @@
 #include "Goombas.h"
 #include "Game.h"
 #include "FireBullet.h"
+#include "Brick.h"
 
 CKoopa::CKoopa(int form) : CGameObject::CGameObject()
 {
@@ -215,21 +216,31 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (state == KOOPA_STATE_SPIN_LEFT)
 				{
-					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj))
 					{
-
 						if (e->nx > 0) {
+							if (dynamic_cast<CBrick*>(e->obj))
+							{
+								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+								brick->SetState(BRICK_STATE_HIDEN);
+							}
 							SetState(KOOPA_STATE_SPIN_RIGHT);
 						}
 					}
 
 
+
 				}
 				else if (state == KOOPA_STATE_SPIN_RIGHT)
 				{
-					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj))
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj))
 					{
 						if (e->nx < 0) {
+							if (dynamic_cast<CBrick*>(e->obj))
+							{
+								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+								brick->SetState(BRICK_STATE_HIDEN);
+							}
 							SetState(KOOPA_STATE_SPIN_LEFT);
 						}
 					}

@@ -26,8 +26,10 @@
 #include "ScoreBoard.h"
 #include "PiranhaPlant.h"
 
-#define QUESTIONBLOCK_AMOUNT	8
+#define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
+#define BRICK_AMOUNT				20
+#define ITEM_BRICK_AMOUNT			20
 
 class CPlayScene : public CScene
 {
@@ -39,7 +41,9 @@ protected:
 	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];
 	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];
+	CBrick* brick[BRICK_AMOUNT];
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
+	CGameObject* itemBrick[ITEM_BRICK_AMOUNT];
 
 	vector<LPGAMEOBJECT> objects;
 
@@ -48,7 +52,7 @@ protected:
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
-	void _ParseSection_ITEM_QUESTION_OBJECTS(string line);
+	void _ParseSection_ITEM_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
 	//void _ParseSection_STATIC_OBJECTS(string line);
 	//void _ParseSection_BACKGROUND_OBJECTS(string line);

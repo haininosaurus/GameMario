@@ -55,6 +55,7 @@ int CMario::GetCurrentWidthMario()
 		return MARIO_TAIL_BBOX_WIDTH;
 	else if (level == MARIO_LEVEL_FIRE)
 		return MARIO_FIRE_BBOX_WIDTH;
+	else return 0;
 }
 
 int CMario::GetCurrentHeightMario()
@@ -67,6 +68,7 @@ int CMario::GetCurrentHeightMario()
 		return MARIO_TAIL_BBOX_HEIGHT;
 	else if (level == MARIO_LEVEL_FIRE)
 		return MARIO_FIRE_BBOX_HEIGHT;
+	else return 0;
 }
 double CMario::GetCenterWidthMario()
 {
@@ -187,7 +189,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-	float t;
+	//float t;
 
 	// turn off collision when die 
 	if (state != MARIO_STATE_DIE)
@@ -228,7 +230,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 		// reset untouchable timer if untouchable time has passed
-		if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+		if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 		{
 			untouchable_start = 0;
 			untouchable = 0;
@@ -321,7 +323,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							{
 								if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT)
 								{
-									kick_start = GetTickCount();
+									kick_start = GetTickCount64();
 									if (e->nx < 0)
 									{
 										SetState(MARIO_STATE_KICK);
@@ -519,14 +521,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (GetTickCount() - kick_start < 150 && !take_tortoistate_state)
+	if (GetTickCount64() - kick_start < 150 && !take_tortoistate_state)
 		SetState(MARIO_STATE_KICK);
 
-	if (GetTickCount() - fight_start < 300)
+	if (GetTickCount64() - fight_start < 300)
 		SetState(MARIO_STATE_FIGHT);
 	else fight_state = 0;
 	
-	if (GetTickCount() - shoot_fire_bullet_start < 200)
+	if (GetTickCount64() - shoot_fire_bullet_start < 200)
 	{
 		if(nx > 0) 	SetState(MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT);
 		else SetState(MARIO_STATE_SHOOT_FIRE_BULLET_LEFT);
@@ -538,20 +540,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CreateFireBullet(NULL);
 	}
 
-	if (state == MARIO_STATE_RUNNING_RIGHT && running_time_right == -1) running_time_right = GetTickCount();
-	else if (state == MARIO_STATE_RUNNING_LEFT && running_time_left == -1) running_time_left = GetTickCount();
+	if (state == MARIO_STATE_RUNNING_RIGHT && running_time_right == -1) running_time_right = (DWORD)GetTickCount64();
+	else if (state == MARIO_STATE_RUNNING_LEFT && running_time_left == -1) running_time_left = (DWORD)GetTickCount64();
 
-	if (GetTickCount() - GetKickStart() < 200) SetState(MARIO_STATE_KICK);
+	if (GetTickCount64() - GetKickStart() < 200) SetState(MARIO_STATE_KICK);
 	else kick_state = 0;
 
-	if (GetTickCount() - fly_low_start < 300)
+	if (GetTickCount64() - fly_low_start < 300)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 		else SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
 	else fly_low_state = 0;
 	
-	if (GetTickCount() - fly_high_start < 1000)
+	if (GetTickCount64() - fly_high_start < 1000)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_HIGH_RIGHT);
 		else SetState(MARIO_STATE_FLYING_HIGH_LEFT);
@@ -565,7 +567,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (nx > 0)
 		{
-			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			if (GetTickCount64() - GetWalkRightTime() < sliding_time_right)
 			{
 				SetState(MARIO_STATE_WALKING_RIGHT);
 				slide_state = 1;
@@ -574,7 +576,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else
 		{
-			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			if (GetTickCount64() - GetWalkLeftTime() < sliding_time_left)
 			{
 				SetState(MARIO_STATE_WALKING_LEFT);
 				slide_state = 1;
@@ -586,7 +588,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (nx > 0)
 		{
-			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			if (GetTickCount64() - GetWalkRightTime() < sliding_time_right)
 			{
 				SetState(MARIO_STATE_RUNNING_RIGHT);
 				slide_state = 1;
@@ -595,7 +597,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else
 		{
-			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			if (GetTickCount64() - GetWalkLeftTime() < sliding_time_left)
 			{
 				SetState(MARIO_STATE_RUNNING_LEFT);
 				slide_state = 1;
@@ -607,7 +609,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (nx > 0)
 		{
-			if (GetTickCount() - GetWalkRightTime() < sliding_time_right)
+			if (GetTickCount64() - GetWalkRightTime() < sliding_time_right)
 			{
 				SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
 				slide_state = 1;
@@ -616,7 +618,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else
 		{
-			if (GetTickCount() - GetWalkLeftTime() < sliding_time_left)
+			if (GetTickCount64() - GetWalkLeftTime() < sliding_time_left)
 			{
 				SetState(MARIO_STATE_RUNNING_LEFT_FAST);
 				slide_state = 1;

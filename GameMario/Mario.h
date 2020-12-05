@@ -263,7 +263,7 @@ public:
 	DWORD GetFlyHighStart() { return fly_high_start; }
 	DWORD GetShootFireBulletStart() { return shoot_fire_bullet_start; }
 
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = (DWORD)GetTickCount64(); }
 
 	void SetJumpStart(DWORD t){ jump_start = t; }
 	void SetKickStart(int t) { kick_start = t; }
@@ -287,7 +287,7 @@ public:
 	void ResetSlidingTimeLeft() { sliding_time_left = 0; }
 
 	void SetShootFireBulletStart(DWORD t) { shoot_fire_bullet_start = t; }
-	void SetSpeechJump() { speech_Jump += 0.0025; }
+	void SetSpeechJump() { speech_Jump += 0.0025f; }
 	void SetFightStart(DWORD t) { fight_start = t; }
 	void SetFlyLowStart(DWORD t) { fly_low_start = t; }
 	void SetFlyHighStart(DWORD t) { fly_high_start = t; }

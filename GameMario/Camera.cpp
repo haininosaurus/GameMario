@@ -16,23 +16,23 @@ void CCamera::UpdateCam() {
 	}
 
 	else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
-		cx -= round(game->GetScreenWidth() / 2);
-		cy -= round(game->GetScreenHeight() / 2);
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
 		CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 		SetCamPosition(round(cx), round(cy));
 	}
 	else if (cx > game->GetScreenWidth() / 2 && cy > 165)
 	{
-		cx -= round(game->GetScreenWidth() / 2 - 40);
-		cy -= round(game->GetScreenHeight() / 2);
+		cx -= game->GetScreenWidth() / 2 - 40;
+		cy -= game->GetScreenHeight() / 2;
 		CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
 		SetCamPosition(round(cx), 240.0f);
 	}
 
 	else if (cx > game->GetScreenWidth() / 2)
 	{
-		cx -= round(game->GetScreenWidth() / 2);
-		cy -= round(game->GetScreenHeight() / 2);
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
 		SetCamPosition(round(cx), 0.0f);
 		CGame::GetInstance()->SetCamPos(round(cx), 0.0f);
 

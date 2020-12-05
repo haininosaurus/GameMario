@@ -32,8 +32,17 @@ class CLeaf : public CGameObject
 	int isRight;
 public:
 	CLeaf() {
-		effect_right_time_start = 0;
-		effect_left_time_start = 0;
+		initLeaf();
+	}
+	void initLeaf() {
+		effect_state = 0;
+		hiden_state = 1;
+		effect_left_time_start = (DWORD)0.0f;
+		effect_left_time = (DWORD)0.0f;
+		effect_right_time = (DWORD)0.0f;
+		effect_right_time_start = (DWORD)0.0f;
+		effect_left_time_start = (DWORD)0.0f;
+		isRight = 0;
 	}
 	void SetState(int state);
 	int IsHidenState() { return hiden_state; }

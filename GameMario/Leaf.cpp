@@ -21,40 +21,40 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (!effect_left_time_start && !effect_right_time_start)
 		{
-			if (GetTickCount() - effect_time_start < 300)
+			if (GetTickCount64() - effect_time_start < 300)
 			{
 				isRight = 1;
 				vy = -LEAF_SPEED_Y;
 			}
 			else
 			{
-				effect_right_time_start = GetTickCount();
+				effect_right_time_start = GetTickCount64();
 			}
 		}
 
 
-		if (GetTickCount() - effect_right_time_start < EFFECT_LIMIT_TIME && effect_right_time_start != 0)
+		if (GetTickCount64() - effect_right_time_start < EFFECT_LIMIT_TIME && effect_right_time_start != 0)
 		{
 			isRight = 1;
 			vy = LEAF_GRAVITY_Y;
 			vx = LEAF_SPEED_X;
 		}
-		else if (GetTickCount() - effect_right_time_start >= EFFECT_LIMIT_TIME && effect_right_time_start != 0)
+		else if (GetTickCount64() - effect_right_time_start >= EFFECT_LIMIT_TIME && effect_right_time_start != 0)
 		{
 			effect_right_time_start = 0;
-			effect_left_time_start = GetTickCount();
+			effect_left_time_start = GetTickCount64();
 		}
 
-		if (GetTickCount() - effect_left_time_start < EFFECT_LIMIT_TIME && effect_left_time_start != 0)
+		if (GetTickCount64() - effect_left_time_start < EFFECT_LIMIT_TIME && effect_left_time_start != 0)
 		{
 			isRight = 0;
 			vy = LEAF_GRAVITY_Y;
 			vx = -LEAF_SPEED_X;
 		}
-		else if (GetTickCount() - effect_left_time_start >= EFFECT_LIMIT_TIME && effect_left_time_start != 0)
+		else if (GetTickCount64() - effect_left_time_start >= EFFECT_LIMIT_TIME && effect_left_time_start != 0)
 		{
 			effect_left_time_start = 0;
-			effect_right_time_start = GetTickCount();
+			effect_right_time_start = GetTickCount64();
 		}
 		
 		y += dy;
@@ -94,7 +94,7 @@ void CLeaf::SetState(int state)
 		if (effect_state == 0)
 		{
 			effect_state = 1;
-			effect_time_start = GetTickCount();
+			effect_time_start = GetTickCount64();
 		}
 		break;
 	case LEAF_STATE_HIDEN:

@@ -20,17 +20,23 @@ class CQuestionBlock : public CGameObject
 {
 	DWORD deflect_start;
 	bool check_init_location;
-	int init_location_y;
+	float init_location_y;
 	CGameObject* item[ITEM_AMOUNT];
 
 public:
-	CQuestionBlock() { check_init_location = false; }
+	CQuestionBlock() { 
+		check_init_location = false;
+		deflect_start = (DWORD)0.0f;
+		init_location_y = 0.0f;
+		for (int i = 0; i < ITEM_AMOUNT; i++)
+			item[i] = NULL;
+	}
 	void AddItemQuestionBlock(CGameObject* item);
 	void SetStateItem(int state);
 	void SetDeflectStart(DWORD deflectstart) { deflect_start = deflectstart; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void SetState(int state);
+	virtual void SetState(int state);
 };
 

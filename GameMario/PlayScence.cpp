@@ -18,7 +18,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 }
 
 /*
-	Load scene resources from scene file (textures, sprites, animations and objects)
+	Load scene resources from scene file (textures, sprites, animations and objects)2
 	See scene1.txt, scene2.txt for detail format specification
 */
 
@@ -154,8 +154,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
+	float x = (float)atof(tokens[1].c_str());
+	float y = (float)atof(tokens[2].c_str());
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
@@ -177,14 +177,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_BRICK:
+		obj = new CBrick();
+		for (int i = 0; i < BRICK_AMOUNT; i++)
+		{
+			if (brick[i] == NULL)
+			{
+				brick[i] = (CBrick*)obj;
+				break;
+			}
+		}
+		break;
 	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_QUESTION_BLOCK:
 		obj = new CQuestionBlock();
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
 		{
-			if (questionBlock[i] == NULL) {
+			if (questionBlock[i] == NULL)
+			{
 				questionBlock[i] = (CQuestionBlock*)obj;
 				break;
 			}
@@ -246,19 +257,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 }
 
-void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
+void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
 
-	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+	if (tokens.size() < 6) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
+	float x = (float)atof(tokens[1].c_str());
+	float y = (float)atof(tokens[2].c_str());
 
 	int ani_set_id = atoi(tokens[3].c_str());
 	int state = atoi(tokens[4].c_str());
+	int item_object = atoi(tokens[5].c_str());
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
@@ -270,13 +282,26 @@ void CPlayScene::_ParseSection_ITEM_QUESTION_OBJECTS(string line)
 		obj->SetState(state);
 		if (state == 0)
 		{
-			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (itemQuestionBlock[i] == NULL)
+			if (item_object == 0) {
+				for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
 				{
-					itemQuestionBlock[i] = (CCoin*)obj;
-					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-					break;
+					if (itemQuestionBlock[i] == NULL)
+					{
+						itemQuestionBlock[i] = (CCoin*)obj;
+						questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
+						break;
+					}
+				}
+			}
+			else if (item_object == 1) {
+				for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
+				{
+					if (itemBrick[i] == NULL)
+					{
+						itemBrick[i] = (CCoin*)obj;
+						brick[i]->AddItemBrick(itemBrick[i]);
+						break;
+					}
 				}
 			}
 		}
@@ -333,8 +358,8 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
+	float x = (float)atof(tokens[1].c_str());
+	float y = (float)atof(tokens[2].c_str());
 
 	int ani_set_id = atoi(tokens[3].c_str());
 	int state = atoi(tokens[4].c_str());
@@ -432,7 +457,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_QUESTION_OBJECTS(line); break;
+		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_OBJECTS(line); break;
 		case SCENE_SECTION_ENEMIES: _ParseSection_ENEMIES(line); break;
 		}
 	}
@@ -639,15 +664,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	//if key right is down, disable key left and key down
 	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
 	{
-		mario->SetWalkRightTime(GetTickCount());
+		mario->SetWalkRightTime(GetTickCount64());
 		//mario doesn't turn left
-		if (GetTickCount() - mario->GetWalkLeftTime() > 200)
+		if (GetTickCount64() - mario->GetWalkLeftTime() > 200)
 		{
 			//mario runs right or runs fast right
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
 				//mario run fast right
-				if (GetTickCount() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
+				if (GetTickCount64() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
 					mario->SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
 				else mario->SetState(MARIO_STATE_RUNNING_RIGHT); 					//mario run right
 			}
@@ -668,12 +693,12 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	//if key left is down, disable key right and key down
 	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT))
 	{
-		mario->SetWalkLeftTime(GetTickCount());
-		if (GetTickCount() - mario->GetWalkRightTime() > 200)
+		mario->SetWalkLeftTime(GetTickCount64());
+		if (GetTickCount64() - mario->GetWalkRightTime() > 200)
 		{
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
-				if (GetTickCount() - mario->GetRunningLeftTime() > 1000 && mario->GetRunningLeftTime() != -1)
+				if (GetTickCount64() - mario->GetRunningLeftTime() > 1000 && mario->GetRunningLeftTime() != -1)
 					mario->SetState(MARIO_STATE_RUNNING_LEFT_FAST);
 				else mario->SetState(MARIO_STATE_RUNNING_LEFT);
 			}
@@ -693,7 +718,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
 	if (game->IsKeyDown(DIK_X)) {
-		if (GetTickCount() - mario->GetJumpStart() < 380)
+		if (GetTickCount64() - mario->GetJumpStart() < 380)
 		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();
