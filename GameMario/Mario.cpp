@@ -388,6 +388,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 				}
+				if (e->ny != 0 && sit_state)
+					SetPosition(2272, 357);
 			}
 
 			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block

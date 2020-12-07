@@ -46,6 +46,7 @@ protected:
 	CGameObject* itemBrick[ITEM_BRICK_AMOUNT];
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> effectObjects;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -64,6 +65,8 @@ public:
 	virtual void Load();
 	virtual void Update(DWORD dt);
 	virtual void Render();
+
+	void AddEffectObject(CGameObject* obj) { effectObjects.push_back(obj); }
 	virtual void Unload();
 
 	CMario* GetPlayer() { return player; }

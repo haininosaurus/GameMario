@@ -57,7 +57,7 @@ void CCoin::SetState(int state)
 		if (effect_state == 0)
 		{
 			effect_state = 1;
-			effect_time_start = GetTickCount();
+			effect_time_start = GetTickCount64();
 		}
 		break;
 	case COIN_STATE_HIDEN:

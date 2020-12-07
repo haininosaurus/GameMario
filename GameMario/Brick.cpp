@@ -1,6 +1,9 @@
 #include "Brick.h"
 #include "Utils.h"
 #include "Coin.h"
+#include "Animations.h"
+#include "PlayScence.h"
+#include "Game.h"
 
 void CBrick::Render()
 {
@@ -32,4 +35,44 @@ void CBrick::AddItemBrick(CGameObject* obj)
 			return;
 		}
 	}
+}
+
+void CBrick::createEffectDestroy()
+{
+	//CGameObject* obj[4];
+	//for (int i = 0; i < 4; i++)
+	//	obj[i] = new CPieceBrick();
+
+	//obj[0]->SetPosition(x, y);
+	//obj[1]->SetPosition(x + PIECE_BBOX_WIDTH + 1, y);
+	//obj[2]->SetPosition(x, y + PIECE_BBOX_HEIGHT + 1);
+	//obj[3]->SetPosition(x + PIECE_BBOX_WIDTH + 1, y + PIECE_BBOX_HEIGHT + 1);
+
+	//CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	//LPANIMATION_SET ani_set = animation_sets->Get(PIECE_BRICK_ANIMATIONSET);
+
+	//LPSCENE scene = CGame::GetInstance()->GetCurrentScene();
+
+	//for(int i = 0; i < 4; i++)
+	//	obj[i]->SetAnimationSet(ani_set);
+	//for (int i = 0; i < 4; i++)
+	//	CPlayScene::AddEffectObject(obj[i]);
+}
+
+//CPieceBrick::CPieceBrick(float x, float y, float v)
+//{
+//	this->x = x;
+//	this->y = y;
+//	this->vy = v;
+//}
+
+void CPieceBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CGameObject::Update(dt);
+
+}
+
+void CPieceBrick::Render()
+{
+	animation_set->at(0)->Render(x, y);
 }

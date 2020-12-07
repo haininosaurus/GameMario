@@ -240,6 +240,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							{
 								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 								brick->SetState(BRICK_STATE_HIDEN);
+								brick->createEffectDestroy();
 							}
 							SetState(KOOPA_STATE_SPIN_LEFT);
 						}

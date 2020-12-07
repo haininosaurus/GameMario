@@ -476,6 +476,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
+	vector<LPGAMEOBJECT> effObjects;
 
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
@@ -492,16 +493,24 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 
 		objects[i]->Update(dt, &coObjects);
 
+	}	
+
+	for (size_t i = 1; i < effectObjects.size(); i++)
+	{
+		effObjects.push_back(effectObjects[i]);
 	}
+	for (size_t i = 0; i < effectObjects.size(); i++)
+	{
 
+		effectObjects[i]->Update(dt, &effObjects);
 
-
-	
+	}
 }
 
 void CPlayScene::Render()
@@ -511,6 +520,12 @@ void CPlayScene::Render()
 	{
 		//if (!dynamic_cast<CPipe*>(objects[i]))
 			objects[i]->Render();
+	}
+
+	for (int i = effectObjects.size() - 1; i >= 0; i--)
+	{
+		//if (!dynamic_cast<CPipe*>(objects[i]))
+		effectObjects[i]->Render();
 	}
 
 	//for (int i = objects.size() - 1; i >= 0; i--)
@@ -547,7 +562,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_X:
 
 		if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
-			mario->SetJumpStart(GetTickCount());
+			mario->SetJumpStart(GetTickCount64());
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
