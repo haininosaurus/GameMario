@@ -14,6 +14,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	DebugOut(L"playscene: \n");
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
@@ -381,33 +382,6 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
 }
-//void CPlayScene::_ParseSection_STATIC_OBJECTS(string line)
-//{
-//	vector<string> tokens = split(line);
-//
-//
-//	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
-//
-//	int object_type = atoi(tokens[0].c_str());
-//	float x = atof(tokens[1].c_str());
-//	float y = atof(tokens[2].c_str());
-//
-//	int ani_set_id = atoi(tokens[3].c_str());
-//	int type = atoi(tokens[4].c_str());
-//
-//	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-//	CGameObject* obj = NULL;
-//
-//	obj = new CStaticObject(type);
-//
-//	obj->SetPosition(x, y);
-//
-//	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-//
-//	obj->SetAnimationSet(ani_set);
-//	objects.push_back(obj);
-//}
-
 
 void CPlayScene::Load()
 {
@@ -571,7 +545,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				|| mario->GetState() == MARIO_STATE_RUNNING_LEFT_FAST
 				|| mario->GetState() == MARIO_STATE_FLYING_HIGH_LEFT)
 			{
-				mario->SetFlyHighStart(GetTickCount());
+				mario->SetFlyHighStart(GetTickCount64());
 				if(mario->nx > 0)
 					mario->SetState(MARIO_STATE_FLYING_HIGH_RIGHT);
 				else mario->SetState(MARIO_STATE_FLYING_HIGH_LEFT);

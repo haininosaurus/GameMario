@@ -1,0 +1,5 @@
+﻿  IntroScene.cpp
+F:\COURSES\game directx\GameMario1\GameMario\GameMario\IntroScene.cpp(115,20): warning C4018: '<': signed/unsigned mismatch
+F:\COURSES\game directx\GameMario1\GameMario\GameMario\IntroScene.cpp(137,20): warning C4018: '<': signed/unsigned mismatch
+F:\COURSES\game directx\GameMario1\GameMario\GameMario\IntroScene.cpp(372,20): warning C4018: '<': signed/unsigned mismatch
+  GameMario.vcxproj -> F:\COURSES\game directx\GameMario1\GameMario\Debug\GameMario.exe

@@ -5,6 +5,7 @@
 #include "Utils.h"
 
 #include "PlayScence.h"
+#include "IntroScene.h"
 
 CGame* CGame::__instance = NULL;
 
@@ -338,7 +339,11 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 
-	LPSCENE scene = new CPlayScene(id, path);
+	LPSCENE scene = NULL;
+	if(id == 1)
+		scene = new CPlayScene(id, path);
+	if(id == 2)
+		scene = new CIntroScene(id, path);
 	scenes[id] = scene;
 }
 
@@ -392,7 +397,14 @@ void CGame::SwitchScene(int scene_id)
 	CAnimations::GetInstance()->Clear();
 
 	current_scene = scene_id;
-	LPSCENE s = scenes[scene_id];
-	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
+	if (scene_id == 1) {
+		CPlayScene* s = (CPlayScene*)scenes[scene_id];
+		CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+	}
+	if (scene_id == 2) {
+		CIntroScene* s = (CIntroScene*)scenes[scene_id];
+		CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+		s->Load();
+	}
 }
