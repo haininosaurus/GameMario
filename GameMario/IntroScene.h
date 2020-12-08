@@ -20,6 +20,7 @@
 #include "FirePlantBullet.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "Luigi.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8

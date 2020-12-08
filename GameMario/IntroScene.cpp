@@ -11,8 +11,12 @@
 #include "Animations.h"
 #include "GameObject.h"
 
+#include "Game.h"
+
 
 using namespace std;
+
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
 CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
@@ -57,6 +61,7 @@ CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BLUE_BRICK				20
 #define OBJECT_TYPE_SCORE_BOARD				21
 #define OBJECT_TYPE_PIRANHA_PLANT			22
+#define OBJECT_TYPE_LUIGI					23
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -169,9 +174,7 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
-		obj = new CMario();
-		break;
+	case OBJECT_TYPE_MARIO:	obj = new CMario();	break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
 		break;
@@ -183,6 +186,7 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
+	case OBJECT_TYPE_LUIGI: obj = new CLuigi(); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -354,7 +358,6 @@ void CIntroScene::Update(DWORD dt)
 
 	}
 }
-
 void CIntroScene::Render()
 {
 
@@ -377,7 +380,9 @@ void CIntroScene::Unload()
 
 void CIntroScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-
+	CGame* game = CGame::GetInstance();
+	if(game->IsKeyDown(DIK_X))
+		CGame::GetInstance()->SwitchScene(1);
 }
 void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 {

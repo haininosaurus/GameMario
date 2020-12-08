@@ -14,7 +14,6 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
-	DebugOut(L"playscene: \n");
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 

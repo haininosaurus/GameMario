@@ -23,6 +23,7 @@
 
 
 #include "PlayScence.h"
+#include "IntroScene.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"MARIO BROS 3"

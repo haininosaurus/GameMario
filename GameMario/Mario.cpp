@@ -20,7 +20,7 @@
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_SMALL;
+	level = MARIO_LEVEL_TAIL;
 	is_high = 0;
 	untouchable = 0;
 	run_state = 0;
