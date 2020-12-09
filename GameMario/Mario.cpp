@@ -17,13 +17,15 @@
 #include "FirePlantBullet.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "Curtain.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_TAIL;
+	level = MARIO_LEVEL_BIG;
 	is_high = 0;
 	untouchable = 0;
 	run_state = 0;
+	intro_state = 1;
 	jump_state = 0;
 	kick_state = 0;
 	turn_state = 0;
@@ -36,7 +38,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	tortoiseshell = NULL;
 	for (int i = 0; i < 2; i++)
 		fire_bullet[i] = NULL;
-
+	create_time = GetTickCount64();
 	SetState(MARIO_STATE_IDLE);
 
 	start_x = x;
@@ -180,6 +182,9 @@ void CMario::FilterCollision(
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
+	if (intro_state) CreateIntroAnimationMario();
+
 	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
 	// Simple fall down
@@ -206,9 +211,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float min_tx, min_ty, nx = 0, ny = 0;
 		float rdx = 0;
 		float rdy = 0;
-		//DebugOut(L"coevent: %d\n", coEvents.size());
+
 		CMario::FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-		//DebugOut(L"coeventresult: %d\n\n", coEventsResult.size());
+
 		float remainingTime = 1.0f - min_tx;
 		
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
@@ -407,8 +412,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			if (dynamic_cast<CRoad*>(e->obj))
-			{
-				
+			{				
 				CRoad* road = dynamic_cast<CRoad*>(e->obj);
 				if (e->ny < 0)
 				{
@@ -628,6 +632,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else slide_state = 0;
 		}
 	}
+
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -884,6 +889,7 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
+
 		run_state = 0;
 		sit_state = 0;
 		turn_state = 0;
@@ -892,7 +898,7 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = walking_right_speech;
+		vx = MARIO_WALKING_SPEED;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
@@ -904,7 +910,7 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = -walking_left_speech;
+		vx = -MARIO_WALKING_SPEED;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
@@ -1148,7 +1154,14 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 }
 
+void CMario::CreateIntroAnimationMario()
+{
+	if (GetTickCount64() - create_time < 1500) nx = 0;
+	if (GetTickCount64() - create_time < 2000 && GetTickCount64() - create_time > 1500) {
+		SetState(MARIO_STATE_WALKING_LEFT);
+	}
 
+}
 
 /*
 	Reset Mario status to the beginning state of a scene

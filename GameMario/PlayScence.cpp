@@ -188,7 +188,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 		}
 		break;
-	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
+	case OBJECT_TYPE_ROAD: 
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CRoad(type);
+		}
+		break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_QUESTION_BLOCK:
 		obj = new CQuestionBlock();
@@ -552,7 +557,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 			else if (mario->vy != 0 && mario->GetJumpState())
 			{
-				mario->SetFlyLowStart(GetTickCount());
+				mario->SetFlyLowStart(GetTickCount64());
 				if (mario->nx > 0)
 					mario->SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 				else mario->SetState(MARIO_STATE_FLYING_LOW_LEFT);

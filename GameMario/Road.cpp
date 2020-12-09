@@ -8,10 +8,14 @@ void CRoad::Render()
 
 void CRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
-	r = x + BRICK_BBOX_WIDTH;
-	b = y + BRICK_BBOX_HEIGHT;
+	if (type == 0)
+	{
+		l = x;
+		t = y;
+		r = x + INTRO_ROAD_BBOX_WIDTH;
+		b = y + INTRO_ROAD_BBOX_HEIGHT;
+	}
+
 }
 
 void CHeadRoad::Render()
@@ -23,6 +27,6 @@ void CHeadRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + BRICK_BBOX_WIDTH;
-	b = y + BRICK_BBOX_HEIGHT;
+	r = x + ROAD_BBOX_WIDTH;
+	b = y + ROAD_BBOX_HEIGHT;
 }

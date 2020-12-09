@@ -22,7 +22,7 @@
 
 CLuigi::CLuigi(float x, float y) : CGameObject()
 {
-	level = LUIGI_LEVEL_TAIL;
+	level = LUIGI_LEVEL_BIG;
 	is_high = 0;
 	untouchable = 0;
 	run_state = 0;

@@ -21,6 +21,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Luigi.h"
+#include "Curtain.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8

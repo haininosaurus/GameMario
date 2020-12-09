@@ -1,3 +1,4 @@
-﻿  Luigi.cpp
-F:\COURSES\game directx\GameMario1\GameMario\GameMario\Luigi.cpp(304,37): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+﻿  Mario.cpp
+F:\COURSES\game directx\GameMario1\GameMario\GameMario\Mario.cpp(41,30): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+F:\COURSES\game directx\GameMario1\GameMario\GameMario\Mario.cpp(331,37): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
   GameMario.vcxproj -> F:\COURSES\game directx\GameMario1\GameMario\Debug\GameMario.exe

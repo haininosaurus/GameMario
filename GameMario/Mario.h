@@ -189,6 +189,7 @@ class CMario : public CGameObject
 	float start_y;
 
 	bool is_high;
+	int intro_state;
 	int run_state;
 	int run_fast_state;
 	int jump_state;
@@ -223,7 +224,7 @@ class CMario : public CGameObject
 
 	DWORD sliding_time_right;
 	DWORD sliding_time_left;
-
+	DWORD create_time;
 
 	float speech_Jump;
 
@@ -265,6 +266,7 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = (DWORD)GetTickCount64(); }
 
+	void SetIntroState(int s) { intro_state = s; }
 	void SetJumpStart(DWORD t){ jump_start = t; }
 	void SetKickStart(int t) { kick_start = t; }
 	void SetJumpState(int j) { jump_state = j; }
@@ -295,10 +297,13 @@ public:
 	void CreateFireBullet(CGameObject* fireBullet);
 	void ShootFireBullet();
 
+	void CreateIntroAnimationMario();
+
 	int GetCurrentWidthMario();
 	int GetCurrentHeightMario();
 	double GetCenterWidthMario();
 	double GetCenterHeightMario();
+
 
 	void Reset();
 

@@ -62,6 +62,7 @@ CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SCORE_BOARD				21
 #define OBJECT_TYPE_PIRANHA_PLANT			22
 #define OBJECT_TYPE_LUIGI					23
+#define OBJECT_TYPE_CURTAIN					24
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -174,11 +175,18 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:	obj = new CMario();	break;
+	case OBJECT_TYPE_MARIO:
+		obj = new CMario();
+		break;
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
 		break;
-	case OBJECT_TYPE_ROAD: obj = new CRoad(); break;
+	case OBJECT_TYPE_ROAD:
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CRoad(type);
+		}
+		break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
@@ -187,6 +195,7 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_LUIGI: obj = new CLuigi(); break;
+	case OBJECT_TYPE_CURTAIN: obj = new CCurtain(); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

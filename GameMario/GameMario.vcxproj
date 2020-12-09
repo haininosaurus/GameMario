@@ -27,6 +27,7 @@
     <ClCompile Include="CloudBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="ColorBrick.cpp" />
+    <ClCompile Include="Curtain.cpp" />
     <ClCompile Include="FireBullet.cpp" />
     <ClCompile Include="FirePiranhaPlant.cpp" />
     <ClCompile Include="FirePlantBullet.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ColorBrick.h" />
+    <ClInclude Include="Curtain.h" />
     <ClInclude Include="FireBullet.h" />
     <ClInclude Include="FirePiranhaPlant.h" />
     <ClInclude Include="FirePlantBullet.h" />

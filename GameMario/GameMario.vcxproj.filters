@@ -117,6 +117,9 @@
     <ClCompile Include="Luigi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Curtain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mario.h">
@@ -222,6 +225,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Luigi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Curtain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
