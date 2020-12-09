@@ -193,6 +193,8 @@ class CLuigi : public CGameObject
 	DWORD sliding_time_right;
 	DWORD sliding_time_left;
 
+	DWORD create_time;
+
 
 	float speech_Jump;
 
@@ -276,6 +278,8 @@ public:
 		float& rdy);
 	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
+
+	void CreateIntroAnimationLuigi();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

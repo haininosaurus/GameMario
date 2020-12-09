@@ -120,6 +120,9 @@
     <ClCompile Include="Curtain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mario.h">
@@ -228,6 +231,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Curtain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

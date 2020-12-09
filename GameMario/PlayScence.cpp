@@ -174,6 +174,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
+		player->SetIntroState(0);
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -374,7 +375,14 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(state); break;
+	case OBJECT_TYPE_GOOMBA:
+		{
+			obj = new CGoomba(state);
+			CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
+			goomba->SetIntroState(0);
+			break;
+		}
+
 	case OBJECT_TYPE_KOOPA: obj = new CKoopa(state); break;
 	default:
 		break;

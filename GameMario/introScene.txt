@@ -16,6 +16,7 @@
 13	Textures\intro-road.png	1	1	1
 14	Textures\curtain.png	1	1	1
 15	Textures\luigi.png	255	255	255
+16	Textures\title-mario.png	1	1	1
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -587,6 +588,8 @@
 #CURTAIN
 40040	0	0	352	183	14
 
+#TITLE
+40041	0	0	256	186	16
 
 #COIN
 50001	294	101	302	116	8
@@ -1113,6 +1116,9 @@
 #CURTAIN
 840	40040	100
 
+#TITLE
+842	40041	100
+
 #CLOUD BRICK
 841	60001	100
 #BLUE BRICK
@@ -1253,8 +1259,12 @@
 
 139	839
 
+
 #CURTAIN
 140	840
+
+#TITLE
+142	842
 
 # MARIO FIRE BULLET
 901	901
@@ -1290,8 +1300,11 @@
 # MARIO
 0	290	50	1
 
+[ENEMIES]
+#goomba
+1	86	0	2	0
 
-
+[OBJECTS]
 #road
 2	0	165	17	0
 2	32	165	17	0
@@ -1305,7 +1318,9 @@
 2	288	165	17	0
 2	320	165	17	0
 
+#title
 
+25	25	-186	142
 
 #background
 6	0	0	139

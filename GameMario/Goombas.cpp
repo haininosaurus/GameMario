@@ -14,7 +14,10 @@
 CGoomba::CGoomba(int form) : CGameObject::CGameObject()
 {
 	SetForm(form);
-	time_start = GetTickCount();
+	intro_state = 1;
+	hiden_state = 0;
+	time_start = GetTickCount64();
+	create_time = GetTickCount64();
 	SetState(GOOMBA_STATE_WALKING);
 }
 
@@ -181,7 +184,14 @@ void CGoomba::FilterCollision(
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
+
 	CGameObject::Update(dt, coObjects);
+
+	if (intro_state) CreateIntroAnimationGoomba();
+	DebugOut(L"hiden state: %d\n", hiden_state);
+	if (hiden_state == 1) return;
+
 
 	if (GetState() != GOOMBA_STATE_DIE && !isDestroy) {
 		vy += GOOMBA_GRAVITY * dt;
@@ -210,7 +220,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			y += min_ty * dy + ny * 0.2f;
 
 			if (ny != 0) vy = 0;
-			//if (nx != 0) vx = 0;
+
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
@@ -291,45 +301,46 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (form == PARAGOOMBA_BROWN_FORM)
 	{
-		if (GetTickCount() - time_start < 2000)
+		if (GetTickCount64() - time_start < 2000)
 		{
-			if (GetTickCount() - time_start < 500)
+			if (GetTickCount64() - time_start < 500)
 				SetState(GOOMBA_STATE_JUMPING);
 			else SetState(GOOMBA_STATE_WALKING);
 		}
-		else time_start = GetTickCount();
+		else time_start = GetTickCount64();
 	}
 }
 
 void CGoomba::Render()
 {
-		int ani = GOOMBA_ANI_YELLOW_WALKING;
-		if (form == GOOMBA_YELLOW_FORM)
-		{
-			if (state == GOOMBA_STATE_DIE) {
-				ani = GOOMBA_ANI_YELLOW_DIE;
-			}
-			else if (state == GOOMBA_STATE_THROWN) {
-				ani = GOOMBA_ANI_THROWN;
-			}
+	if (hiden_state) return;
+	int ani = GOOMBA_ANI_YELLOW_WALKING;
+	if (form == GOOMBA_YELLOW_FORM)
+	{
+		if (state == GOOMBA_STATE_DIE) {
+			ani = GOOMBA_ANI_YELLOW_DIE;
 		}
-		else if (form == GOOMBA_BROWN_FORM)
-		{
-			if (state == GOOMBA_STATE_DIE) {
-				ani = GOOMBA_ANI_BROWN_DIE;
-			}
-			else if (state == GOOMBA_STATE_THROWN) {
-				ani = GOOMBA_ANI_THROWN;
-			}
-			else ani = GOOMBA_ANI_BROWN_WALKING;
+		else if (state == GOOMBA_STATE_THROWN) {
+			ani = GOOMBA_ANI_THROWN;
 		}
-		else if (form == PARAGOOMBA_BROWN_FORM)
-		{
-			if (!jump_state)
-				ani = PARAGOOMBA_ANI_BROWN_WALKING;
-			else ani = PARAGOOMBA_ANI_BROWN_JUMPING;
+	}
+	else if (form == GOOMBA_BROWN_FORM)
+	{
+		if (state == GOOMBA_STATE_DIE) {
+			ani = GOOMBA_ANI_BROWN_DIE;
 		}
-		animation_set->at(ani)->Render(x, y);
+		else if (state == GOOMBA_STATE_THROWN) {
+			ani = GOOMBA_ANI_THROWN;
+		}
+		else ani = GOOMBA_ANI_BROWN_WALKING;
+	}
+	else if (form == PARAGOOMBA_BROWN_FORM)
+	{
+		if (!jump_state)
+			ani = PARAGOOMBA_ANI_BROWN_WALKING;
+		else ani = PARAGOOMBA_ANI_BROWN_JUMPING;
+	}
+	animation_set->at(ani)->Render(x, y);
 }
 
 void CGoomba::SetState(int state)
@@ -338,19 +349,22 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE:
+		hiden_state = 0;
 		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE + 1;
 		vx = 0;
 		vy = 0;
 		break;
 	case GOOMBA_STATE_WALKING:
+		hiden_state = 0;
 		jump_state = 0;
 		vx = -GOOMBA_WALKING_SPEED;
 		break;
 	case GOOMBA_STATE_THROWN:
-		//vx = 0;
+		hiden_state = 0;
 		vy = -GOONBA_JUMP_DEFLECT_SPEED;
 		break;
 	case GOOMBA_STATE_JUMPING:
+		hiden_state = 0;
 		if (!jump_state)
 		{
 			y = y - 5;
@@ -359,8 +373,20 @@ void CGoomba::SetState(int state)
 
 		vy = -GOONBA_JUMP_SPEED;
 		break;
+	case GOOMBA_STATE_HIDEN:
+		hiden_state = 1;
+		break;
 	}
 
+}
+
+void CGoomba::CreateIntroAnimationGoomba()
+{
+	if (GetTickCount64() - create_time < 5500) SetState(GOOMBA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 6000) {
+		SetState(GOOMBA_STATE_WALKING);
+		vx = 0;
+	}
 }
 
 int CGoomba::GetState() {

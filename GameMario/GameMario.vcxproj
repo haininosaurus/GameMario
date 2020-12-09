@@ -51,6 +51,7 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Title.cpp" />
     <ClCompile Include="TransObject.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WoodBlock.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="TransObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WoodBlock.h" />

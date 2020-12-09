@@ -111,6 +111,7 @@ void CMushroom::FilterCollision(
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (state == MUSHROOM_STATE_HIDEN) return;
 	CGameObject::Update(dt, coObjects);
 
 	if (state == MUSHROOM_STATE_NORMAL)

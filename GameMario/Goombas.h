@@ -25,6 +25,7 @@
 #define GOOMBA_STATE_DIE			200
 #define GOOMBA_STATE_THROWN			300
 #define GOOMBA_STATE_JUMPING		400
+#define GOOMBA_STATE_HIDEN			500
 
 #define GOOMBA_ANI_YELLOW_WALKING			0
 #define GOOMBA_ANI_BROWN_WALKING			1
@@ -40,6 +41,9 @@ class CGoomba : public CGameObject
 {
 	bool isDestroy = false;
 	int jump_state;
+	int hiden_state;
+	int intro_state;
+	int create_time;
 
 	DWORD time_start;
 	DWORD timeDestroy = 0;
@@ -64,5 +68,8 @@ public:
 	virtual void SetState(int state);
 	virtual int GetState();
 	void SetForm(int f) { form = f; }
+	void SetIntroState(int s) { intro_state = s; }
 	int GetForm() { return form; }
+
+	void CreateIntroAnimationGoomba();
 };

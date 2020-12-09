@@ -15,6 +15,13 @@ void CRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
 		r = x + INTRO_ROAD_BBOX_WIDTH;
 		b = y + INTRO_ROAD_BBOX_HEIGHT;
 	}
+	if (type == 1)
+	{
+		l = x;
+		t = y;
+		r = x + ROAD_BBOX_WIDTH;
+		b = y + ROAD_BBOX_HEIGHT;
+	}
 
 }
 

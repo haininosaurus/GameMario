@@ -203,6 +203,7 @@ class CMario : public CGameObject
 	int slide_state;
 	int shoot_fire_bullet_state;
 
+	int checkSit;
 	
 	float walking_right_speech;
 	float walking_left_speech;
@@ -229,7 +230,7 @@ class CMario : public CGameObject
 	float speech_Jump;
 
 public:
-	float pcy;
+
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

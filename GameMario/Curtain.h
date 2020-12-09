@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define SPEED_Y		0.05f
+#define SPEED_Y		0.08f
 
 class CCurtain : public CGameObject
 {

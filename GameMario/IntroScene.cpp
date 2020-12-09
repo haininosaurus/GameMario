@@ -63,6 +63,7 @@ CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PIRANHA_PLANT			22
 #define OBJECT_TYPE_LUIGI					23
 #define OBJECT_TYPE_CURTAIN					24
+#define OBJECT_TYPE_TITLE					25
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -196,6 +197,7 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_LUIGI: obj = new CLuigi(); break;
 	case OBJECT_TYPE_CURTAIN: obj = new CCurtain(); break;
+	case OBJECT_TYPE_TITLE: obj = new CTitle(); break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

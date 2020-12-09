@@ -39,6 +39,7 @@ CLuigi::CLuigi(float x, float y) : CGameObject()
 	for (int i = 0; i < 2; i++)
 		fire_bullet[i] = NULL;
 
+	create_time = GetTickCount64();
 	SetState(LUIGI_STATE_IDLE);
 
 	start_x = x;
@@ -158,6 +159,7 @@ void CLuigi::FilterCollision(
 
 void CLuigi::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CreateIntroAnimationLuigi();
 	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
 	// Simple fall down
@@ -975,6 +977,28 @@ void CLuigi::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 }
 
+void CLuigi::CreateIntroAnimationLuigi()
+{
+	if (GetTickCount64() - create_time < 3300 && GetTickCount64() - create_time > 2500) {
+		SetState(LUIGI_STATE_WALKING_RIGHT);
+		if (GetWalkingRightSpeech() < LUIGI_WALKING_SPEED)
+			SetWalkingRightSpeech();
+	}
+
+	if (GetTickCount64() - create_time > 3300 && GetTickCount64() - create_time < 3700) {
+		SetState(LUIGI_STATE_JUMP);
+	}
+	if (GetTickCount64() - create_time > 3700 && GetTickCount64() - create_time < 4150) {
+		jump_state = 0;
+	}
+	if (GetTickCount64() - create_time > 4150 && GetTickCount64() - create_time < 4800) {
+		SetState(LUIGI_STATE_JUMP);
+	}
+	if (GetTickCount64() - create_time > 4800 && GetTickCount64() - create_time < 5000) {
+		jump_state = 0;
+	}
+
+}
 
 
 /*

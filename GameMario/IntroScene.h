@@ -22,6 +22,7 @@
 #include "Leaf.h"
 #include "Luigi.h"
 #include "Curtain.h"
+#include "Title.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8

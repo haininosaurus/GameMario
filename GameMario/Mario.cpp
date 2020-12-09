@@ -31,7 +31,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	turn_state = 0;
 	run_fast_state = 0;
 	fall_state = 0;
-	pcy = 0;
+
+	checkSit = 0;
 	walking_right_speech = 0;
 	walking_right_speech = 0;
 	take_tortoistate_state = 0;
@@ -898,7 +899,7 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = MARIO_WALKING_SPEED;
+		vx = walking_right_speech;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
@@ -910,7 +911,7 @@ void CMario::SetState(int state)
 		run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vx = -MARIO_WALKING_SPEED;
+		vx = -walking_left_speech;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
@@ -1156,9 +1157,25 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CMario::CreateIntroAnimationMario()
 {
-	if (GetTickCount64() - create_time < 1500) nx = 0;
-	if (GetTickCount64() - create_time < 2000 && GetTickCount64() - create_time > 1500) {
+
+	if (GetTickCount64() - create_time < 2500) nx = 0;
+	if (GetTickCount64() - create_time < 4150 && GetTickCount64() - create_time > 2500) {
 		SetState(MARIO_STATE_WALKING_LEFT);
+		if (GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
+			SetWalkingLeftSpeech();
+	}
+	if (GetTickCount64() - create_time < 4900 && GetTickCount64() - create_time > 4150) {
+		SetState(MARIO_STATE_SIT);
+		vx = 0;
+		sit_state = 1;
+	}
+	if (GetTickCount64() - create_time > 4900 && GetTickCount64() - create_time < 5000) {
+		if (!checkSit) {
+			y -= 10;
+			checkSit = 1;
+		}
+		SetState(MARIO_STATE_IDLE);
+		SetSitState(0);
 	}
 
 }
