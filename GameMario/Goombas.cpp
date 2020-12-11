@@ -381,8 +381,8 @@ void CGoomba::SetState(int state)
 
 void CGoomba::CreateIntroAnimationGoomba()
 {
-	if (GetTickCount64() - create_time < 5500) SetState(GOOMBA_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 6000) {
+	if (GetTickCount64() - create_time < 6500) SetState(GOOMBA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 7000) {
 		SetState(GOOMBA_STATE_WALKING);
 		vx = 0;
 	}

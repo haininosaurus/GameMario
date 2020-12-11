@@ -7,7 +7,7 @@ CTitle::CTitle() : CGameObject()
 
 void CTitle::Render()
 {
-	animation_set->at(0)->Render(x, y);
+	animation_set->at(type)->Render(x, y);
 }
 
 void CTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
@@ -18,8 +18,18 @@ void CTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 void CTitle::CreateIntroAnimationTitle()
 {
-	if (GetTickCount64() - create_time < 5000 && GetTickCount64() - create_time > 4800)
+	if (GetTickCount64() - create_time < 5000 && GetTickCount64() - create_time > 4800) {
 		vy = SPEED_Y;
-	if (GetTickCount64() - create_time > 5700)
+		type = 0;
+	}
+
+	if (GetTickCount64() - create_time > 5700 && GetTickCount64() - create_time < 7000)
 		vy = 0;
+	if (GetTickCount64() - create_time > 7000)
+	{
+		y = 0;
+		x = 0;
+		type = 1;
+	}
+
 }

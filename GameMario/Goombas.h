@@ -35,7 +35,7 @@
 #define GOOMBA_ANI_BROWN_DIE				5
 #define GOOMBA_ANI_THROWN					0
 
-#define GOOMBA_GRAVITY				0.001f
+#define GOOMBA_GRAVITY				0.0005f
 
 class CGoomba : public CGameObject
 {

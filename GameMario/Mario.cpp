@@ -695,7 +695,8 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
+					if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_BIG_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_RIGHT;
@@ -704,7 +705,8 @@ void CMario::Render()
 				}
 				else
 				{
-					if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
+					if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_BIG_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_LEFT;
@@ -1125,6 +1127,9 @@ void CMario::SetState(int state)
 	case MARIO_STATE_DEFLECT:
 		deflect_state = 1;
 		break;
+	case MARIO_STATE_HEADUP:
+		headup_state = 1;
+		break;
 	}
 
 	
@@ -1203,6 +1208,15 @@ void CMario::CreateIntroAnimationMario()
 		SetState(MARIO_STATE_IDLE);
 		SetSitState(0);
 	}
+	if (GetTickCount64() - create_time > 8400 && GetTickCount64() - create_time < 8600)
+	{
+		SetState(MARIO_STATE_IDLE);
+	}
+	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 8800)
+	{
+		SetState(MARIO_STATE_HEADUP);
+	}
+
 
 }
 

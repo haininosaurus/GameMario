@@ -3,8 +3,12 @@
 
 #define SPEED_Y			0.2f
 
+#define DARK_TITLE		0
+#define LIGHT_TITLE		1
+
 class CTitle : public CGameObject
 {
+	int type;
 	DWORD create_time;
 public:
 	CTitle();

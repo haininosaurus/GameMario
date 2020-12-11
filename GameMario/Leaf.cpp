@@ -115,8 +115,8 @@ void CLeaf::SetState(int state)
 
 void CLeaf::CreateIntroAnimationLeaf()
 {
-	if (GetTickCount64() - create_time < 5500) SetState(LEAF_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 6000) {
+	if (GetTickCount64() - create_time < 6500) SetState(LEAF_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 7000) {
 		SetState(EFFECT_STATE);
 	}
 }

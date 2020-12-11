@@ -345,11 +345,11 @@ void CKoopa::SetState(int state)
 
 void CKoopa::CreateIntroAnimationKoopa()
 {
-	if (GetTickCount64() - create_time < 5500) SetState(KOOPA_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 7000) {
+	if (GetTickCount64() - create_time < 6000) SetState(KOOPA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 6000 && GetTickCount64() - create_time < 7500) {
 		SetState(KOOPA_STATE_HIDE);
 	}
-	if (GetTickCount64() - create_time > 8100 && GetTickCount64() - create_time < 9500) {
+	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 10000) {
 		SetState(KOOPA_STATE_TAKEN);
 	}
 
