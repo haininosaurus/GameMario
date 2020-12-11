@@ -38,9 +38,7 @@ class CIntroScene : public CScene
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
-	void _ParseSection_ITEM_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
-
 
 public:
 	CIntroScene(int id, LPCWSTR filePath);

@@ -4,6 +4,7 @@
 
 #define KOOPA_GRAVITY					0.001f
 #define PARAKOOPA_JUMP_SPEED			0.3f
+#define KOOPA_JUMP_DEFLECT_SPEED		0.2f
 
 #define KOOPA_RED_FORM					0
 #define KOOPA_GREEN_FORM				1
@@ -42,13 +43,17 @@
 #define KOOPA_STATE_SPIN_RIGHT				400
 #define KOOPA_STATE_SPIN_LEFT				500
 #define KOOPA_STATE_TAKEN					600
+#define KOOPA_STATE_HIDEN					700
 
 class CKoopa : public CGameObject
 {
 	int form;
 	int isSpin = 0;
+	int hiden_state;
+	int intro_state;
+	DWORD create_time;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects/*, vector<LPGAMEOBJECT>* quesObjects*/);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void FilterCollision(
 		vector<LPCOLLISIONEVENT>& coEvents,
@@ -62,11 +67,15 @@ class CKoopa : public CGameObject
 	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
+
 public:
 	CKoopa(int form);
 	virtual void SetState(int state);
 	virtual int GetState();
 	void SetForm(int f) { form = f; }
 	int GetForm() { return form; }
+
+	void SetIntroState(int s) { intro_state = s; }
+	void CreateIntroAnimationKoopa();
 };
 

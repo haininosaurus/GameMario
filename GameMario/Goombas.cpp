@@ -14,7 +14,7 @@
 CGoomba::CGoomba(int form) : CGameObject::CGameObject()
 {
 	SetForm(form);
-	intro_state = 1;
+	intro_state = 0;
 	hiden_state = 0;
 	time_start = GetTickCount64();
 	create_time = GetTickCount64();
@@ -189,7 +189,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 
 	if (intro_state) CreateIntroAnimationGoomba();
-	DebugOut(L"hiden state: %d\n", hiden_state);
 	if (hiden_state == 1) return;
 
 

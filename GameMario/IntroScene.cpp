@@ -177,8 +177,12 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		obj = new CMario();
-		break;
+		{
+			obj = new CMario();
+			CMario* mario = dynamic_cast<CMario*>(obj);
+			mario->SetIntroState(1);
+			break;
+		}
 	case OBJECT_TYPE_BRICK:
 		obj = new CBrick();
 		break;
@@ -198,6 +202,14 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_LUIGI: obj = new CLuigi(); break;
 	case OBJECT_TYPE_CURTAIN: obj = new CCurtain(); break;
 	case OBJECT_TYPE_TITLE: obj = new CTitle(); break;
+	case OBJECT_TYPE_LEAF:
+		{
+			obj = new CLeaf();
+			CLeaf* leaf = dynamic_cast<CLeaf*>(obj);
+			leaf->SetIntroState(1);
+			break;
+		}
+
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -213,49 +225,6 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 
 }
 
-void CIntroScene::_ParseSection_ITEM_OBJECTS(string line)
-{
-	vector<string> tokens = split(line);
-
-
-	if (tokens.size() < 6) return; // skip invalid lines - an object set must have at least id, x, y
-
-	int object_type = atoi(tokens[0].c_str());
-	float x = (float)atof(tokens[1].c_str());
-	float y = (float)atof(tokens[2].c_str());
-
-	int ani_set_id = atoi(tokens[3].c_str());
-	int state = atoi(tokens[4].c_str());
-	int item_object = atoi(tokens[5].c_str());
-
-	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	CGameObject* obj = NULL;
-
-	switch (object_type)
-	{
-	case OBJECT_TYPE_COIN:
-		obj = new CCoin();
-		obj->SetState(state);
-		break;
-	case OBJECT_TYPE_MUSHROOM:
-		obj = new CMushroom();
-		obj->SetState(state);
-		break;
-	case OBJECT_TYPE_LEAF:
-		obj = new CLeaf();
-		obj->SetState(state);
-		break;
-	default:
-		break;
-	}
-
-	obj->SetPosition(x, y);
-
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
-}
 
 void CIntroScene::_ParseSection_ENEMIES(string line)
 {
@@ -276,8 +245,21 @@ void CIntroScene::_ParseSection_ENEMIES(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(state); break;
-	case OBJECT_TYPE_KOOPA: obj = new CKoopa(state); break;
+	case OBJECT_TYPE_GOOMBA: 
+		{
+			obj = new CGoomba(state);
+			CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
+			goomba->SetIntroState(1);
+			break;
+		}
+
+	case OBJECT_TYPE_KOOPA:
+	{
+		obj = new CKoopa(state);
+		CKoopa* koopa = dynamic_cast<CKoopa*>(obj);
+		koopa->SetIntroState(1);
+		break;
+	}
 	default:
 		break;
 	}
@@ -318,9 +300,6 @@ void CIntroScene::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
-		if (line == "[ITEM_QUESTION_OBJECTS]") {
-			section = SCENE_SECTION_ITEM_QUESTION_OBJECTS; continue;
-		}
 		if (line == "[ENEMIES]") {
 			section = SCENE_SECTION_ENEMIES; continue;
 		}
@@ -336,7 +315,6 @@ void CIntroScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_OBJECTS(line); break;
 		case SCENE_SECTION_ENEMIES: _ParseSection_ENEMIES(line); break;
 		}
 	}

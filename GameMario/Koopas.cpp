@@ -10,14 +10,19 @@
 #include "Game.h"
 #include "FireBullet.h"
 #include "Brick.h"
+#include "Mario.h"
+#include "Leaf.h"
 
 CKoopa::CKoopa(int form) : CGameObject::CGameObject()
 {
 	SetForm(form);
 	SetState(KOOPA_STATE_WALKING_LEFT);
+	intro_state = 0;
+	create_time = GetTickCount64();
 }
 void CKoopa::Render()
 {
+	if (hiden_state) return;
 	int ani = KOOPA_ANI_RED_WALKING_RIGHT;
 	if (form == KOOPA_RED_FORM)
 	{
@@ -32,7 +37,9 @@ void CKoopa::Render()
 	}
 	else if(form == KOOPA_GREEN_FORM)
 	{
-		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
+		if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_HIDE)
+			ani = KOOPA_ANI_GREEN_TAKEN;
+		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
 			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
 		else if (state == KOOPA_STATE_HIDE)
 			ani = KOOPA_ANI_GREEN_HIDE;
@@ -40,7 +47,7 @@ void CKoopa::Render()
 			ani = KOOPA_ANI_GREEN_SPIN;
 		else if (state == KOOPA_STATE_TAKEN)
 			ani = KOOPA_ANI_GREEN_TAKEN;
-		else ani = KOOPA_ANI_GREEN_WALKING_RIGHT;
+		else  ani = KOOPA_ANI_GREEN_WALKING_RIGHT;
 	}
 	else if (form == PARAKOOPA_GREEN_FORM)
 	{
@@ -128,7 +135,7 @@ void CKoopa::FilterCollision(
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
-		if (dynamic_cast<CColorBrick*>(c->obj) || dynamic_cast<CGoomba*>(c->obj)) {}
+		if (dynamic_cast<CColorBrick*>(c->obj) || dynamic_cast<CGoomba*>(c->obj) || dynamic_cast<CLeaf*>(c->obj)) {}
 		else if(dynamic_cast<CTransObject*>(c->obj) && state == KOOPA_STATE_SPIN_LEFT ||
 			dynamic_cast<CTransObject*>(c->obj) && state == KOOPA_STATE_SPIN_RIGHT){ }
 		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
@@ -162,6 +169,9 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
+
+	if (intro_state) CreateIntroAnimationKoopa();
+	if (hiden_state) return;
 	if(state != KOOPA_STATE_TAKEN)
 		vy += KOOPA_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -212,6 +222,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
 						SetState(KOOPA_STATE_HIDE);
 						bullet->SetState(FIREBULLET_DESTROY_STATE);
+					}
+				}
+				if (e->ny != 0 && intro_state)
+				{
+					if (dynamic_cast<CMario*>(e->obj)) {
+						CMario* mario = dynamic_cast<CMario*>(e->obj);
+						mario->SetState(MARIO_STATE_DEFLECT);
+						vy = -KOOPA_JUMP_DEFLECT_SPEED;
+						vx = -0.05;
 					}
 				}
 				if (state == KOOPA_STATE_SPIN_LEFT)
@@ -302,6 +321,7 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_HIDE:
 		vx = 0;
 		vy = 0;
+		hiden_state = 0;
 		isSpin = 0;
 		break;
 	case KOOPA_STATE_SPIN_RIGHT:
@@ -317,9 +337,24 @@ void CKoopa::SetState(int state)
 		vy = 0;
 		isSpin = 0;
 		break;
-		
+	case KOOPA_STATE_HIDEN:
+		hiden_state = 1;
+		break;
 	}
 }
+
+void CKoopa::CreateIntroAnimationKoopa()
+{
+	if (GetTickCount64() - create_time < 5500) SetState(KOOPA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 7000) {
+		SetState(KOOPA_STATE_HIDE);
+	}
+	if (GetTickCount64() - create_time > 8100 && GetTickCount64() - create_time < 9500) {
+		SetState(KOOPA_STATE_TAKEN);
+	}
+
+}
+
 int CKoopa::GetState() {
 	return CGameObject::GetState();
 }

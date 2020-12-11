@@ -15,7 +15,7 @@
 #define LEAF_EFFECT_LEFT_ANI		0
 #define LEAF_EFFECT_RIGHT_ANI		1
 
-#define EFFECT_LIMIT_TIME	600
+#define EFFECT_LIMIT_TIME	500
 
 
 class CLeaf : public CGameObject
@@ -24,11 +24,13 @@ class CLeaf : public CGameObject
 	DWORD effect_time;
 	DWORD effect_time_start;
 	int hiden_state;
+	int intro_state;
 
 	DWORD effect_right_time;
 	DWORD effect_left_time;
 	DWORD effect_right_time_start;
 	DWORD effect_left_time_start;
+	DWORD create_time;
 	int isRight;
 public:
 	CLeaf() {
@@ -43,11 +45,17 @@ public:
 		effect_right_time_start = (DWORD)0.0f;
 		effect_left_time_start = (DWORD)0.0f;
 		isRight = 0;
+		intro_state = 0;
+		create_time = GetTickCount64();
 	}
+
 	void SetState(int state);
+	void SetIntroState(int s) { intro_state = s; }
 	int IsHidenState() { return hiden_state; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+
+	void CreateIntroAnimationLeaf();
 };
 

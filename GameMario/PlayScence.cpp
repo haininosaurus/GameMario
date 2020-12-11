@@ -378,8 +378,6 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	case OBJECT_TYPE_GOOMBA:
 		{
 			obj = new CGoomba(state);
-			CGoomba* goomba = dynamic_cast<CGoomba*>(obj);
-			goomba->SetIntroState(0);
 			break;
 		}
 

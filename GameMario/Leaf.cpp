@@ -6,6 +6,7 @@
 
 void CLeaf::Render()
 {
+	if (hiden_state) return;
 	int ani = isRight;
 	if (GetState() == LEAF_STATE_HIDEN && hiden_state) return;
 	if (isRight) ani = LEAF_EFFECT_RIGHT_ANI;
@@ -16,7 +17,9 @@ void CLeaf::Render()
 void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-
+	
+	if (intro_state) CreateIntroAnimationLeaf();
+	if (hiden_state) return;
 	if (state == EFFECT_STATE)
 	{
 		if (!effect_left_time_start && !effect_right_time_start)
@@ -107,5 +110,13 @@ void CLeaf::SetState(int state)
 		break;
 	default:
 		break;
+	}
+}
+
+void CLeaf::CreateIntroAnimationLeaf()
+{
+	if (GetTickCount64() - create_time < 5500) SetState(LEAF_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 5500 && GetTickCount64() - create_time < 6000) {
+		SetState(EFFECT_STATE);
 	}
 }
