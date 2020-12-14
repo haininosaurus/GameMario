@@ -1322,6 +1322,10 @@
 
 #LEAF
 19	120	0	221
+
+#mushroom
+18	50	-16	211
+
 [ENEMIES]
 #goomba
 1	86	-30	2	0

@@ -3,6 +3,13 @@
 #include <algorithm>
 #include "Game.h"
 #include "ColorBrick.h"
+#include "Utils.h"
+
+CMushroom::CMushroom()
+{
+	intro_state = 0;
+	create_time = GetTickCount64();
+}
 
 void CMushroom::Render()
 {
@@ -111,7 +118,10 @@ void CMushroom::FilterCollision(
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (intro_state) CreateIntroAnimationMushroom();
 	if (state == MUSHROOM_STATE_HIDEN) return;
+
+
 	CGameObject::Update(dt, coObjects);
 
 	if (state == MUSHROOM_STATE_NORMAL)
@@ -149,9 +159,9 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == EFFECT_STATE)
 	{
-		if (GetTickCount() - effect_time_start < 1010)
+		if (GetTickCount64() - effect_time_start < 1010)
 		{
-			if (GetTickCount() - effect_time_start > 200)
+			if (GetTickCount64() - effect_time_start > 200)
 			{
 				hiden_state = 0;
 				vy = -MUSHROOM_SPEED_Y;
@@ -188,7 +198,7 @@ void CMushroom::SetState(int state)
 		if (effect_state == 0)
 		{
 			effect_state = 1;
-			effect_time_start = GetTickCount();
+			effect_time_start = GetTickCount64();
 		}
 		break;
 	case MUSHROOM_STATE_HIDEN:
@@ -196,10 +206,24 @@ void CMushroom::SetState(int state)
 		effect_state = 0;
 		break;
 	case MUSHROOM_STATE_NORMAL:
+		hiden_state = 0;
 		effect_state = 0;
 		vx = -MUSHROOM_SPEED_X;
 		break;
 	default:
 		break;
+	}
+}
+
+void CMushroom::CreateIntroAnimationMushroom()
+{
+	if (GetTickCount64() - create_time < 6500) SetState(MUSHROOM_STATE_HIDEN);
+	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 7000) {
+		DebugOut(L"da vao intro\n");
+		SetState(MUSHROOM_STATE_NORMAL);
+		vx = 0;
+	}
+	if (GetTickCount64() - create_time > 7000 && GetTickCount64() - create_time < 9000) {
+		SetState(MUSHROOM_STATE_NORMAL);
 	}
 }

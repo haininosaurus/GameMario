@@ -477,6 +477,10 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
+	if (player->GetSmokeState()) {
+		player->Update(dt, &coObjects);
+		return;
+	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -624,7 +628,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_Z:
 		if (mario->GetStateTakeTortoiseshell() == 1)
 		{
-			mario->SetKickStart(GetTickCount());
+			mario->SetKickStart(GetTickCount64());
 			mario->SetState(MARIO_STATE_KICK);
 		}
 		break;

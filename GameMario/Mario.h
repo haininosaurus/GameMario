@@ -261,6 +261,7 @@ public:
 	int GetSitState() { return sit_state; }
 	int GetShootFireBulletState() { return shoot_fire_bullet_state; }
 	int GetSlideState(){return slide_state;}
+	int GetSmokeState() { return smoke_state; }
 	float GetWalkingRightSpeech() { return walking_right_speech; }
 	float GetWalkingLeftSpeech() { return walking_left_speech; }
 	int GetFallState() { return fall_state; }
@@ -306,6 +307,7 @@ public:
 	void SetFightStart(DWORD t) { fight_start = t; }
 	void SetFlyLowStart(DWORD t) { fly_low_start = t; }
 	void SetFlyHighStart(DWORD t) { fly_high_start = t; }
+	void SetSmokeStart(DWORD t) { smoke_start = t; }
 
 	void CreateFireBullet(CGameObject* fireBullet);
 	void ShootFireBullet();

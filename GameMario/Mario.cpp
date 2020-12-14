@@ -198,6 +198,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			return;
 		}
 		else {
+			smoke_state = 0;
 			SetLevel(MARIO_LEVEL_TAIL);
 		}
 	}
@@ -739,7 +740,8 @@ void CMario::Render()
 			}
 			else if (vx > 0)
 			{
-				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_LEFT;
+				if (smoke_state) ani = MARIO_ANI_SMOKE;
+				else if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
@@ -749,7 +751,8 @@ void CMario::Render()
 			}
 			else
 			{
-				if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_RIGHT;
+				if (smoke_state) ani = MARIO_ANI_SMOKE;
+				else if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_BIG_JUMPING_LEFT;

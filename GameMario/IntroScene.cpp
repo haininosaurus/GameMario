@@ -209,11 +209,20 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 			leaf->SetIntroState(1);
 			break;
 		}
+	case OBJECT_TYPE_MUSHROOM:
+		{
+		DebugOut(L"da tao nam \n");
+			obj = new CMushroom();
+			CMushroom* mushroom = dynamic_cast<CMushroom*>(obj);
+			mushroom->SetIntroState(1);
+			break;
+		}
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
+
 
 	// General object setup
 	obj->SetPosition(x, y);

@@ -7,7 +7,7 @@
 
 #define MUSHROOM_SPEED_Y	0.015f
 #define MUSHROOM_SPEED_X	0.035f
-#define MUSHROOM_GRAVITY	0.002f
+#define MUSHROOM_GRAVITY	0.0006f
 
 #define MUSHROOM_STATE_HIDEN	0
 #define EFFECT_STATE	1
@@ -19,13 +19,18 @@ class CMushroom : public CGameObject
 {
 	int effect_state;
 	int hiden_state;
+	int intro_state;
+	DWORD create_time;
 	DWORD effect_time_start;
 public:
+	CMushroom();
 	void SetState(int state);
 	int IsHidenState() { return hiden_state; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+	void CreateIntroAnimationMushroom();
+	void SetIntroState(int s) { intro_state = s; }
 
 	virtual void FilterCollision(
 		vector<LPCOLLISIONEVENT>& coEvents,
