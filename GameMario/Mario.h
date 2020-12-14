@@ -39,6 +39,7 @@
 #define MARIO_STATE_SHOOT_FIRE_BULLET_LEFT				960
 #define MARIO_STATE_DEFLECT								970
 #define MARIO_STATE_HEADUP								980
+#define MARIO_STATE_SMOKE								990
 
 
 
@@ -154,7 +155,9 @@
 #define MARIO_ANI_DEFLECT								93
 #define MARIO_ANI_HEADUP								94
 
-#define MARIO_ANI_DIE									95
+#define MARIO_ANI_SMOKE									95
+
+#define MARIO_ANI_DIE									96
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -208,6 +211,8 @@ class CMario : public CGameObject
 	int headup_state;
 	int sit_state;
 	int slide_state;
+	int smoke_state;
+	DWORD smoke_start;
 	int shoot_fire_bullet_state;
 
 	int checkSit;

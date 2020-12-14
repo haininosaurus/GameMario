@@ -31,6 +31,7 @@ CMario::CMario(float x, float y) : CGameObject()
 	turn_state = 0;
 	run_fast_state = 0;
 	fall_state = 0;
+	smoke_state = 0;
 
 	checkSit = 0;
 	walking_right_speech = 0;
@@ -186,8 +187,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (intro_state) CreateIntroAnimationMario();
 
+
 	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
+
+	if (smoke_state)
+	{
+		if (GetTickCount64() - smoke_start < 300)
+		{
+			return;
+		}
+		else {
+			SetLevel(MARIO_LEVEL_TAIL);
+		}
+	}
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
 
@@ -456,8 +469,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (!mushroom->IsHidenState())
 				{
 					mushroom->SetState(LEAF_STATE_HIDEN);
+					SetState(MARIO_STATE_SMOKE);
 					SetPosition(x, y - 2);
-					SetLevel(GetLevel() + 1);
+					smoke_start = GetTickCount64();
+					//SetLevel(GetLevel() + 1);
 				}
 
 			}
@@ -554,12 +569,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount64() - GetKickStart() < 200) SetState(MARIO_STATE_KICK);
 	else kick_state = 0;
 
-	if (GetTickCount64() - fly_low_start < 300)
+	if (GetTickCount64() - fly_low_start < 300 && !intro_state)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 		else SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
 	else fly_low_state = 0;
+
+	if (GetTickCount64() - fly_low_start < 1300 && intro_state)
+	{
+		if (nx > 0) SetState(MARIO_STATE_FLYING_LOW_RIGHT);
+		else SetState(MARIO_STATE_FLYING_LOW_LEFT);
+	}
 	
 	if (GetTickCount64() - fly_high_start < 1000)
 	{
@@ -695,7 +716,8 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					if (smoke_state) ani = MARIO_ANI_SMOKE;
+					else if (headup_state == 1) ani = MARIO_ANI_HEADUP;
 					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_BIG_SIT_RIGHT;
@@ -705,7 +727,8 @@ void CMario::Render()
 				}
 				else
 				{
-					if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					if (smoke_state) ani = MARIO_ANI_SMOKE;
+					else if (headup_state == 1) ani = MARIO_ANI_HEADUP;
 					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_BIG_SIT_LEFT;
@@ -924,6 +947,7 @@ void CMario::SetState(int state)
 		deflect_state = 0;
 		jump_state = 1;
 		fall_state = 0;
+		headup_state = 0;
 		kick_state = 0;
 		turn_state = 0;
 		fight_state = 0;
@@ -1130,6 +1154,11 @@ void CMario::SetState(int state)
 	case MARIO_STATE_HEADUP:
 		headup_state = 1;
 		break;
+	case MARIO_STATE_SMOKE:
+		smoke_state = 1;
+		vy = 0;
+		vx = 0;
+		break;
 	}
 
 	
@@ -1208,14 +1237,25 @@ void CMario::CreateIntroAnimationMario()
 		SetState(MARIO_STATE_IDLE);
 		SetSitState(0);
 	}
-	if (GetTickCount64() - create_time > 8400 && GetTickCount64() - create_time < 8600)
+	if (GetTickCount64() - create_time > 8400 && GetTickCount64() - create_time < 8800)
 	{
 		SetState(MARIO_STATE_IDLE);
 	}
-	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 8800)
+	if (GetTickCount64() - create_time > 8800 && GetTickCount64() - create_time < 9800)
 	{
 		SetState(MARIO_STATE_HEADUP);
 	}
+	if (GetTickCount64() - create_time > 9800 && GetTickCount64() - create_time < 10300)
+	{
+		SetState(MARIO_STATE_JUMP);
+	}
+	if (GetTickCount64() - create_time > 10300 && GetTickCount64() - create_time < 12400)
+	{
+		if (fly_low_state == 0) fly_low_start = GetTickCount64();
+		SetState(MARIO_STATE_FLYING_LOW_LEFT);
+	}
+	
+
 
 
 }
