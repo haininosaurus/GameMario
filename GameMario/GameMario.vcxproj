@@ -40,8 +40,10 @@
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="Luigi.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map1.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="OverworldMap1.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="PlayScence.cpp" />
@@ -50,7 +52,6 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="Sprites.cpp" />
-    <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TransObject.cpp" />
@@ -80,8 +81,10 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Luigi.h" />
+    <ClInclude Include="Map1.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="OverworldMap1.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="PlayScence.h" />
@@ -90,7 +93,6 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="Sprites.h" />
-    <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TransObject.h" />

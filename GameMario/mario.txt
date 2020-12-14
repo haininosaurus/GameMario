@@ -1,6 +1,7 @@
 [SETTINGS]
-start	2
+start	3
 #scene list
 [SCENES]
 1	scene1.txt
 2	introScene.txt
+3	overworldMap.txt
