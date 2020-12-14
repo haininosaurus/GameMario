@@ -352,6 +352,9 @@ void CKoopa::CreateIntroAnimationKoopa()
 	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 10000) {
 		SetState(KOOPA_STATE_TAKEN);
 	}
+	if (GetTickCount64() - create_time > 12800 && GetTickCount64() - create_time < 15000) {
+		SetState(KOOPA_STATE_SPIN_RIGHT);
+	}
 
 }
 

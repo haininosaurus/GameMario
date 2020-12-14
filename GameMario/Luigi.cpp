@@ -253,7 +253,7 @@ void CLuigi::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 							else if (fight_state)
 							{
-								goomba->SetState(GOOMBA_STATE_THROWN);
+								goomba->SetState(GOOMBA_STATE_DEFLECT);
 							}
 							else
 								SetState(LUIGI_STATE_DIE);

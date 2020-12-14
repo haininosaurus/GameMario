@@ -286,14 +286,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL && !fight_state)
+							if (level > MARIO_LEVEL_SMALL && !fight_state && !intro_state)
 							{
 								SetLevel(GetLevel() - 1);
 								StartUntouchable();
 							}
 							else if (fight_state)
 							{
-								goomba->SetState(GOOMBA_STATE_THROWN);
+								goomba->SetState(GOOMBA_STATE_DEFLECT);
 							}
 							else
 								SetState(MARIO_STATE_DIE);
@@ -813,6 +813,7 @@ void CMario::Render()
 					if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_RIGHT;
 					else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_RIGHT;
 					else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
+					else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_RIGHT;
 					else if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_RIGHT;
@@ -824,6 +825,7 @@ void CMario::Render()
 					if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_LEFT;
 					else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_LEFT;
 					else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
+					else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_LEFT;
 					else if (kick_state == 1) ani = MARIO_ANI_TAIL_KICK_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_IDLE_LEFT;
@@ -1252,11 +1254,42 @@ void CMario::CreateIntroAnimationMario()
 	{
 		SetState(MARIO_STATE_JUMP);
 	}
-	if (GetTickCount64() - create_time > 10300 && GetTickCount64() - create_time < 12400)
+	if (GetTickCount64() - create_time > 10300 && GetTickCount64() - create_time < 11300)
 	{
 		if (fly_low_state == 0) fly_low_start = GetTickCount64();
+		vx = -MARIO_WALKING_SPEED + 0.015;
 		SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
+	if (GetTickCount64() - create_time > 11300 && GetTickCount64() - create_time < 11700)
+	{
+		fly_low_state = 0;
+		SetState(MARIO_STATE_IDLE);
+	}
+	if (GetTickCount64() - create_time > 11700 && GetTickCount64() - create_time < 11900)
+	{
+		vy = -MARIO_JUMP_DEFLECT_SPEED + 0.15;
+		vx = -MARIO_WALKING_SPEED + 0.04;
+	}
+	if (GetTickCount64() - create_time > 11900 && GetTickCount64() - create_time < 12100)
+	{
+		SetState(MARIO_STATE_TURN_LEFT);
+	}
+	if (GetTickCount64() - create_time > 12100 && GetTickCount64() - create_time < 12800)
+	{
+		SetState(MARIO_STATE_WALKING_RIGHT);
+		if (GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
+			SetWalkingRightSpeech();
+	}
+	if (GetTickCount64() - create_time > 12800 && GetTickCount64() - create_time < 13000)
+	{
+		if (!kick_state) SetKickStart(GetTickCount64());
+		SetState(MARIO_STATE_KICK);
+	}
+	if (GetTickCount64() - create_time > 14000 && GetTickCount64() - create_time < 16000)
+	{
+		SetState(MARIO_STATE_IDLE);
+	}
+
 	
 
 

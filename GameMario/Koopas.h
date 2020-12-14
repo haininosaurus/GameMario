@@ -9,6 +9,7 @@
 #define KOOPA_RED_FORM					0
 #define KOOPA_GREEN_FORM				1
 #define PARAKOOPA_GREEN_FORM			2	
+#define KOOPA_BLACK_FORM				3
 
 #define KOOPA_WALKING_SPEED				0.03f;
 #define KOOPA_SPINNING_SPEED			0.25f;

@@ -198,7 +198,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
 		coEvents.clear();
-		if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_THROWN)
+		if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_DEFLECT)
 			CalcPotentialCollisions(coObjects, coEvents);
 
 		if (coEvents.size() == 0)
@@ -215,8 +215,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-			x += min_tx * dx + nx * 0.2f;
-			y += min_ty * dy + ny * 0.2f;
+			x += min_tx * dx + nx * 0.1f;
+			y += min_ty * dy + ny * 0.1f;
 
 			if (ny != 0) vy = 0;
 
@@ -238,10 +238,10 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CKoopa*>(e->obj))
 				{
 					CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-					if (state != GOOMBA_STATE_THROWN) {
+					if (state != GOOMBA_STATE_DEFLECT) {
 						if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT)
 						{
-							SetState(GOOMBA_STATE_THROWN);
+							SetState(GOOMBA_STATE_DEFLECT);
 						}
 					}
 				}
@@ -249,7 +249,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
 
-					SetState(GOOMBA_STATE_THROWN);
+					SetState(GOOMBA_STATE_DEFLECT);
 					bullet->SetState(FIREBULLET_DESTROY_STATE);
 				}
 
@@ -267,19 +267,19 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						goomba->vx = GOOMBA_WALKING_SPEED;
 					}
 				}
-				if (dynamic_cast<CMario*>(e->obj))
-				{
-					CMario* mario = dynamic_cast<CMario*>(e->obj);
-					if (e->nx > 0)
-					{
-						vx = +GOOMBA_WALKING_SPEED;
-					}
-					if (e->nx < 0)
-					{
-						vx = -GOOMBA_WALKING_SPEED;
-					}
-					mario->SetLevel(MARIO_LEVEL_BIG);
-				}
+				//if (dynamic_cast<CMario*>(e->obj))
+				//{
+				//	CMario* mario = dynamic_cast<CMario*>(e->obj);
+				//	if (e->nx > 0)
+				//	{
+				//		vx = +GOOMBA_WALKING_SPEED;
+				//	}
+				//	if (e->nx < 0)
+				//	{
+				//		vx = -GOOMBA_WALKING_SPEED;
+				//	}
+				//	//mario->SetLevel(MARIO_LEVEL_BIG);
+				//}
 			}
 
 		}
@@ -319,8 +319,11 @@ void CGoomba::Render()
 		if (state == GOOMBA_STATE_DIE) {
 			ani = GOOMBA_ANI_YELLOW_DIE;
 		}
-		else if (state == GOOMBA_STATE_THROWN) {
-			ani = GOOMBA_ANI_THROWN;
+		else if (state == GOOMBA_STATE_DEFLECT) {
+			ani = GOOMBA_ANI_DEFLECT;
+		}
+		else if (state == GOOMBA_STATE_IDLE) {
+			ani = GOOMBA_ANI_YELLOW_IDLE;
 		}
 	}
 	else if (form == GOOMBA_BROWN_FORM)
@@ -328,8 +331,8 @@ void CGoomba::Render()
 		if (state == GOOMBA_STATE_DIE) {
 			ani = GOOMBA_ANI_BROWN_DIE;
 		}
-		else if (state == GOOMBA_STATE_THROWN) {
-			ani = GOOMBA_ANI_THROWN;
+		else if (state == GOOMBA_STATE_DEFLECT) {
+			ani = GOOMBA_ANI_DEFLECT;
 		}
 		else ani = GOOMBA_ANI_BROWN_WALKING;
 	}
@@ -358,7 +361,7 @@ void CGoomba::SetState(int state)
 		jump_state = 0;
 		vx = -GOOMBA_WALKING_SPEED;
 		break;
-	case GOOMBA_STATE_THROWN:
+	case GOOMBA_STATE_DEFLECT:
 		hiden_state = 0;
 		vy = -GOONBA_JUMP_DEFLECT_SPEED;
 		break;
@@ -375,6 +378,10 @@ void CGoomba::SetState(int state)
 	case GOOMBA_STATE_HIDEN:
 		hiden_state = 1;
 		break;
+	case GOOMBA_STATE_IDLE:
+		hiden_state = 0;
+		vx = 0;
+		break;
 	}
 
 }
@@ -382,10 +389,15 @@ void CGoomba::SetState(int state)
 void CGoomba::CreateIntroAnimationGoomba()
 {
 	if (GetTickCount64() - create_time < 6500) SetState(GOOMBA_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 7000) {
-		SetState(GOOMBA_STATE_WALKING);
-		vx = 0;
+	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 10800) {
+		SetState(GOOMBA_STATE_IDLE);
 	}
+	if (GetTickCount64() - create_time > 10800 && GetTickCount64() - create_time < 11000) {
+		SetState(GOOMBA_STATE_WALKING);
+	}	
+	//if (GetTickCount64() - create_time > 11000 && GetTickCount64() - create_time < 11500) {
+	//	SetState(GOOMBA_STATE_DIE);
+	//}
 }
 
 int CGoomba::GetState() {
