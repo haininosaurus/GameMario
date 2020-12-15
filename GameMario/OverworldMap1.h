@@ -7,6 +7,7 @@
 #include "ScoreBoard.h"
 #include "BackgroundObject.h"
 #include "MarioOverworld.h"
+#include "Turtle.h"
 
 class COverworldMap1 : public CScene
 {

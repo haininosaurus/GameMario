@@ -43,6 +43,7 @@ COverworldMap1::COverworldMap1(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SCOREBOARD				2
 #define OBJECT_TYPE_BACKGROUND				3
 #define OBJECT_TYPE_MARIOOVERWORLD			4
+#define	OBJECT_TYPE_TURTLE					5
 
 #define MAX_SCENE_LINE						1024
 
@@ -170,6 +171,9 @@ void COverworldMap1::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BACKGROUND:
 		obj = new CBackgroundObject();
+		break;
+	case OBJECT_TYPE_TURTLE:
+		obj = new CTurtle();
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

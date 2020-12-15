@@ -57,6 +57,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TransObject.cpp" />
+    <ClCompile Include="Turtle.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WoodBlock.cpp" />
   </ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TransObject.h" />
+    <ClInclude Include="Turtle.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WoodBlock.h" />
   </ItemGroup>
