@@ -6,9 +6,11 @@
 #include "Map1.h"
 #include "ScoreBoard.h"
 #include "BackgroundObject.h"
+#include "MarioOverworld.h"
 
 class COverworldMap1 : public CScene
 {
+	CMarioOverworld* player;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);
@@ -16,6 +18,7 @@ class COverworldMap1 : public CScene
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
+	void _ParseSection_NODES(string line);
 
 public:
 	COverworldMap1(int id, LPCWSTR filePath);
@@ -24,6 +27,9 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+
+
+	CMarioOverworld* GetPlayer() { return player; }
 
 	friend class COverworldMapScenceKeyHandler;
 };

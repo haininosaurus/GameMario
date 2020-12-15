@@ -55,8 +55,6 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_ITEM_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
-	//void _ParseSection_STATIC_OBJECTS(string line);
-	//void _ParseSection_BACKGROUND_OBJECTS(string line);
 
 
 public:

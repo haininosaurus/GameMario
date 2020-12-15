@@ -195,6 +195,12 @@
     <ClCompile Include="Map1.cpp">
       <Filter>Source Files\WorldMap1</Filter>
     </ClCompile>
+    <ClCompile Include="MarioOverworld.cpp">
+      <Filter>Source Files\WorldMap1</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\WorldMap1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntroScene.h">
@@ -312,6 +318,12 @@
       <Filter>Header Files\Score</Filter>
     </ClInclude>
     <ClInclude Include="Map1.h">
+      <Filter>Header Files\WorldMap1</Filter>
+    </ClInclude>
+    <ClInclude Include="MarioOverworld.h">
+      <Filter>Header Files\WorldMap1</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
       <Filter>Header Files\WorldMap1</Filter>
     </ClInclude>
   </ItemGroup>

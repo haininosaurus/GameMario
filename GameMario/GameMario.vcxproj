@@ -42,7 +42,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map1.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MarioOverworld.cpp" />
     <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="OverworldMap1.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
@@ -83,7 +85,9 @@
     <ClInclude Include="Luigi.h" />
     <ClInclude Include="Map1.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="MarioOverworld.h" />
     <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="OverworldMap1.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PiranhaPlant.h" />

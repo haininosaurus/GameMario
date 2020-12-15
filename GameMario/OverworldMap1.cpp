@@ -37,10 +37,12 @@ COverworldMap1::COverworldMap1(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATIONS				4
 #define SCENE_SECTION_ANIMATION_SETS			5
 #define SCENE_SECTION_OBJECTS					6
+#define SCENE_SECTION_NODES						7
 
 #define OBJECT_TYPE_WORLDMAP1				1
 #define OBJECT_TYPE_SCOREBOARD				2
 #define OBJECT_TYPE_BACKGROUND				3
+#define OBJECT_TYPE_MARIOOVERWORLD			4
 
 #define MAX_SCENE_LINE						1024
 
@@ -151,6 +153,15 @@ void COverworldMap1::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
+	case OBJECT_TYPE_MARIOOVERWORLD:
+		if (player != NULL)
+		{
+			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			return;
+		}
+		obj = new CMarioOverworld();
+		player = (CMarioOverworld*)obj;
+		break;
 	case OBJECT_TYPE_WORLDMAP1:
 		obj = new CMap1();
 		break;
@@ -176,6 +187,25 @@ void COverworldMap1::_ParseSection_OBJECTS(string line)
 
 }
 
+void COverworldMap1::_ParseSection_NODES(string line)
+{
+	vector<string> tokens = split(line);
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+
+	int object_type = atoi(tokens[0].c_str());
+	float l = (float)atof(tokens[1].c_str());
+	float t = (float)atof(tokens[2].c_str());
+	float r = (float)atof(tokens[3].c_str());
+	float b = (float)atof(tokens[4].c_str());
+
+	int state = atoi(tokens[5].c_str());
+
+	CNode* node = new CNode(l, t, r, b, state);
+	player->PushNode(node);
+}
 
 
 
@@ -208,6 +238,9 @@ void COverworldMap1::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
+		if (line == "[NODES]") {
+			section = SCENE_SECTION_NODES; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -215,11 +248,12 @@ void COverworldMap1::Load()
 		//
 		switch (section)
 		{
-		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
-		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_NODES: _ParseSection_NODES(line); break;
 		}
 	}
 
@@ -273,8 +307,18 @@ void COverworldMap1::Unload()
 void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	CGame* game = CGame::GetInstance();
+	CMarioOverworld* mariooverworld = ((COverworldMap1*)scence)->GetPlayer();
+
 	if (game->IsKeyDown(DIK_X))
 		CGame::GetInstance()->SwitchScene(1);
+	else if (game->IsKeyDown(DIK_RIGHT) && !mariooverworld->GetIsMoving())
+		mariooverworld->SetState(MARIO_STATE_MOVING_RIGHT);
+	else if(game->IsKeyDown(DIK_UP) && !mariooverworld->GetIsMoving())
+		mariooverworld->SetState(MARIO_STATE_MOVING_UP);
+	else if (game->IsKeyDown(DIK_LEFT) && !mariooverworld->GetIsMoving())
+		mariooverworld->SetState(MARIO_STATE_MOVING_LEFT);
+	else if (game->IsKeyDown(DIK_DOWN) && !mariooverworld->GetIsMoving())
+		mariooverworld->SetState(MARIO_STATE_MOVING_DOWN);
 }
 void COverworldMapScenceKeyHandler::OnKeyUp(int KeyCode)
 {
