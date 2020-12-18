@@ -14,7 +14,7 @@
 #define PIRANHAPLANT_BBOX_WIDTH			16
 #define PIRANHAPLANT_BBOX_HEIGHT		22
 
-class CPiranhaPlant : public CGameObject
+class CPiranhaPlant : public CollisionObject
 {
 	float sx, sy, tan;
 	float y_limit;
@@ -42,8 +42,6 @@ class CPiranhaPlant : public CGameObject
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 public:
 	CPiranhaPlant() {};

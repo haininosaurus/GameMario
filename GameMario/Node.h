@@ -14,5 +14,6 @@ public:
 	float GetTop() { return top; }
 	float GetRight() { return right; }
 	float GetBottom() { return bottom; }
+	int GetType() { return type; }
 };
 

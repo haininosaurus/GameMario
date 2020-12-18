@@ -187,7 +187,7 @@
 
 
 
-class CMario : public CGameObject
+class CMario : public CollisionObject
 {
 	int level;
 	int untouchable;
@@ -331,8 +331,6 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

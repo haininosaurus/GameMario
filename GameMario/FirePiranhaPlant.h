@@ -19,7 +19,7 @@
 #define FIREPIRANHAPLANT_BBOX_HEIGHT		33
 
 
-class CFirePiranhaPlant : public CGameObject
+class CFirePiranhaPlant : public CollisionObject
 {
 	float sx, sy, tan;
 	float y_limit;
@@ -54,8 +54,7 @@ class CFirePiranhaPlant : public CGameObject
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
+
 	
 public:
 	void CreateFirePlantBullet(CGameObject* fireplantbullet);

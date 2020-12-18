@@ -45,6 +45,7 @@ public:
 	}
 	void SetState(int state);
 	bool GetIsMoving() { return isMoving; }
+	int GetTypeCurrentNode();
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
 	virtual void Render();

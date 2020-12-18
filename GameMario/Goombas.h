@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Collision.h"
 
-#define GOOMBA_WALKING_SPEED		0.03f;
+#define GOOMBA_WALKING_SPEED		0.03f
 #define GOONBA_JUMP_DEFLECT_SPEED	0.2f
 #define GOONBA_JUMP_SPEED			0.08f
 
@@ -41,7 +41,7 @@
 
 #define GOOMBA_GRAVITY				0.0005f
 
-class CGoomba : public CGameObject
+class CGoomba : public CollisionObject
 {
 	bool isDestroy = false;
 	int jump_state;
@@ -64,8 +64,6 @@ class CGoomba : public CGameObject
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 public:
 	CGoomba(int f);

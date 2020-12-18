@@ -107,6 +107,18 @@ void CMarioOverworld::GetBoundingBox(float& l, float& t, float& r, float& b)
 	b = y + MARIO_SMALL_BBOX_HEIGHT;
 }
 
+int CMarioOverworld::GetTypeCurrentNode()
+{
+	for (size_t i = 0; i < nodes.size(); i++)
+	{
+		if (x == nodes[i]->GetLeft() && y == nodes[i]->GetTop())
+		{
+			return nodes[i]->GetType();
+		}
+	}
+	return 0;
+}
+
 void CMarioOverworld::SetState(int state)
 {
 	CGameObject::SetState(state);

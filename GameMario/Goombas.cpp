@@ -11,7 +11,7 @@
 #include "Utils.h"
 #include "QuestionBlock.h"
 #include "ColorBrick.h"
-CGoomba::CGoomba(int form) : CGameObject::CGameObject()
+CGoomba::CGoomba(int form)
 {
 	SetForm(form);
 	intro_state = 0;
@@ -49,41 +49,7 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 
 }
-LPCOLLISIONEVENT CGoomba::SweptAABBEx(LPGAMEOBJECT coO)
-{
-	float sl, st, sr, sb;		// static object bbox
-	float ml, mt, mr, mb;		// moving object bbox
-	float t, nx, ny;
 
-	coO->GetBoundingBox(sl, st, sr, sb);
-
-	// deal with moving object: m speed = original m speed - collide object speed
-	float svx, svy;
-	coO->GetSpeed(svx, svy);
-
-	float sdx = svx * dt;
-	float sdy = svy * dt;
-
-	// (rdx, rdy) is RELATIVE movement distance/velocity 
-	float rdx = this->dx - sdx;
-	float rdy = this->dy - sdy;
-
-	GetBoundingBox(ml, mt, mr, mb);
-
-	CGame::SweptAABB(
-		ml, mt, mr, mb,
-		rdx, rdy,
-		sl, st, sr, sb,
-		t, nx, ny
-		);
-
-
-
-
-	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
-	return e;
-	return 0;
-}
 
 /*
 	Calculate potential collisions with the list of colliable objects
@@ -91,22 +57,6 @@ LPCOLLISIONEVENT CGoomba::SweptAABBEx(LPGAMEOBJECT coO)
 	coObjects: the list of colliable objects
 	coEvents: list of potential collisions
 */
-void CGoomba::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT>* coObjects,
-	vector<LPCOLLISIONEVENT>& coEvents)
-{
-	for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-		if (e->t > 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
-		else
-			delete e;
-	}
-
-	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
-}
 
 void CGoomba::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,

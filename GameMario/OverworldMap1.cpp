@@ -270,10 +270,6 @@ void COverworldMap1::Load()
 
 void COverworldMap1::Update(DWORD dt)
 {
-
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
-
 	vector<LPGAMEOBJECT> coObjects;
 
 	for (size_t i = 1; i < objects.size(); i++)
@@ -314,7 +310,10 @@ void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)
 	CMarioOverworld* mariooverworld = ((COverworldMap1*)scence)->GetPlayer();
 
 	if (game->IsKeyDown(DIK_X))
-		CGame::GetInstance()->SwitchScene(1);
+	{
+		if(mariooverworld->GetTypeCurrentNode() != 0)
+			CGame::GetInstance()->SwitchScene(mariooverworld->GetTypeCurrentNode());
+	}
 	else if (game->IsKeyDown(DIK_RIGHT) && !mariooverworld->GetIsMoving())
 		mariooverworld->SetState(MARIO_STATE_MOVING_RIGHT);
 	else if(game->IsKeyDown(DIK_UP) && !mariooverworld->GetIsMoving())
@@ -326,6 +325,7 @@ void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)
 }
 void COverworldMapScenceKeyHandler::OnKeyUp(int KeyCode)
 {
+
 
 }
 

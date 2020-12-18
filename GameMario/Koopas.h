@@ -46,7 +46,7 @@
 #define KOOPA_STATE_TAKEN					600
 #define KOOPA_STATE_HIDEN					700
 
-class CKoopa : public CGameObject
+class CKoopa : public CollisionObject
 {
 	int form;
 	int isSpin = 0;
@@ -65,8 +65,6 @@ class CKoopa : public CGameObject
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 
 
 public:

@@ -20,7 +20,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 
-CLuigi::CLuigi(float x, float y) : CGameObject()
+CLuigi::CLuigi(float x, float y)
 {
 	level = LUIGI_LEVEL_BIG;
 	is_high = 0;
@@ -56,61 +56,6 @@ int CLuigi::GetCurrentWidthLuigi()
 	else if (level == LUIGI_LEVEL_TAIL)
 		return LUIGI_TAIL_BBOX_WIDTH;
 	else return 0;
-}
-LPCOLLISIONEVENT CLuigi::SweptAABBEx(LPGAMEOBJECT coO)
-{
-	float sl, st, sr, sb;		// static object bbox
-	float ml, mt, mr, mb;		// moving object bbox
-	float t, nx, ny;
-
-	coO->GetBoundingBox(sl, st, sr, sb);
-
-	// deal with moving object: m speed = original m speed - collide object speed
-	float svx, svy;
-	coO->GetSpeed(svx, svy);
-
-	float sdx = svx * dt;
-	float sdy = svy * dt;
-
-	// (rdx, rdy) is RELATIVE movement distance/velocity 
-	float rdx = this->dx - sdx;
-	float rdy = this->dy - sdy;
-
-	GetBoundingBox(ml, mt, mr, mb);
-
-	CGame::SweptAABB(
-		ml, mt, mr, mb,
-		rdx, rdy,
-		sl, st, sr, sb,
-		t, nx, ny
-	);
-
-	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
-	return e;
-	return 0;
-}
-
-/*
-	Calculate potential collisions with the list of colliable objects
-
-	coObjects: the list of colliable objects
-	coEvents: list of potential collisions
-*/
-void CLuigi::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT>* coObjects,
-	vector<LPCOLLISIONEVENT>& coEvents)
-{
-	for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-		if (e->t >= 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
-		else
-			delete e;
-	}
-
-	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
 void CLuigi::FilterCollision(

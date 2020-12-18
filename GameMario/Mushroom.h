@@ -15,7 +15,7 @@
 
 #define MUSHROOM_RED_ANI		0
 
-class CMushroom : public CGameObject
+class CMushroom : public CollisionObject
 {
 	int effect_state;
 	int hiden_state;
@@ -41,7 +41,5 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 };
 
