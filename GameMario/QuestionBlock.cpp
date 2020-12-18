@@ -33,18 +33,19 @@ void CQuestionBlock::SetStateItem(int state)
 			item[i]->SetState(state);
 			break;
 		}
-		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
-		{
-			item[i]->SetPosition(x, y - 4);
-			item[i]->SetState(state);
-			break;
-		}
 		else if (item[i]->GetState() == LEAF_STATE_HIDEN && dynamic_cast<CLeaf*>(item[i]))
 		{
 			item[i]->SetPosition(x, y - 4);
 			item[i]->SetState(state);
 			break;
 		}
+		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
+		{
+			item[i]->SetPosition(x, y - 4);
+			item[i]->SetState(state);
+			break;
+		}
+
 	}
 }
 

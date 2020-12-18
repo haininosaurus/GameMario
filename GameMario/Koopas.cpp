@@ -185,6 +185,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 								brick->SetState(BRICK_STATE_HIDEN);
 							}
+
+							if (dynamic_cast<CQuestionBlock*>(e->obj))
+							{
+								CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
+								quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
+								quesBlock->SetStateItem(EFFECT_STATE);
+
+							}
 							SetState(KOOPA_STATE_SPIN_RIGHT);
 						}
 					}
@@ -202,6 +210,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 								brick->SetState(BRICK_STATE_HIDEN);
 								brick->createEffectDestroy();
+							}
+
+							if (dynamic_cast<CQuestionBlock*>(e->obj))
+							{
+								CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
+								quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
+								quesBlock->SetStateItem(EFFECT_STATE);
+
 							}
 							SetState(KOOPA_STATE_SPIN_LEFT);
 						}

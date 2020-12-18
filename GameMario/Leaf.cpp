@@ -1,14 +1,13 @@
 #include "Leaf.h"
-
+#include "Utils.h"
 #include "Animations.h"
 
 
 
 void CLeaf::Render()
 {
-	if (hiden_state) return;
-	int ani = isRight;
-	if (GetState() == LEAF_STATE_HIDEN && hiden_state) return;
+	int ani;
+	if (GetState() == LEAF_STATE_HIDEN || hiden_state) return;
 	if (isRight) ani = LEAF_EFFECT_RIGHT_ANI;
 	else ani = LEAF_EFFECT_LEFT_ANI;
 	animation_set->at(ani)->Render(x, y);
@@ -96,6 +95,7 @@ void CLeaf::SetState(int state)
 		hiden_state = 0;
 		if (effect_state == 0)
 		{
+			DebugOut(L"effect state \n");
 			effect_state = 1;
 			effect_time_start = GetTickCount64();
 		}
