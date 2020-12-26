@@ -134,6 +134,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (intro_state) CreateIntroAnimationMario();
 
+	DebugOut(L"fall_state: %d\n", fall_state);
 
 	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
@@ -166,7 +167,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-		fall_state = 1;
 	}
 	else
 	{
@@ -190,10 +190,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (vy < 0.02 && vy >= 0) {
 			jump_state = 0;
-			fall_state = 0;
+
 			vy = 0;
 		}
-		else fall_state = 1;
 
 
 		// reset untouchable timer if untouchable time has passed
@@ -203,6 +202,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			untouchable = 0;
 		}
 
+		if (vy == 0)  fall_state = 0;
 		//
 		// Collision logic with other objects
 		//
@@ -210,6 +210,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			
+
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -362,6 +363,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block
 			{
+				fall_state = 1;
 				CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
 				if (e->ny > 0)
 				{
@@ -376,6 +378,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CRoad*>(e->obj))
 			{				
+
 				CRoad* road = dynamic_cast<CRoad*>(e->obj);
 				if (e->ny < 0)
 				{
@@ -426,6 +429,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+
+
+
 
 	if (tortoiseshell != NULL) {
 		if (level == MARIO_LEVEL_SMALL)

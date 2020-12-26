@@ -40,6 +40,7 @@
 #define MARIO_STATE_DEFLECT								970
 #define MARIO_STATE_HEADUP								980
 #define MARIO_STATE_SMOKE								990
+#define MARIO_STATE_FALL								1000
 
 
 
@@ -212,6 +213,7 @@ class CMario : public CollisionObject
 	int sit_state;
 	int slide_state;
 	int smoke_state;
+
 	DWORD smoke_start;
 	int shoot_fire_bullet_state;
 
@@ -262,9 +264,10 @@ public:
 	int GetShootFireBulletState() { return shoot_fire_bullet_state; }
 	int GetSlideState(){return slide_state;}
 	int GetSmokeState() { return smoke_state; }
+	int GetDeflectState() { return deflect_state; }
+	int GetFallState() { return fall_state; }
 	float GetWalkingRightSpeech() { return walking_right_speech; }
 	float GetWalkingLeftSpeech() { return walking_left_speech; }
-	int GetFallState() { return fall_state; }
 	bool GetIsHigh() { return is_high; }
 	float GetSpeechJump() { return speech_Jump; }
 	DWORD GetWalkRightTime() { return walking_time_right; }
@@ -286,6 +289,8 @@ public:
 	void SetJumpState(int j) { jump_state = j; }
 	void SetFightState(int f) { fight_state = f; }
 	void SetSitState(int s) { sit_state = s; }
+	void SetDeflectState(int d) { deflect_state = d; }
+
 	void SetShootFireBulletState(int s) { shoot_fire_bullet_state = s; }
 	void SetWalkRightTime(DWORD t) { walking_time_right = t; }
 	void SetWalkLeftTime(DWORD t) { walking_time_left = t; }

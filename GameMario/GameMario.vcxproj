@@ -22,6 +22,7 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BlueBrick.cpp" />
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BuzzyBeetle.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="MarioOverworld.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Number.cpp" />
     <ClCompile Include="OverworldMap1.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
@@ -52,9 +54,10 @@
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Road.cpp" />
     <ClCompile Include="Scence.cpp" />
-    <ClCompile Include="ScoreBoard.cpp" />
+    <ClCompile Include="ScoreEffect.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="TimePlay.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TransObject.cpp" />
     <ClCompile Include="Turtle.cpp" />
@@ -65,6 +68,7 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BlueBrick.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BuzzyBeetle.h" />
     <ClInclude Include="Camera.h" />
@@ -89,6 +93,7 @@
     <ClInclude Include="MarioOverworld.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Number.h" />
     <ClInclude Include="OverworldMap1.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PiranhaPlant.h" />
@@ -96,9 +101,10 @@
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Scence.h" />
-    <ClInclude Include="ScoreBoard.h" />
+    <ClInclude Include="ScoreEffect.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="TimePlay.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TransObject.h" />
     <ClInclude Include="Turtle.h" />

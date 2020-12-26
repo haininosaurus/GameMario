@@ -23,8 +23,10 @@
 #include "Leaf.h"
 #include "BlueBrick.h"
 #include "Camera.h"
-#include "ScoreBoard.h"
+#include "Board.h"
 #include "PiranhaPlant.h"
+#include "TimePlay.h"
+#include "Number.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -37,6 +39,8 @@ protected:
 
 	CMario* player;
 	CCamera* cam;
+	vector<CNumber*> num;
+	CTime* time;
 	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];

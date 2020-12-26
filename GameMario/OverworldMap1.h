@@ -4,7 +4,7 @@
 #include "Game.h"
 
 #include "Map1.h"
-#include "ScoreBoard.h"
+#include "Board.h"
 #include "BackgroundObject.h"
 #include "MarioOverworld.h"
 #include "Turtle.h"

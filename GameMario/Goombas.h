@@ -39,6 +39,7 @@
 #define GOOMBA_ANI_YELLOW_IDLE				6
 #define GOOMBA_ANI_DEFLECT					0
 
+
 #define GOOMBA_GRAVITY				0.0005f
 
 class CGoomba : public CollisionObject

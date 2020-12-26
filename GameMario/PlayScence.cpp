@@ -54,6 +54,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BLUE_BRICK				20
 #define OBJECT_TYPE_SCORE_BOARD				21
 #define OBJECT_TYPE_PIRANHA_PLANT			22
+#define OBJECT_TYPE_TIME					23
+#define OBJECT_TYPE_NUMBER					24
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -218,6 +220,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_SCORE_BOARD: 
 		obj = new CScoreBoard(); 
 		sb = (CScoreBoard*)obj;
+		sb->SetTime(time);
 		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
@@ -248,6 +251,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 		}
 		break;
+	case OBJECT_TYPE_NUMBER:
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CNumber();
+			if (type == 0)
+				num.push_back((CNumber*)obj);
+			break;
+		}
+	case OBJECT_TYPE_TIME:
+		obj = new CTime(num);
+		time = (CTime*)obj;
+		break;
+		
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -577,14 +593,14 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->GetFightState() == 0 &&
-			GetTickCount() - mario->GetFightStart() > 500)
+			GetTickCount64() - mario->GetFightStart() > 500)
 		{
-			mario->SetFightStart(GetTickCount());
+			mario->SetFightStart(GetTickCount64());
 			mario->SetState(MARIO_STATE_FIGHT);
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_FIRE && !mario->GetShootFireBulletState())
 		{
-			mario->SetShootFireBulletStart(GetTickCount());
+			mario->SetShootFireBulletStart(GetTickCount64());
 			mario->ShootFireBullet();
 			if(mario->nx > 0)
 				mario->SetState(MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT);
@@ -721,7 +737,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
 	if (game->IsKeyDown(DIK_X)) {
-		if (GetTickCount64() - mario->GetJumpStart() < 380)
+		if (GetTickCount64() - mario->GetJumpStart() < 380 && !mario->GetFallState())
 		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();
