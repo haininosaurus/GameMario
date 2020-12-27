@@ -40,7 +40,7 @@
 #define MARIO_STATE_DEFLECT								970
 #define MARIO_STATE_HEADUP								980
 #define MARIO_STATE_SMOKE								990
-#define MARIO_STATE_FALL								1000
+#define MARIO_STATE_GROWUP								1000
 
 
 
@@ -157,8 +157,10 @@
 #define MARIO_ANI_HEADUP								94
 
 #define MARIO_ANI_SMOKE									95
+#define MARIO_ANI_GROWUP_RIGHT							96
+#define MARIO_ANI_GROWUP_LEFT							97
 
-#define MARIO_ANI_DIE									96
+#define MARIO_ANI_DIE									98
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -212,9 +214,12 @@ class CMario : public CollisionObject
 	int headup_state;
 	int sit_state;
 	int slide_state;
+
 	int smoke_state;
+	int growup_state;
 
 	DWORD smoke_start;
+	DWORD growup_start;
 	int shoot_fire_bullet_state;
 
 	int checkSit;
@@ -264,6 +269,7 @@ public:
 	int GetShootFireBulletState() { return shoot_fire_bullet_state; }
 	int GetSlideState(){return slide_state;}
 	int GetSmokeState() { return smoke_state; }
+	int GetGrowupState() { return growup_state; }
 	int GetDeflectState() { return deflect_state; }
 	int GetFallState() { return fall_state; }
 	float GetWalkingRightSpeech() { return walking_right_speech; }

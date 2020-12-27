@@ -493,7 +493,7 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	if (player->GetSmokeState()) {
+	if (player->GetSmokeState() || player->GetGrowupState()) {
 		player->Update(dt, &coObjects);
 		return;
 	}
@@ -561,6 +561,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	switch (KeyCode)
 	{
 	case DIK_X:
@@ -669,8 +671,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
-	//Mario sit
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	if (game->IsKeyDown(DIK_DOWN))
 	{
 		if (mario->GetLevel() != MARIO_LEVEL_SMALL &&

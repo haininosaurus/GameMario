@@ -134,7 +134,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (intro_state) CreateIntroAnimationMario();
 
-	DebugOut(L"fall_state: %d\n", fall_state);
 
 	if (vy > 0) jump_state = 1;
 	CGameObject::Update(dt);
@@ -148,6 +147,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else {
 			smoke_state = 0;
 			SetLevel(MARIO_LEVEL_TAIL);
+		}
+	}
+	DebugOut(L"grow up state: %d\n", growup_state);
+	if (growup_state)
+	{
+		if (GetTickCount64() - growup_start < 1000)
+		{
+			return;
+		}
+		else {
+			SetState(MARIO_STATE_IDLE);
+			growup_state = 0;
+			SetLevel(MARIO_LEVEL_BIG);
 		}
 	}
 	// Simple fall down
@@ -363,10 +375,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block
 			{
-				fall_state = 1;
+
 				CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
 				if (e->ny > 0)
 				{
+					fall_state = 1;
 					vy = 0;
 					if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
 					{
@@ -408,9 +421,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
 				if (!mushroom->IsHidenState())
 				{
-					mushroom->SetState(MUSHROOM_STATE_HIDEN);
-					SetPosition(x, y - 2);
-					SetLevel(GetLevel() + 1);
+					if (GetLevel() == MARIO_LEVEL_SMALL)
+					{
+						mushroom->SetState(MUSHROOM_STATE_HIDEN);
+						SetState(MARIO_STATE_GROWUP);
+						growup_start = GetTickCount64();
+						SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT + MARIO_SMALL_BBOX_HEIGHT - 1);
+					}
 				}
 
 			}
@@ -720,7 +737,8 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
+					if (growup_state) ani = MARIO_ANI_GROWUP_RIGHT;
+					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
@@ -728,7 +746,8 @@ void CMario::Render()
 				}
 				else
 				{
-					if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
+					if (growup_state) ani = MARIO_ANI_GROWUP_LEFT;
+					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
@@ -737,7 +756,8 @@ void CMario::Render()
 			}
 			else if (vx > 0)
 			{
-				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
+				if (growup_state) ani = MARIO_ANI_GROWUP_RIGHT;
+				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
@@ -747,7 +767,8 @@ void CMario::Render()
 			}
 			else
 			{
-				if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
+				if (growup_state) ani = MARIO_ANI_GROWUP_LEFT;
+				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
@@ -1116,6 +1137,11 @@ void CMario::SetState(int state)
 		smoke_state = 1;
 		vy = 0;
 		vx = 0;
+		break;
+	case MARIO_STATE_GROWUP:
+		growup_state = 1;
+		vx = 0;
+		vy = 0;
 		break;
 	}
 
