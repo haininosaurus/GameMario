@@ -57,6 +57,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_TIME					23
 #define OBJECT_TYPE_NUMBER					24
 #define OBJECT_TYPE_SCORE_EFFECT			25
+#define OBJECT_TYPE_SCORE					26
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -222,6 +223,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CScoreBoard(); 
 		sb = (CScoreBoard*)obj;
 		sb->SetTime(time);
+		sb->SetScore(score);
 		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
@@ -258,15 +260,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CNumber();
 			if (type == 0)
 				num.push_back((CNumber*)obj);
+			if (type == 1)
+				numScore.push_back((CNumber*)obj);
 			break;
 		}
 	case OBJECT_TYPE_TIME:
 		obj = new CTime(num);
 		time = (CTime*)obj;
 		break;
+	case OBJECT_TYPE_SCORE:
+		obj = new CScore(numScore);
+		score = (CScore*)obj;
+		break;
 	case OBJECT_TYPE_SCORE_EFFECT:
 		obj = new CScoreEffect();
-		player->CreateScore((CScoreEffect*)obj);
+		for (int i = 0; i < 3; i++)
+		{
+			if (scoreEffect[i] == NULL)
+			{
+				scoreEffect[i] = (CScoreEffect*)obj;
+				scoreEffect[i]->SetScorePlay(score);
+				player->CreateScore(scoreEffect[i]);
+				break;
+			}
+		}
+
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

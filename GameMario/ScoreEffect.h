@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Score.h"
 
 #define SCORE_STATE_100				0
 #define SCORE_STATE_200				1
@@ -30,13 +31,16 @@
 class CScoreEffect : public CGameObject
 {
 	int score;
+	CScore* score_play;
 	int display_state;
 	DWORD display_start;
 public:
 	CScoreEffect() { SetState(SCORE_STATE_HIDEN); }
 
 	void SetState(int state);
+	void SetScorePlay(CScore* s) { score_play = s; }
 	void DisplayScore(int score, float x, float y, DWORD t);
+	void AddScorePlay(int s) { score_play->SetScore(s); }
 
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

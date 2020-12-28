@@ -1239,7 +1239,6 @@ void CMario::DisplayScores(int s, float x, float y, DWORD t)
 	{
 		if (score[i]->GetState() == SCORE_STATE_HIDEN)
 		{
-			DebugOut(L"Da display score\n");
 			score[i]->DisplayScore(s, x, y, t);
 			break;
 		}

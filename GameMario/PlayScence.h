@@ -28,6 +28,7 @@
 #include "TimePlay.h"
 #include "Number.h"
 #include "ScoreEffect.h"
+#include "Score.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -41,7 +42,9 @@ protected:
 	CMario* player;
 	CCamera* cam;
 	vector<CNumber*> num;
+	vector<CNumber*> numScore;
 	CTime* time;
+	CScore* score;
 	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];
@@ -50,7 +53,7 @@ protected:
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
 	CGameObject* itemBrick[ITEM_BRICK_AMOUNT];
 
-	CScoreEffect* scoreEffect[100];
+	CScoreEffect* scoreEffect[3];
 
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> effectObjects;
