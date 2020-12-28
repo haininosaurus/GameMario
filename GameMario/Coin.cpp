@@ -25,7 +25,14 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else vy = COIN_SPEED_Y;
 			y += dy;
 		}
-		else SetState(COIN_STATE_HIDEN);
+		else
+		{
+			if (effect_state)
+			{
+				SetState(COIN_STATE_HIDEN);
+				//scoreEffect->DisplayScore(score, x, y, GetTickCount64());
+			}
+		}
 
 	}
 

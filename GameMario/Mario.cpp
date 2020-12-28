@@ -33,6 +33,8 @@ CMario::CMario(float x, float y)
 	fall_state = 0;
 	smoke_state = 0;
 
+	streak_Kill = -1;
+
 	checkSit = 0;
 	walking_right_speech = 0;
 	walking_right_speech = 0;
@@ -147,9 +149,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else {
 			smoke_state = 0;
 			SetLevel(MARIO_LEVEL_TAIL);
+			SetState(MARIO_STATE_IDLE);
 		}
 	}
-	DebugOut(L"grow up state: %d\n", growup_state);
+
 	if (growup_state)
 	{
 		if (GetTickCount64() - growup_start < 1000)
@@ -214,7 +217,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			untouchable = 0;
 		}
 
-		if (vy == 0)  fall_state = 0;
+		if (vy == 0) {
+
+			fall_state = 0;
+		}
 		//
 		// Collision logic with other objects
 		//
@@ -232,6 +238,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
+						streak_Kill++;
+						DisplayScores(streak_Kill, goomba->x, goomba->y, GetTickCount64());
 						if (goomba->GetForm() != PARAGOOMBA_BROWN_FORM)
 							goomba->SetState(GOOMBA_STATE_DIE);
 						else goomba->SetForm(GOOMBA_BROWN_FORM);
@@ -271,6 +279,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (koopa->GetState() != KOOPA_STATE_HIDE)
 						{
+							streak_Kill++;
+							DisplayScores(streak_Kill, koopa->x, koopa->y, GetTickCount64());
 							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM)
 								koopa->SetForm(KOOPA_GREEN_FORM);
 							else koopa->SetState(KOOPA_STATE_HIDE);
@@ -444,6 +454,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+
+			if (!dynamic_cast<CGoomba*>(e->obj) && !dynamic_cast<CKoopa*>(e->obj))
+				streak_Kill = -1;
 		}
 	}
 
@@ -647,6 +660,25 @@ void CMario::CreateFireBullet(CGameObject* fireBullet)
 		}
 	}
 }
+
+void CMario::CreateScore(CScoreEffect* s)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (score[i] == NULL) {
+			score[i] = s;
+			DebugOut(L"da tao score\n");
+			break;
+		}
+		else if (score[i]->GetState() != SCORE_STATE_HIDEN)
+		{
+			score[i]->SetState(SCORE_STATE_HIDEN);
+		}
+	}
+}
+
+
+
 
 void CMario::ShootFireBullet()
 {
@@ -896,6 +928,7 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
+
 		deflect_state = 0;
 		run_state = 0;
 		sit_state = 0;
@@ -941,6 +974,7 @@ void CMario::SetState(int state)
 		}
 		break;
 	case MARIO_STATE_IDLE:
+		//streak_Kill = -1;
 		deflect_state = 0;
 		fly_low_state = 0;
 		if (slide_state)
@@ -1196,6 +1230,19 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	{
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
+	}
+}
+
+void CMario::DisplayScores(int s, float x, float y, DWORD t)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (score[i]->GetState() == SCORE_STATE_HIDEN)
+		{
+			DebugOut(L"Da display score\n");
+			score[i]->DisplayScore(s, x, y, t);
+			break;
+		}
 	}
 }
 

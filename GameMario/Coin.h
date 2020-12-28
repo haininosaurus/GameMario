@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "ScoreEffect.h"
 
 #define COIN_BBOX_WIDTH 16
 #define COIN_BBOX_HEIGHT 16
@@ -17,7 +18,13 @@ class CCoin : public CGameObject
 {
 	int effect_state;
 	DWORD effect_time_start;
+
+	int score;
+	CScoreEffect* scoreEffect;
+
 public:
+	void SetScore(int s) { score = s; }
+	void SetScoreEffect(CScoreEffect* s) { scoreEffect = s; }
 	void SetState(int state);
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);

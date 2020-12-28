@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Collision.h"
+#include "ScoreEffect.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -218,6 +219,8 @@ class CMario : public CollisionObject
 	int smoke_state;
 	int growup_state;
 
+
+
 	DWORD smoke_start;
 	DWORD growup_start;
 	int shoot_fire_bullet_state;
@@ -229,8 +232,13 @@ class CMario : public CollisionObject
 
 	int take_tortoistate_state;
 
+	int streak_Kill;
+
 	CGameObject* tortoiseshell;
+
 	CGameObject* fire_bullet[2];
+	CScoreEffect* score[3];
+
 	DWORD jump_start;
 	DWORD kick_start;
 	DWORD shoot_fire_bullet_start;
@@ -321,6 +329,8 @@ public:
 	void SetSmokeStart(DWORD t) { smoke_start = t; }
 
 	void CreateFireBullet(CGameObject* fireBullet);
+	void CreateScore(CScoreEffect* s);
+	void DisplayScores(int s, float x, float y, DWORD t);
 	void ShootFireBullet();
 
 	void CreateIntroAnimationMario();

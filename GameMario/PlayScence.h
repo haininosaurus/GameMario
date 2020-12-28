@@ -27,6 +27,7 @@
 #include "PiranhaPlant.h"
 #include "TimePlay.h"
 #include "Number.h"
+#include "ScoreEffect.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -48,6 +49,8 @@ protected:
 	CBrick* brick[BRICK_AMOUNT];
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
 	CGameObject* itemBrick[ITEM_BRICK_AMOUNT];
+
+	CScoreEffect* scoreEffect[100];
 
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> effectObjects;

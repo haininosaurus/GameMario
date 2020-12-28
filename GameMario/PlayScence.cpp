@@ -56,6 +56,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PIRANHA_PLANT			22
 #define OBJECT_TYPE_TIME					23
 #define OBJECT_TYPE_NUMBER					24
+#define OBJECT_TYPE_SCORE_EFFECT			25
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -263,7 +264,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CTime(num);
 		time = (CTime*)obj;
 		break;
-		
+	case OBJECT_TYPE_SCORE_EFFECT:
+		obj = new CScoreEffect();
+		player->CreateScore((CScoreEffect*)obj);
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -360,6 +364,7 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 			}
 		}
 		break;
+
 	default:
 		break;
 	}
