@@ -26,27 +26,40 @@ void CKoopa::Render()
 	int ani = KOOPA_ANI_RED_WALKING_RIGHT;
 	if (form == KOOPA_RED_FORM)
 	{
-		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
+		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
 			ani = KOOPA_ANI_RED_WALKING_LEFT;
-		else if (state == KOOPA_STATE_HIDE)
-			ani = KOOPA_ANI_RED_HIDE;
-		else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
-			ani = KOOPA_ANI_RED_SPIN;
-		else if (state == KOOPA_STATE_TAKEN)
-			ani = KOOPA_ANI_RED_TAKEN;
+		else if (state == KOOPA_STATE_TORTOISESHELL_DOWN)
+			ani = KOOPA_ANI_RED_TORTOISESHELL_DOWN;
+		else if (state == KOOPA_STATE_TORTOISESHELL_UP)
+			ani = KOOPA_ANI_RED_TORTOISESHELL_UP;
+		else if (state == KOOPA_STATE_SPIN_LEFT && isDown || state == KOOPA_STATE_SPIN_RIGHT && isDown)
+			ani = KOOPA_ANI_RED_SPIN_DOWN;
+		else if (state == KOOPA_STATE_SPIN_LEFT && !isDown || state == KOOPA_STATE_SPIN_RIGHT && !isDown)
+			ani = KOOPA_ANI_RED_SPIN_UP;
+		else if (state == KOOPA_STATE_TAKEN && isDown)
+			ani = KOOPA_ANI_RED_TAKEN_DOWN;
+		else if (state == KOOPA_STATE_TAKEN && !isDown)
+			ani = KOOPA_ANI_RED_TAKEN_UP;
+		else  ani = KOOPA_ANI_RED_WALKING_RIGHT;
 	}
 	else if(form == KOOPA_GREEN_FORM)
 	{
-		if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_HIDE)
-			ani = KOOPA_ANI_GREEN_TAKEN;
+		if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_TORTOISESHELL_DOWN)
+			ani = KOOPA_ANI_GREEN_TAKEN_DOWN;
 		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
 			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
-		else if (state == KOOPA_STATE_HIDE)
-			ani = KOOPA_ANI_GREEN_HIDE;
-		else if (state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
-			ani = KOOPA_ANI_GREEN_SPIN;
-		else if (state == KOOPA_STATE_TAKEN)
-			ani = KOOPA_ANI_GREEN_TAKEN;
+		else if (state == KOOPA_STATE_TORTOISESHELL_DOWN)
+			ani = KOOPA_ANI_GREEN_TORTOISESHELL_DOWN;
+		else if (state == KOOPA_STATE_TORTOISESHELL_UP)
+			ani = KOOPA_ANI_GREEN_TORTOISESHELL_UP;
+		else if (state == KOOPA_STATE_SPIN_LEFT && isDown || state == KOOPA_STATE_SPIN_RIGHT && isDown)
+			ani = KOOPA_ANI_GREEN_SPIN_DOWN;
+		else if (state == KOOPA_STATE_SPIN_LEFT && !isDown || state == KOOPA_STATE_SPIN_RIGHT && !isDown)
+			ani = KOOPA_ANI_GREEN_SPIN_UP;
+		else if (state == KOOPA_STATE_TAKEN && isDown)
+			ani = KOOPA_ANI_GREEN_TAKEN_DOWN;
+		else if (state == KOOPA_STATE_TAKEN && !isDown)
+			ani = KOOPA_ANI_GREEN_TAKEN_UP;
 		else  ani = KOOPA_ANI_GREEN_WALKING_RIGHT;
 	}
 	else if (form == PARAKOOPA_GREEN_FORM)
@@ -114,6 +127,23 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (intro_state) CreateIntroAnimationKoopa();
 	if (hiden_state) return;
+
+	if (deflect_state)
+	{
+		if (GetTickCount64() - defect_start > 300)
+		{
+			vx = 0;
+			deflect_state = 0;
+		}
+
+		else
+		{
+			SetState(KOOPA_STATE_TORTOISESHELL_UP);
+			vy = -KOOPA_JUMP_DEFLECT_SPEED;
+			vx = -KOOPA_WALKING_SPEED - 0.25f;
+		}
+
+	}
 	if(state != KOOPA_STATE_TAKEN)
 		vy += KOOPA_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -162,8 +192,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (dynamic_cast<CFireBullet*>(e->obj))
 					{
 						CFireBullet* bullet = dynamic_cast<CFireBullet*>(e->obj);
-						SetState(KOOPA_STATE_HIDE);
+						SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 						bullet->SetState(FIREBULLET_DESTROY_STATE);
+					}
+					if (dynamic_cast<CMario*>(e->obj))
+					{
+						CMario* mario = dynamic_cast<CMario*>(e->obj);
+						if(mario->GetState() == MARIO_STATE_FIGHT)
+							vy = -KOOPA_JUMP_DEFLECT_SPEED;
+						
 					}
 				}
 				if (e->ny != 0 && intro_state)
@@ -246,7 +283,7 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 
-	if (state == KOOPA_STATE_HIDE)
+	if (state == KOOPA_STATE_TORTOISESHELL_DOWN || state == KOOPA_STATE_TORTOISESHELL_UP)
 	{
 		right = x + KOOPA_BBOX_HIDE_WIDTH;
 		bottom = y + KOOPA_BBOX_HIDE_HEIGHT;
@@ -276,11 +313,20 @@ void CKoopa::SetState(int state)
 		isSpin = 0;
 		vx = -KOOPA_WALKING_SPEED;
 		break;
-	case KOOPA_STATE_HIDE:
+	case KOOPA_STATE_TORTOISESHELL_DOWN:
 		vx = 0;
 		vy = 0;
 		hiden_state = 0;
 		isSpin = 0;
+		isDown = 1;
+		break;
+	case KOOPA_STATE_TORTOISESHELL_UP:
+		DebugOut(L"da vao tortoiseshell up\n");
+		vx = 0;
+		vy = 0;
+		hiden_state = 0;
+		isSpin = 0;
+		isDown = 0;
 		break;
 	case KOOPA_STATE_SPIN_RIGHT:
 		isSpin = 1;
@@ -305,7 +351,7 @@ void CKoopa::CreateIntroAnimationKoopa()
 {
 	if (GetTickCount64() - create_time < 6000) SetState(KOOPA_STATE_HIDEN);
 	if (GetTickCount64() - create_time > 6000 && GetTickCount64() - create_time < 7500) {
-		SetState(KOOPA_STATE_HIDE);
+		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 	}
 	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 10000) {
 		SetState(KOOPA_STATE_TAKEN);

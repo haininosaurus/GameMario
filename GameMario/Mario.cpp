@@ -275,19 +275,29 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 				if (koopa->GetState() != KOOPA_STATE_TAKEN)
 				{
-					if (e->ny < 0)
+					if (fight_state && (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN || koopa->GetState() != KOOPA_STATE_TORTOISESHELL_UP))
 					{
-						if (koopa->GetState() != KOOPA_STATE_HIDE)
+						koopa->SetState(KOOPA_STATE_TORTOISESHELL_UP);
+						koopa->SetDefectStart(GetTickCount64());
+						koopa->SetDefectState(1);
+						DebugOut(L"da danh rua");
+					}
+
+					else if (e->ny < 0)
+					{
+
+						if (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN && koopa->GetState() != KOOPA_STATE_TORTOISESHELL_UP)
 						{
 							streak_Kill++;
 							DisplayScores(streak_Kill, koopa->x, koopa->y, GetTickCount64());
 							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM)
 								koopa->SetForm(KOOPA_GREEN_FORM);
-							else koopa->SetState(KOOPA_STATE_HIDE);
+							else if (koopa->GetIsDown()) koopa->SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
+							else koopa->SetState(KOOPA_STATE_TORTOISESHELL_UP);
 							jump_state = 1;
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}            
-						else if (koopa->GetState() == KOOPA_STATE_HIDE)
+						else if (koopa->GetState() == KOOPA_STATE_TORTOISESHELL_DOWN || koopa->GetState() == KOOPA_STATE_TORTOISESHELL_UP)
 						{
 
 							if (round(x + CMario::GetCurrentWidthMario() / 2) < koopa->x + round(KOOPA_BBOX_WIDTH / 2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
@@ -300,7 +310,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (untouchable == 0)
 						{
-							if (koopa->GetState() != KOOPA_STATE_HIDE)
+							if (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN && koopa->GetState() != KOOPA_STATE_TORTOISESHELL_UP && !fight_state)
 							{
 								if (level > MARIO_LEVEL_SMALL)
 								{
@@ -327,7 +337,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 										koopa->SetState(KOOPA_STATE_SPIN_LEFT);
 									}
 								}
-								else
+								else if (!fight_state)
 								{
 									tortoiseshell = koopa;
 									koopa->SetState(KOOPA_STATE_TAKEN);
@@ -460,7 +470,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-
+	DebugOut(L"fight state: %d\n", fight_state);
 
 
 	if (tortoiseshell != NULL) {

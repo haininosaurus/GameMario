@@ -214,15 +214,15 @@ void CLuigi::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (e->ny < 0)
 					{
-						if (koopa->GetState() != KOOPA_STATE_HIDE)
+						if (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN)
 						{
 							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM)
 								koopa->SetForm(KOOPA_GREEN_FORM);
-							else koopa->SetState(KOOPA_STATE_HIDE);
+							else koopa->SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 							jump_state = 1;
 							vy = -LUIGI_JUMP_DEFLECT_SPEED;
 						}
-						else if (koopa->GetState() == KOOPA_STATE_HIDE)
+						else if (koopa->GetState() == KOOPA_STATE_TORTOISESHELL_DOWN)
 						{
 
 							if (round(x + CLuigi::GetCurrentWidthLuigi() / 2) < koopa->x + round(KOOPA_BBOX_WIDTH / 2)) koopa->SetState(KOOPA_STATE_SPIN_RIGHT);
@@ -234,7 +234,7 @@ void CLuigi::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (untouchable == 0)
 						{
-							if (koopa->GetState() != KOOPA_STATE_HIDE)
+							if (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN)
 							{
 								if (level > LUIGI_LEVEL_SMALL)
 								{
