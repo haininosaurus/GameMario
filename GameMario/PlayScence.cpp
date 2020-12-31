@@ -705,7 +705,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 	}
 	//if key right is down, disable key left and key down
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
 	{
 		mario->SetWalkRightTime(GetTickCount64());
 		//mario doesn't turn left
@@ -734,7 +734,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	}
 	//if key left is down, disable key right and key down
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT))
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN))
 	{
 		mario->SetWalkLeftTime(GetTickCount64());
 		if (GetTickCount64() - mario->GetWalkRightTime() > 200)

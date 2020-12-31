@@ -32,6 +32,8 @@
 #define KOOPA_ANI_RED_TAKEN_DOWN						4
 #define KOOPA_ANI_RED_TAKEN_UP							14
 #define KOOPA_ANI_RED_SPIN_UP							12
+#define KOOPA_ANI_RED_REBORN_DOWN						16
+#define KOOPA_ANI_RED_REBORN_UP							18
 
 #define KOOPA_ANI_GREEN_TORTOISESHELL_UP				15
 #define KOOPA_ANI_GREEN_SPIN_UP							13
@@ -41,6 +43,8 @@
 #define KOOPA_ANI_GREEN_SPIN_DOWN						8
 #define KOOPA_ANI_GREEN_TAKEN_DOWN						9
 #define KOOPA_ANI_GREEN_TAKEN_UP						15
+#define KOOPA_ANI_GREEN_REBORN_DOWN						17
+#define KOOPA_ANI_GREEN_REBORN_UP						19
 
 #define PARAKOOPA_ANI_GREEN_JUMPING_RIGHT				10
 #define PARAKOOPA_ANI_GREEN_JUMPING_LEFT				11
@@ -53,6 +57,7 @@
 #define KOOPA_STATE_SPIN_RIGHT				400
 #define KOOPA_STATE_SPIN_LEFT				500
 #define KOOPA_STATE_TAKEN					600
+#define KOOPA_STATE_REBORN					900
 
 #define KOOPA_STATE_HIDEN					700
 
@@ -62,10 +67,12 @@ class CKoopa : public CollisionObject
 	int isSpin = 0;
 	int isDown = 1;
 	int hiden_state;
+	int tortoiseshell_state;
 	int intro_state;
 	DWORD create_time;
 	int deflect_state = 0;
 	DWORD defect_start;
+	DWORD tortoiseshell_start;
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

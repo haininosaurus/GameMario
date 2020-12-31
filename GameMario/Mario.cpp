@@ -280,7 +280,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						koopa->SetState(KOOPA_STATE_TORTOISESHELL_UP);
 						koopa->SetDefectStart(GetTickCount64());
 						koopa->SetDefectState(1);
-						DebugOut(L"da danh rua");
 					}
 
 					else if (e->ny < 0)
@@ -469,8 +468,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				streak_Kill = -1;
 		}
 	}
-
-	DebugOut(L"fight state: %d\n", fight_state);
 
 
 	if (tortoiseshell != NULL) {
@@ -941,7 +938,7 @@ void CMario::SetState(int state)
 
 		deflect_state = 0;
 		run_state = 0;
-		sit_state = 0;
+		//sit_state = 0;
 		turn_state = 0;
 		speech_Jump = 0;
 		kick_state = 0;
@@ -954,7 +951,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_WALKING_LEFT:
 		deflect_state = 0;
 		turn_state = 0;
-		sit_state = 0;
+		//sit_state = 0;
 		run_state = 0;
 		speech_Jump = 0;
 		kick_state = 0;

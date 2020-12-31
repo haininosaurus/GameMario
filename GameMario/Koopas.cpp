@@ -28,6 +28,10 @@ void CKoopa::Render()
 	{
 		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
 			ani = KOOPA_ANI_RED_WALKING_LEFT;
+		else if (state == KOOPA_STATE_REBORN && isDown)
+			ani = KOOPA_ANI_RED_REBORN_DOWN;
+		else if (state == KOOPA_STATE_REBORN && !isDown)
+			ani = KOOPA_ANI_RED_REBORN_UP;
 		else if (state == KOOPA_STATE_TORTOISESHELL_DOWN)
 			ani = KOOPA_ANI_RED_TORTOISESHELL_DOWN;
 		else if (state == KOOPA_STATE_TORTOISESHELL_UP)
@@ -48,6 +52,10 @@ void CKoopa::Render()
 			ani = KOOPA_ANI_GREEN_TAKEN_DOWN;
 		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
 			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
+		else if (state == KOOPA_STATE_REBORN && isDown)
+			ani = KOOPA_ANI_GREEN_REBORN_DOWN;
+		else if (state == KOOPA_STATE_REBORN && !isDown)
+			ani = KOOPA_ANI_GREEN_REBORN_UP;
 		else if (state == KOOPA_STATE_TORTOISESHELL_DOWN)
 			ani = KOOPA_ANI_GREEN_TORTOISESHELL_DOWN;
 		else if (state == KOOPA_STATE_TORTOISESHELL_UP)
@@ -139,11 +147,21 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 		{
 			SetState(KOOPA_STATE_TORTOISESHELL_UP);
-			vy = -KOOPA_JUMP_DEFLECT_SPEED;
+			vy = -KOOPA_JUMP_DEFLECT_SPEED - 0.05f;
 			vx = -KOOPA_WALKING_SPEED - 0.25f;
 		}
 
 	}
+
+	if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 5000 && GetTickCount64() - tortoiseshell_start < 7000)
+		SetState(KOOPA_STATE_REBORN);
+	else if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 7000)
+	{
+		SetPosition(x, y - 10);
+		SetState(KOOPA_STATE_WALKING_RIGHT);
+	}
+
+
 	if(state != KOOPA_STATE_TAKEN)
 		vy += KOOPA_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -283,7 +301,7 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 
-	if (state == KOOPA_STATE_TORTOISESHELL_DOWN || state == KOOPA_STATE_TORTOISESHELL_UP)
+	if (state == KOOPA_STATE_TORTOISESHELL_DOWN || state == KOOPA_STATE_TORTOISESHELL_UP || state == KOOPA_STATE_REBORN)
 	{
 		right = x + KOOPA_BBOX_HIDE_WIDTH;
 		bottom = y + KOOPA_BBOX_HIDE_HEIGHT;
@@ -306,14 +324,20 @@ void CKoopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_WALKING_RIGHT:
+		isDown = 1;
+		tortoiseshell_state = 0;
 		isSpin = 0;
 		vx = KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_WALKING_LEFT:
+		isDown = 1;
+		tortoiseshell_state = 0;
 		isSpin = 0;
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_TORTOISESHELL_DOWN:
+		if (!tortoiseshell_state) tortoiseshell_start = GetTickCount64();
+		tortoiseshell_state = 1;
 		vx = 0;
 		vy = 0;
 		hiden_state = 0;
@@ -321,22 +345,28 @@ void CKoopa::SetState(int state)
 		isDown = 1;
 		break;
 	case KOOPA_STATE_TORTOISESHELL_UP:
-		DebugOut(L"da vao tortoiseshell up\n");
+		if (!tortoiseshell_state) tortoiseshell_start = GetTickCount64();
+		tortoiseshell_state = 1;
 		vx = 0;
 		vy = 0;
 		hiden_state = 0;
 		isSpin = 0;
 		isDown = 0;
 		break;
+	case KOOPA_STATE_REBORN:
+		break;
 	case KOOPA_STATE_SPIN_RIGHT:
+		tortoiseshell_state = 0;
 		isSpin = 1;
 		vx = KOOPA_SPINNING_SPEED;
 		break;
 	case KOOPA_STATE_SPIN_LEFT:
+		tortoiseshell_state = 0;
 		isSpin = 1;
 		vx = - KOOPA_SPINNING_SPEED;
 		break;
 	case KOOPA_STATE_TAKEN:
+		tortoiseshell_state = 0;
 		vx = 0;
 		vy = 0;
 		isSpin = 0;
