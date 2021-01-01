@@ -58,6 +58,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_NUMBER					24
 #define OBJECT_TYPE_SCORE_EFFECT			25
 #define OBJECT_TYPE_SCORE					26
+#define OBJECT_TYPE_ARROW					27
+#define OBJECT_TYPE_ARROWS					28
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -224,6 +226,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		sb = (CScoreBoard*)obj;
 		sb->SetTime(time);
 		sb->SetScore(score);
+		sb->SetArrows(arrows);
 		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
@@ -285,6 +288,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 		}
 
+		break;
+	case OBJECT_TYPE_ARROW:
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CArrow(type);
+			arrow.push_back((CArrow*)obj);
+			break;
+		}
+		break;
+	case OBJECT_TYPE_ARROWS:
+		obj = new CArrows(arrow);
+		arrows = (CArrows*)obj;
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -510,6 +525,11 @@ void CPlayScene::Update(DWORD dt)
 		sb->SetCam(cam);
 	}
 	cam->UpdateCam();
+
+	if (player->GetArrows() == NULL)
+	{
+		player->SetArrows(arrows);
+	}
 
 	for (size_t i = 1; i < objects.size(); i++)
 	{

@@ -647,6 +647,24 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (state == MARIO_STATE_RUNNING_LEFT || state == MARIO_STATE_RUNNING_RIGHT || state == MARIO_STATE_RUNNING_LEFT_FAST || state == MARIO_STATE_RUNNING_RIGHT_FAST)
+	{
+		if (GetTickCount64() - running_start > 200)
+		{
+			arrows->SetWhiteArrows();
+			running_start = GetTickCount64();
+		}
+
+	}
+	else {
+		if (GetTickCount64() - running_start > 200)
+		{
+			arrows->SetBlackArrows();
+			running_start = GetTickCount64();
+		}
+
+	}
+
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

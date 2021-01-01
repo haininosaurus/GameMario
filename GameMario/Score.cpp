@@ -22,6 +22,17 @@ void CScore::SetPositionNumbers(float x, float y)
 
 void CScore::Render()
 {
+
+}
+
+void CScore::PushNumbers(CNumber* num)
+{
+
+	numbers.push_back(num);
+}
+
+void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
 	int num = score;
 	int temp;
 
@@ -33,15 +44,4 @@ void CScore::Render()
 		num = num / 10;
 		numbers[i]->SetState(temp);
 	}
-}
-
-void CScore::PushNumbers(CNumber* num)
-{
-
-	numbers.push_back(num);
-}
-
-void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	
 }

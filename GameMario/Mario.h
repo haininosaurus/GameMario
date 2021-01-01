@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Collision.h"
 #include "ScoreEffect.h"
+#include "Arrow.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -9,7 +10,7 @@
 #define MARIO_RUNNING_FAST_SPEED						0.2f
 
 #define MARIO_JUMP_SPEED_Y								0.15f
-#define MARIO_FLYING_SPEED_Y							0.03f
+#define MARIO_FLYING_SPEED_Y							0.05f
 #define MARIO_JUMP_DEFLECT_SPEED						0.2f
 #define MARIO_GRAVITY									0.001f
 #define MARIO_DIE_DEFLECT_SPEED							0.5f
@@ -238,6 +239,7 @@ class CMario : public CollisionObject
 
 	CGameObject* fire_bullet[2];
 	CScoreEffect* score[3];
+	CArrows* arrows;
 
 	DWORD jump_start;
 	DWORD kick_start;
@@ -249,6 +251,7 @@ class CMario : public CollisionObject
 	DWORD running_time_left;
 	DWORD walking_time_right;
 	DWORD walking_time_left;
+	DWORD running_start;
 
 	DWORD sliding_time_right;
 	DWORD sliding_time_left;
@@ -264,6 +267,8 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
+	void SetArrows(CArrows* ar) { arrows = ar; }
+	CArrows* GetArrows() { return arrows; }
 
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
