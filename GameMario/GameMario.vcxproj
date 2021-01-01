@@ -29,6 +29,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CloudBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="CoinPlay.cpp" />
     <ClCompile Include="ColorBrick.cpp" />
     <ClCompile Include="Curtain.cpp" />
     <ClCompile Include="FireBullet.cpp" />
@@ -40,6 +41,7 @@
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Leaf.cpp" />
+    <ClCompile Include="Lives.cpp" />
     <ClCompile Include="Luigi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map1.cpp" />
@@ -77,6 +79,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CloudBrick.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="CoinPlay.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ColorBrick.h" />
     <ClInclude Include="Curtain.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Leaf.h" />
+    <ClInclude Include="Lives.h" />
     <ClInclude Include="Luigi.h" />
     <ClInclude Include="Map1.h" />
     <ClInclude Include="Mario.h" />

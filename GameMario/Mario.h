@@ -3,6 +3,8 @@
 #include "Collision.h"
 #include "ScoreEffect.h"
 #include "Arrow.h"
+#include "CoinPlay.h"
+#include "Lives.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -240,6 +242,8 @@ class CMario : public CollisionObject
 	CGameObject* fire_bullet[2];
 	CScoreEffect* score[3];
 	CArrows* arrows;
+	CCoinPlay* coinplay;
+	CLives* lives;
 
 	DWORD jump_start;
 	DWORD kick_start;
@@ -268,7 +272,11 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	void SetArrows(CArrows* ar) { arrows = ar; }
+	void SetCoinPlay(CCoinPlay* cp) { coinplay = cp; }
+	void SetLives(CLives* l) { lives = l; }
 	CArrows* GetArrows() { return arrows; }
+	CCoinPlay* GetCoinPlay() { return coinplay; }
+	CLives* GetLives() { return lives; }
 
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }

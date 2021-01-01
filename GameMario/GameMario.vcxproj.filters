@@ -217,6 +217,12 @@
       <Filter>Source Files\Score</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
+      <Filter>Source Files\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinPlay.cpp">
+      <Filter>Source Files\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Lives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -360,6 +366,12 @@
       <Filter>Header Files\Score</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
+      <Filter>Header Files\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinPlay.h">
+      <Filter>Header Files\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="Lives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

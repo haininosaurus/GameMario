@@ -17,6 +17,8 @@ void CScoreBoard::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		time->SetPositionNumbers(cam->GetCx() + 152.0f, cam->GetCy() + 185.0f);
 		score->SetPositionNumbers(cam->GetCx() + 80.0f, cam->GetCy() + 185.0f);
 		arrows->SetPositionArrows(cam->GetCx() + 80.0f, cam->GetCy() + 176.0f);
+		coin->SetPositionNumbers(cam->GetCx() + 160.0f, cam->GetCy() + 176.0f);
+		lives->SetPositionNumbers(cam->GetCx() + 56.0f, cam->GetCy() + 185.0f);
 	}
 }
 

@@ -359,6 +359,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (coin->GetState() == COIN_STATE_NORMAL)
 				{
+					coinplay->AddCoin();
 					coin->SetState(COIN_STATE_HIDEN);
 
 				}			
@@ -402,6 +403,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = 0;
 					if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
 					{
+						if(dynamic_cast<CCoin*>(quesBlock->GetItemObject()))
+							coinplay->AddCoin();
 						quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
 						quesBlock->SetStateItem(EFFECT_STATE);
 					}

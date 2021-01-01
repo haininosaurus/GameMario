@@ -33,6 +33,12 @@ public:
 	}
 	void AddItemQuestionBlock(CGameObject* item);
 	void SetStateItem(int state);
+	CGameObject* GetItemObject() {
+		for (int i = 0; i < ITEM_AMOUNT; i++)
+		{
+			if (item[i] != NULL) return item[i];
+		}
+	}
 	void SetDeflectStart(DWORD deflectstart) { deflect_start = deflectstart; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

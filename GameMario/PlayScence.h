@@ -30,6 +30,8 @@
 #include "ScoreEffect.h"
 #include "Score.h"
 #include "Arrow.h"
+#include "CoinPlay.h"
+#include "Lives.h"
 
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
@@ -44,10 +46,15 @@ protected:
 	CCamera* cam;
 	vector<CNumber*> num;
 	vector<CNumber*> numScore;
+	vector<CNumber*> numCoin;
+	vector<CNumber*> numLives;
 	vector<CArrow*> arrow;
+	vector<CCoin*> coin;
 	CTime* time;
 	CScore* score;
 	CArrows* arrows;
+	CCoinPlay* coinPlay;
+	CLives* lives;
 	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];

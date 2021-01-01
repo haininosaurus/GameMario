@@ -60,6 +60,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SCORE					26
 #define OBJECT_TYPE_ARROW					27
 #define OBJECT_TYPE_ARROWS					28
+#define OBJECT_TYPE_COINPLAY				29
+#define OBJECT_TYPE_LIVES					30
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -227,6 +229,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		sb->SetTime(time);
 		sb->SetScore(score);
 		sb->SetArrows(arrows);
+		sb->SetCoinPlay(coinPlay);
+		sb->SetLives(lives);
 		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
@@ -265,6 +269,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				num.push_back((CNumber*)obj);
 			if (type == 1)
 				numScore.push_back((CNumber*)obj);
+			if (type == 2)
+				numCoin.push_back((CNumber*)obj);
+			if (type == 3)
+				numLives.push_back((CNumber*)obj);
 			break;
 		}
 	case OBJECT_TYPE_TIME:
@@ -300,6 +308,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ARROWS:
 		obj = new CArrows(arrow);
 		arrows = (CArrows*)obj;
+		break;
+	case OBJECT_TYPE_COINPLAY:
+		obj = new CCoinPlay(numCoin);
+		coinPlay = (CCoinPlay*)obj;
+		break;
+	case OBJECT_TYPE_LIVES:
+		obj = new CLives(numLives);
+		lives = (CLives*)obj;
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -529,6 +545,14 @@ void CPlayScene::Update(DWORD dt)
 	if (player->GetArrows() == NULL)
 	{
 		player->SetArrows(arrows);
+	}
+	if (player->GetCoinPlay() == NULL)
+	{
+		player->SetCoinPlay(coinPlay);
+	}
+	if (player->GetLives() == NULL)
+	{
+		player->SetLives(lives);
 	}
 
 	for (size_t i = 1; i < objects.size(); i++)
