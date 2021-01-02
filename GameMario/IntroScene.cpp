@@ -201,7 +201,14 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_LUIGI: obj = new CLuigi(); break;
 	case OBJECT_TYPE_CURTAIN: obj = new CCurtain(); break;
-	case OBJECT_TYPE_TITLE: obj = new CTitle(); break;
+	case OBJECT_TYPE_TITLE:
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CTitle(type);
+			if(type)
+				title = (CTitle*)obj;
+		}
+		break;
 	case OBJECT_TYPE_LEAF:
 		{
 			obj = new CLeaf();
@@ -357,11 +364,27 @@ void CIntroScene::Update(DWORD dt)
 }
 void CIntroScene::Render()
 {
-
-	for (int i = objects.size() - 1; i >= 0; i--)
+	if (title->GetType() != 2 && title->GetType() != 3)
 	{
-		objects[i]->Render();
+		for (int i = objects.size() - 1; i >= 0; i--)
+		{
+			objects[i]->Render();
+		}
 	}
+	else {
+		for (int i = objects.size() - 1; i >= 0; i--)
+		{
+			if(!dynamic_cast<CRoad*>(objects[i]))
+				objects[i]->Render();
+		}
+		for (int i = objects.size() - 1; i >= 0; i--)
+		{
+			if (dynamic_cast<CRoad*>(objects[i]))
+				objects[i]->Render();
+		}
+	}
+
+
 }
 
 /*
@@ -378,8 +401,25 @@ void CIntroScene::Unload()
 void CIntroScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	CGame* game = CGame::GetInstance();
-	if(game->IsKeyDown(DIK_X))
-		CGame::GetInstance()->SwitchScene(1);
+	CTitle* title = ((CIntroScene*)scence)->GetTitle();
+
+	if (game->IsKeyDown(DIK_X))
+	{
+		if (title->GetType() == 4)
+			title->SetType(2);
+		else CGame::GetInstance()->SwitchScene(3);
+	}
+	if (game->IsKeyDown(DIK_DOWN))
+	{
+		if (title->GetType() == 2)
+			title->SetType(3);
+	}
+	if (game->IsKeyDown(DIK_UP))
+	{
+		if (title->GetType() == 3)
+			title->SetType(2);
+	}
+
 }
 void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 {

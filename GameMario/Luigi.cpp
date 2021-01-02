@@ -933,15 +933,55 @@ void CLuigi::CreateIntroAnimationLuigi()
 	if (GetTickCount64() - create_time > 3300 && GetTickCount64() - create_time < 3700) {
 		SetState(LUIGI_STATE_JUMP);
 	}
-	if (GetTickCount64() - create_time > 3700 && GetTickCount64() - create_time < 4150) {
+	if (GetTickCount64() - create_time > 3700 && GetTickCount64() - create_time < 4125) {
 		jump_state = 0;
 	}
-	if (GetTickCount64() - create_time > 4150 && GetTickCount64() - create_time < 4800) {
+	if (GetTickCount64() - create_time > 4125 && GetTickCount64() - create_time < 4800) {
 		SetState(LUIGI_STATE_JUMP);
 	}
 	if (GetTickCount64() - create_time > 4800 && GetTickCount64() - create_time < 5000) {
 		jump_state = 0;
 	}
+	if (GetTickCount64() - create_time > 15000 && GetTickCount64() - create_time < 15050)
+	{
+		SetPosition(310, 133);
+		SetState(LUIGI_STATE_RUNNING_LEFT);
+		//SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
+		if (GetWalkingLeftSpeech() < LUIGI_WALKING_SPEED)
+			SetWalkingLeftSpeech();
+	}
+	if (GetTickCount64() - create_time > 15050 && GetTickCount64() - create_time < 15800)
+	{
+		//SetState(LUIGI_STATE_RUNNING_LEFT);
+		vx = -LUIGI_WALKING_SPEED;
+		//SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
+		if (GetWalkingLeftSpeech() < LUIGI_WALKING_SPEED)
+			SetWalkingLeftSpeech();
+	}
+	else if (GetTickCount64() - create_time > 15800 && GetTickCount64() - create_time < 16000)
+	{
+		SetState(MARIO_STATE_IDLE);
+		vx = 0;
+		run_state = 0;
+		take_tortoistate_state = 0;
+		tortoiseshell = NULL;
+	}
+	else if (GetTickCount64() - create_time > 16000 && GetTickCount64() - create_time < 16200)
+	{
+		if (!kick_state) SetKickStart(GetTickCount64());
+		SetState(LUIGI_STATE_KICK);
+		vx = 0;
+	}
+	else if (GetTickCount64() - create_time > 16200 && GetTickCount64() - create_time < 18000)
+	{
+		vx = 0;
+	}
+	else if (GetTickCount64() - create_time > 18000 && GetTickCount64() - create_time < 20200)
+	{
+		vx = LUIGI_WALKING_SPEED;
+	}
+
+
 
 }
 

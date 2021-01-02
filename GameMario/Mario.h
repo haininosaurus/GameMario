@@ -292,6 +292,7 @@ public:
 	int GetSmokeState() { return smoke_state; }
 	int GetGrowupState() { return growup_state; }
 	int GetDeflectState() { return deflect_state; }
+	int GetIntroState() { return intro_state; }
 	int GetFallState() { return fall_state; }
 	float GetWalkingRightSpeech() { return walking_right_speech; }
 	float GetWalkingLeftSpeech() { return walking_left_speech; }

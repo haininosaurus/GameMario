@@ -542,15 +542,15 @@ void CPlayScene::Update(DWORD dt)
 	}
 	cam->UpdateCam();
 
-	if (player->GetArrows() == NULL)
+	if (player->GetArrows() == NULL && !player->GetIntroState())
 	{
 		player->SetArrows(arrows);
 	}
-	if (player->GetCoinPlay() == NULL)
+	if (player->GetCoinPlay() == NULL && !player->GetIntroState())
 	{
 		player->SetCoinPlay(coinPlay);
 	}
-	if (player->GetLives() == NULL)
+	if (player->GetLives() == NULL && !player->GetIntroState())
 	{
 		player->SetLives(lives);
 	}

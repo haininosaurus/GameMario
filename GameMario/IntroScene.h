@@ -24,6 +24,7 @@
 #include "Curtain.h"
 #include "Title.h"
 
+
 #define QUESTIONBLOCK_AMOUNT		8
 #define ITEM_QUESTIONBLOCK_AMOUNT	8
 #define BRICK_AMOUNT				20
@@ -32,6 +33,8 @@
 class CIntroScene : public CScene
 {
 	vector<LPGAMEOBJECT> objects;
+
+	CTitle* title;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -42,6 +45,8 @@ class CIntroScene : public CScene
 
 public:
 	CIntroScene(int id, LPCWSTR filePath);
+
+	CTitle* GetTitle() { return title; }
 
 	virtual void Load();
 	virtual void Update(DWORD dt);

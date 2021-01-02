@@ -1,19 +1,29 @@
 #include "Title.h"
 
-CTitle::CTitle() : CGameObject()
+CTitle::CTitle(int f) : CGameObject()
 {
+	form = f;
+	if (form)
+	{
+		type = 4;
+	}
 	create_time = GetTickCount64();
 }
 
 void CTitle::Render()
 {
+	if (type == HIDEN_TITLE) return;
 	animation_set->at(type)->Render(x, y);
 }
 
 void CTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 {
-	CreateIntroAnimationTitle();
-	y += vy * dt;
+	if (!form)
+	{
+		CreateIntroAnimationTitle();
+		y += vy * dt;
+	}
+
 }
 
 void CTitle::CreateIntroAnimationTitle()

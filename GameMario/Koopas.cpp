@@ -153,9 +153,9 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	}
 
-	if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 5000 && GetTickCount64() - tortoiseshell_start < 7000)
+	if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 5000 && GetTickCount64() - tortoiseshell_start < 7000 && !intro_state)
 		SetState(KOOPA_STATE_REBORN);
-	else if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 7000)
+	else if (tortoiseshell_state && GetTickCount64() - tortoiseshell_start > 7000 && !intro_state)
 	{
 		SetPosition(x, y - 10);
 		SetState(KOOPA_STATE_WALKING_RIGHT);
@@ -388,6 +388,34 @@ void CKoopa::CreateIntroAnimationKoopa()
 	}
 	if (GetTickCount64() - create_time > 12800 && GetTickCount64() - create_time < 15000) {
 		SetState(KOOPA_STATE_SPIN_RIGHT);
+	}
+	if (GetTickCount64() - create_time > 15000 && GetTickCount64() - create_time < 15050) {
+		SetPosition(283, 144);
+		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
+	}
+	if (GetTickCount64() - create_time > 16100 && GetTickCount64() - create_time < 16400) {
+
+		SetState(KOOPA_STATE_SPIN_LEFT);
+	}
+	if (GetTickCount64() - create_time > 16550 && GetTickCount64() - create_time < 18000) {
+
+		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
+	}
+	if (GetTickCount64() - create_time > 18200 && GetTickCount64() - create_time < 20000) {
+
+		SetState(KOOPA_STATE_SPIN_RIGHT);
+	}
+	if (GetTickCount64() - create_time > 20000 && GetTickCount64() - create_time < 20100)
+	{
+		SetPosition(0, 136);
+	}
+	if (GetTickCount64() - create_time > 20700 && GetTickCount64() - create_time < 20800)
+	{
+		//vx = 0;
+	}
+	if (GetTickCount64() - create_time > 20700 && GetTickCount64() - create_time < 20800)
+	{
+		SetPosition(x + 2, y);
 	}
 
 }
