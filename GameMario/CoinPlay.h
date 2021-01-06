@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Number.h"
+#include "Game.h"
 
 class CCoinPlay : public CGameObject
 {
@@ -8,9 +9,11 @@ class CCoinPlay : public CGameObject
 	int coin;
 
 public:
-	CCoinPlay() { coin = 0; }
+	CCoinPlay() {
+		CGame* game = CGame::GetInstance();
+		coin = game->GetCoinPlay(); 
+	}
 	CCoinPlay(vector<CNumber*> num) {
-		coin = 0;
 		for (int i = 0; i < num.size(); i++)
 		{
 			numbers.push_back(num[i]);
@@ -18,7 +21,10 @@ public:
 
 	}
 	void SetPositionNumbers(float x, float y);
-	void AddCoin() { coin += 1; }
+	void AddCoin() { 
+		CGame* game = CGame::GetInstance();
+		game->SetCoin(game->GetCoinPlay() + 1);
+	}
 
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

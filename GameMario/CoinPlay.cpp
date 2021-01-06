@@ -15,9 +15,9 @@ void CCoinPlay::Render()
 
 void CCoinPlay::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	int num = coin;
+	CGame* game = CGame::GetInstance();
+	int num = game->GetCoinPlay();
 	int temp;
-
 
 	for (int i = numbers.size() - 1; i >= 0; i--)
 	{

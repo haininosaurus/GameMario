@@ -37,6 +37,7 @@
     <ClCompile Include="FirePlantBullet.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GoalCard.cpp" />
     <ClCompile Include="Goombas.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Koopas.cpp" />
@@ -60,6 +61,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ScoreEffect.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TimePlay.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -88,6 +90,7 @@
     <ClInclude Include="FirePlantBullet.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GoalCard.h" />
     <ClInclude Include="Goombas.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="KeyEventHandler.h" />
@@ -111,6 +114,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="ScoreEffect.h" />
     <ClInclude Include="Sprites.h" />
+    <ClInclude Include="Switch.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TimePlay.h" />
     <ClInclude Include="Title.h" />

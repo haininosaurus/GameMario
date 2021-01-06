@@ -2,7 +2,7 @@
 
 CCurtain::CCurtain() : CGameObject()
 {
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 }
 
 void CCurtain::Render()

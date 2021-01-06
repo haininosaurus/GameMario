@@ -18,13 +18,15 @@
 
 class CQuestionBlock : public CGameObject
 {
+	int form;
 	DWORD deflect_start;
 	bool check_init_location;
 	float init_location_y;
 	CGameObject* item[ITEM_AMOUNT];
 
 public:
-	CQuestionBlock() { 
+	CQuestionBlock(int f) { 
+		form = f;
 		check_init_location = false;
 		deflect_start = (DWORD)0.0f;
 		init_location_y = 0.0f;
@@ -41,6 +43,7 @@ public:
 	}
 	void SetDeflectStart(DWORD deflectstart) { deflect_start = deflectstart; }
 	virtual void Render();
+	int GetForm() { return form; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void SetState(int state);

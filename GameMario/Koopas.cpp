@@ -243,9 +243,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 							if (dynamic_cast<CQuestionBlock*>(e->obj))
 							{
+
 								CQuestionBlock* quesBlock = dynamic_cast<CQuestionBlock*>(e->obj);
-								quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
-								quesBlock->SetStateItem(EFFECT_STATE);
+								if (!quesBlock->GetForm())
+								{
+									quesBlock->SetState(QUESTIONBLOCK_DEFLECT_STATE);
+									quesBlock->SetStateItem(EFFECT_STATE);
+								}
+
 
 							}
 							SetState(KOOPA_STATE_SPIN_RIGHT);

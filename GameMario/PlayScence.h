@@ -32,9 +32,11 @@
 #include "Arrow.h"
 #include "CoinPlay.h"
 #include "Lives.h"
+#include "Switch.h"
+#include "GoalCard.h"
 
-#define QUESTIONBLOCK_AMOUNT		8
-#define ITEM_QUESTIONBLOCK_AMOUNT	8
+#define QUESTIONBLOCK_AMOUNT		9
+#define ITEM_QUESTIONBLOCK_AMOUNT	9
 #define BRICK_AMOUNT				20
 #define ITEM_BRICK_AMOUNT			20
 

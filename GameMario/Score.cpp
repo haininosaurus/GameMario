@@ -1,9 +1,9 @@
 #include "Score.h"
 #include "Utils.h"
+#include "Game.h"
 
 CScore::CScore()
 {
-	score = 0;
 
 }
 
@@ -33,7 +33,8 @@ void CScore::PushNumbers(CNumber* num)
 
 void CScore::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	int num = score;
+	CGame* game = CGame::GetInstance();
+	int num = game->GetScore();
 	int temp;
 
 

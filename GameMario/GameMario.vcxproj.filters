@@ -225,6 +225,12 @@
     <ClCompile Include="Lives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Switch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntroScene.h">
@@ -372,6 +378,12 @@
       <Filter>Header Files\Score</Filter>
     </ClInclude>
     <ClInclude Include="Lives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Switch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

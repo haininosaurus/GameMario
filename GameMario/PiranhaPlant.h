@@ -44,7 +44,6 @@ class CPiranhaPlant : public CollisionObject
 		float& rdy);
 
 public:
-	CPiranhaPlant() {};
 	CPiranhaPlant(CGameObject* mario);
 	virtual void SetState(int state);
 	virtual int GetState();

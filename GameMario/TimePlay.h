@@ -14,7 +14,7 @@ public:
 	CTime();
 	CTime(vector<CNumber*> num) {
 		time = TIME_LIMIT;
-		time_start = GetTickCount64();
+		time_start = (DWORD)GetTickCount64();
 
 		for (int i = 0; i < num.size(); i++)
 			numbers.push_back(num[i]);

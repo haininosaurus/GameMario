@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "ScoreEffect.h"
 
-#define COIN_BBOX_WIDTH 16
-#define COIN_BBOX_HEIGHT 16
+#define COIN_BBOX_WIDTH 12
+#define COIN_BBOX_HEIGHT 12
 
 #define COIN_SPEED_Y	0.2f
 
@@ -19,11 +19,14 @@ class CCoin : public CGameObject
 	int effect_state;
 	DWORD effect_time_start;
 
-	int score;
 	CScoreEffect* scoreEffect;
 
 public:
-	void SetScore(int s) { score = s; }
+	CCoin() {
+		int effect_state = 0;
+		DWORD effect_time_start = 0;
+		CScoreEffect* scoreEffect = 0;
+	}
 	void SetScoreEffect(CScoreEffect* s) { scoreEffect = s; }
 	void SetState(int state);
 	virtual void Render();

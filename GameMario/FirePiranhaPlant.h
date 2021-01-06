@@ -59,7 +59,6 @@ class CFirePiranhaPlant : public CollisionObject
 public:
 	void CreateFirePlantBullet(CGameObject* fireplantbullet);
 	void ShootFirePlantBullet();
-	CFirePiranhaPlant() {};
 	CFirePiranhaPlant(CGameObject* mario);
 	virtual void SetState(int state);
 	virtual int GetState();

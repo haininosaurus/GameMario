@@ -14,10 +14,10 @@ void CMarioOverworld::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	{
 		for (size_t i = 0; i < nodes.size(); i++)
 		{
-			if (x + MARIO_SMALL_BBOX_WIDTH ==  nodes[i]->GetLeft() && y == nodes[i]->GetTop())
+			if (x + MARIO_INTRO_SMALL_BBOX_WIDTH ==  nodes[i]->GetLeft() && y == nodes[i]->GetTop())
 			{
 				move_right = 1;
-				destination_x = x + 2 * MARIO_SMALL_BBOX_WIDTH;
+				destination_x = x + 2 * MARIO_INTRO_SMALL_BBOX_WIDTH;
 				destination_y = y;
 				break;
 			}
@@ -27,10 +27,10 @@ void CMarioOverworld::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	{
 		for (size_t i = 0; i < nodes.size(); i++)
 		{
-			if (x - MARIO_SMALL_BBOX_WIDTH == nodes[i]->GetLeft() && y == nodes[i]->GetTop())
+			if (x - MARIO_INTRO_SMALL_BBOX_WIDTH == nodes[i]->GetLeft() && y == nodes[i]->GetTop())
 			{
 				move_left = 1;
-				destination_x = x - 2 * MARIO_SMALL_BBOX_WIDTH;
+				destination_x = x - 2 * MARIO_INTRO_SMALL_BBOX_WIDTH;
 				destination_y = y;
 				break;
 			}
@@ -40,11 +40,11 @@ void CMarioOverworld::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	{
 		for (size_t i = 0; i < nodes.size(); i++)
 		{
-			if (x  == nodes[i]->GetLeft() && y - MARIO_SMALL_BBOX_HEIGHT == nodes[i]->GetTop())
+			if (x  == nodes[i]->GetLeft() && y - MARIO_INTRO_SMALL_BBOX_HEIGHT == nodes[i]->GetTop())
 			{
 				move_top = 1;
 				destination_x = x;
-				destination_y = y - 2 * MARIO_SMALL_BBOX_HEIGHT;
+				destination_y = y - 2 * MARIO_INTRO_SMALL_BBOX_HEIGHT;
 				break;
 			}
 		}
@@ -53,11 +53,11 @@ void CMarioOverworld::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	{
 		for (size_t i = 0; i < nodes.size(); i++)
 		{
-			if (x == nodes[i]->GetLeft() && y + MARIO_SMALL_BBOX_HEIGHT == nodes[i]->GetTop())
+			if (x == nodes[i]->GetLeft() && y + MARIO_INTRO_SMALL_BBOX_HEIGHT == nodes[i]->GetTop())
 			{
 				move_bottom = 1;
 				destination_x = x;
-				destination_y = y + 2 * MARIO_SMALL_BBOX_HEIGHT;
+				destination_y = y + 2 * MARIO_INTRO_SMALL_BBOX_HEIGHT;
 				break;
 			}
 		}
@@ -103,8 +103,8 @@ void CMarioOverworld::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y;
-	r = x + MARIO_SMALL_BBOX_WIDTH;
-	b = y + MARIO_SMALL_BBOX_HEIGHT;
+	r = x + MARIO_INTRO_SMALL_BBOX_WIDTH;
+	b = y + MARIO_INTRO_SMALL_BBOX_HEIGHT;
 }
 
 int CMarioOverworld::GetTypeCurrentNode()
@@ -127,19 +127,19 @@ void CMarioOverworld::SetState(int state)
 	{
 	case MARIO_STATE_MOVING_RIGHT:
 		isMoving = true;
-		vx = MARIO_WALKING_SPEED;
+		vx = MARIO_INTRO_WALKING_SPEED;
 		break;
 	case MARIO_STATE_MOVING_UP:
 		isMoving = true;
-		vy = -MARIO_WALKING_SPEED;
+		vy = -MARIO_INTRO_WALKING_SPEED;
 		break;
 	case MARIO_STATE_MOVING_DOWN:
 		isMoving = true;
-		vy = MARIO_WALKING_SPEED;
+		vy = MARIO_INTRO_WALKING_SPEED;
 		break;
 	case MARIO_STATE_MOVING_LEFT:
 		isMoving = true;
-		vx = -MARIO_WALKING_SPEED;
+		vx = -MARIO_INTRO_WALKING_SPEED;
 		break;
 	case MARIO_STATE_IDLE:
 		isMoving = false;

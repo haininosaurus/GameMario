@@ -7,7 +7,7 @@ CTitle::CTitle(int f) : CGameObject()
 	{
 		type = 4;
 	}
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 }
 
 void CTitle::Render()
@@ -29,7 +29,7 @@ void CTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 void CTitle::CreateIntroAnimationTitle()
 {
 	if (GetTickCount64() - create_time < 5000 && GetTickCount64() - create_time > 4800) {
-		vy = SPEED_Y;
+		vy = TITLE_SPEED_Y;
 		type = 0;
 	}
 

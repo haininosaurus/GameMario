@@ -46,7 +46,7 @@ public:
 		effect_left_time_start = (DWORD)0.0f;
 		isRight = 0;
 		intro_state = 0;
-		create_time = GetTickCount64();
+		create_time = (DWORD)GetTickCount64();
 	}
 
 	void SetState(int state);

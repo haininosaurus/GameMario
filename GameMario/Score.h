@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Number.h"
 #include "Utils.h"
+#include "Game.h"
 
 class CScore : public CGameObject
 {
@@ -11,7 +12,6 @@ class CScore : public CGameObject
 public:
 	CScore();
 	CScore(vector<CNumber*> num) {
-		score = 0;
 		for (int i = 0; i < num.size(); i++)
 		{
 			numbers.push_back(num[i]);
@@ -20,7 +20,10 @@ public:
 	}
 	void PushNumbers(CNumber* num);
 	void SetPositionNumbers(float x, float y);
-	void SetScore(int s) { score += s; }
+	void SetScore(int s) { 
+		CGame* game = CGame::GetInstance();
+		game->SetScore(game->GetScore() + s);
+	}
 
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -62,6 +62,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ARROWS					28
 #define OBJECT_TYPE_COINPLAY				29
 #define OBJECT_TYPE_LIVES					30
+#define OBJECT_TYPE_SWITCH					31
+#define OBJECT_TYPE_GOALCARDS				32
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -155,6 +157,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
+	CGame* game = CGame::GetInstance();
 	vector<string> tokens = split(line);
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
@@ -205,16 +208,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_QUESTION_BLOCK:
-		obj = new CQuestionBlock();
-		for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
 		{
-			if (questionBlock[i] == NULL)
+			int form = atoi(tokens[4].c_str());
+			obj = new CQuestionBlock(form);
+			for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
 			{
-				questionBlock[i] = (CQuestionBlock*)obj;
-				break;
+				if (questionBlock[i] == NULL)
+				{
+					questionBlock[i] = (CQuestionBlock*)obj;
+					break;
+				}
 			}
+			break;
 		}
-		break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
@@ -223,6 +229,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
+	case OBJECT_TYPE_GOALCARDS: obj = new CGoalCard(); break;
 	case OBJECT_TYPE_SCORE_BOARD: 
 		obj = new CScoreBoard(); 
 		sb = (CScoreBoard*)obj;
@@ -373,6 +380,23 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 				{
 					if (itemBrick[i] == NULL)
 					{
+						DebugOut(L"1\n");
+						itemBrick[i] = (CCoin*)obj;
+						brick[i]->AddItemBrick(itemBrick[i]);
+						break;
+					}
+				}
+			}
+		}
+
+		if (state == 1)
+		{
+			if (item_object == 1) {
+				for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
+				{
+					if (itemBrick[i] == NULL)
+					{
+						DebugOut(L"1\n");
 						itemBrick[i] = (CCoin*)obj;
 						brick[i]->AddItemBrick(itemBrick[i]);
 						break;
@@ -390,7 +414,7 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 			{
 				if (itemQuestionBlock[i] == NULL)
 				{
-					itemQuestionBlock[i] = (CMushroom*)obj;
+					itemQuestionBlock[i] = (CSwitch*)obj;
 					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
 					break;
 				}
@@ -413,7 +437,22 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 			}
 		}
 		break;
-
+	case OBJECT_TYPE_SWITCH:
+		obj = new CSwitch(brick);
+		obj->SetState(state);
+		if (state == 0)
+		{
+			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			{
+				if (itemQuestionBlock[i] == NULL)
+				{
+					itemQuestionBlock[i] = (CLeaf*)obj;
+					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
+					break;
+				}
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -644,7 +683,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				|| mario->GetState() == MARIO_STATE_RUNNING_LEFT_FAST
 				|| mario->GetState() == MARIO_STATE_FLYING_HIGH_LEFT)
 			{
-				mario->SetFlyHighStart(GetTickCount64());
+				mario->SetFlyHighStart((DWORD)GetTickCount64());
 				if(mario->nx > 0)
 					mario->SetState(MARIO_STATE_FLYING_HIGH_RIGHT);
 				else mario->SetState(MARIO_STATE_FLYING_HIGH_LEFT);
@@ -652,7 +691,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 			else if (mario->vy != 0 && mario->GetJumpState())
 			{
-				mario->SetFlyLowStart(GetTickCount64());
+				mario->SetFlyLowStart((DWORD)GetTickCount64());
 				if (mario->nx > 0)
 					mario->SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 				else mario->SetState(MARIO_STATE_FLYING_LOW_LEFT);
@@ -662,14 +701,14 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->GetFightState() == 0 &&
-			GetTickCount64() - mario->GetFightStart() > 500)
+			(DWORD)GetTickCount64() - mario->GetFightStart() > 500)
 		{
-			mario->SetFightStart(GetTickCount64());
+			mario->SetFightStart((DWORD)GetTickCount64());
 			mario->SetState(MARIO_STATE_FIGHT);
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_FIRE && !mario->GetShootFireBulletState())
 		{
-			mario->SetShootFireBulletStart(GetTickCount64());
+			mario->SetShootFireBulletStart((DWORD)GetTickCount64());
 			mario->ShootFireBullet();
 			if(mario->nx > 0)
 				mario->SetState(MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT);
@@ -751,15 +790,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	//if key right is down, disable key left and key down
 	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
 	{
-		mario->SetWalkRightTime(GetTickCount64());
+		mario->SetWalkRightTime((DWORD)GetTickCount64());
 		//mario doesn't turn left
-		if (GetTickCount64() - mario->GetWalkLeftTime() > 200)
+		if ((DWORD)GetTickCount64() - mario->GetWalkLeftTime() > 200)
 		{
 			//mario runs right or runs fast right
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
 				//mario run fast right
-				if (GetTickCount64() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
+				if ((DWORD)GetTickCount64() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
 					mario->SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
 				else mario->SetState(MARIO_STATE_RUNNING_RIGHT); 					//mario run right
 			}

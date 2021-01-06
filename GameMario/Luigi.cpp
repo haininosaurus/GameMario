@@ -39,7 +39,7 @@ CLuigi::CLuigi(float x, float y)
 	for (int i = 0; i < 2; i++)
 		fire_bullet[i] = NULL;
 
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 	SetState(LUIGI_STATE_IDLE);
 
 	start_x = x;
@@ -248,7 +248,7 @@ void CLuigi::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							{
 								if (state != LUIGI_STATE_RUNNING_LEFT && state != LUIGI_STATE_RUNNING_RIGHT)
 								{
-									kick_start = GetTickCount64();
+									kick_start = (DWORD)GetTickCount64();
 									if (e->nx < 0)
 									{
 										SetState(LUIGI_STATE_KICK);

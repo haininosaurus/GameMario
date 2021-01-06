@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define SPEED_Y			0.2f
+#define TITLE_SPEED_Y			0.2f
 
 #define DARK_TITLE			0
 #define LIGHT_TITLE			1

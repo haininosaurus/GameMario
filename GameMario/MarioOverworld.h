@@ -3,18 +3,18 @@
 #include "Node.h"
 #include "Game.h"
 
-#define MARIO_WALKING_SPEED						0.05f
+#define MARIO_INTRO_WALKING_SPEED						0.05f
 
-#define MARIO_SMALL_BBOX_WIDTH					16
-#define MARIO_SMALL_BBOX_HEIGHT					16
+#define MARIO_INTRO_SMALL_BBOX_WIDTH					16
+#define MARIO_INTRO_SMALL_BBOX_HEIGHT					16
 
-#define MARIO_STATE_IDLE						0
-#define MARIO_STATE_MOVING_RIGHT				1
-#define MARIO_STATE_MOVING_UP					2
-#define MARIO_STATE_MOVING_LEFT					3
-#define MARIO_STATE_MOVING_DOWN				4
+#define MARIO_STATE_IDLE								0
+#define MARIO_STATE_MOVING_RIGHT						1
+#define MARIO_STATE_MOVING_UP							2
+#define MARIO_STATE_MOVING_LEFT							3
+#define MARIO_STATE_MOVING_DOWN							4
 
-#define MARIO_LEVEL_SMALL						0
+#define MARIO_INTRO_LEVEL_SMALL							0
 
 class CMarioOverworld : public CGameObject
 {

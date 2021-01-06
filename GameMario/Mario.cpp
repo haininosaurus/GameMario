@@ -18,6 +18,7 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Curtain.h"
+#include "Switch.h"
 
 CMario::CMario(float x, float y)
 {
@@ -42,7 +43,7 @@ CMario::CMario(float x, float y)
 	tortoiseshell = NULL;
 	for (int i = 0; i < 2; i++)
 		fire_bullet[i] = NULL;
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 	SetState(MARIO_STATE_IDLE);
 
 	start_x = x;
@@ -323,7 +324,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							{
 								if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT)
 								{
-									kick_start = GetTickCount64();
+									kick_start = (DWORD)GetTickCount64();
 									if (e->nx < 0)
 									{
 										SetState(MARIO_STATE_KICK);
@@ -438,6 +439,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						SetState(MARIO_STATE_DIE);
 				}
 			}
+			if (dynamic_cast<CSwitch*>(e->obj))
+			{
+				CSwitch* switchs = dynamic_cast<CSwitch*>(e->obj);
+				if (e->ny < 0)
+				{
+					if (switchs->GetState() == EFFECT_STATE)
+					{
+						switchs->SetSwitch();
+						switchs->SetState(SWITCH_STATE_ACTIVE);
+						switchs->SetPosition(switchs->x, switchs->y + 9);
+					}
+
+				}
+
+			}
 
 			if (dynamic_cast<CMushroom*>(e->obj))
 			{
@@ -448,7 +464,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						mushroom->SetState(MUSHROOM_STATE_HIDEN);
 						SetState(MARIO_STATE_GROWUP);
-						growup_start = GetTickCount64();
+						growup_start = (DWORD)GetTickCount64();
 						SetPosition(x, y - MARIO_BIG_BBOX_HEIGHT + MARIO_SMALL_BBOX_HEIGHT - 1);
 					}
 				}
@@ -462,7 +478,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					mushroom->SetState(LEAF_STATE_HIDEN);
 					SetState(MARIO_STATE_SMOKE);
 					SetPosition(x, y - 2);
-					smoke_start = GetTickCount64();
+					smoke_start = (DWORD)GetTickCount64();
 					//SetLevel(GetLevel() + 1);
 				}
 
@@ -658,7 +674,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (GetTickCount64() - running_start > 200)
 			{
 				arrows->SetWhiteArrows();
-				running_start = GetTickCount64();
+				running_start = (DWORD)GetTickCount64();
 			}
 
 		}
@@ -666,7 +682,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (GetTickCount64() - running_start > 200)
 			{
 				arrows->SetBlackArrows();
-				running_start = GetTickCount64();
+				running_start = (DWORD)GetTickCount64();
 			}
 
 		}
@@ -1324,7 +1340,7 @@ void CMario::CreateIntroAnimationMario()
 	}
 	if (GetTickCount64() - create_time > 10300 && GetTickCount64() - create_time < 11300)
 	{
-		if (fly_low_state == 0) fly_low_start = GetTickCount64();
+		if (fly_low_state == 0) fly_low_start = (DWORD)GetTickCount64();
 		vx = -MARIO_WALKING_SPEED + 0.015;
 		SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
@@ -1410,7 +1426,7 @@ void CMario::CreateIntroAnimationMario()
 		{
 			SetLevel(MARIO_LEVEL_SMALL);
 			SetState(MARIO_STATE_GROWUP);
-			growup_start = GetTickCount64();
+			growup_start = (DWORD)GetTickCount64();
 		}
 	}
 	else if (GetTickCount64() - create_time > 20800 && GetTickCount64() - create_time < 21000)

@@ -7,6 +7,7 @@
 #include <d3dx9.h>
 
 
+
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
@@ -38,6 +39,12 @@ class CGame
 	float cam_x = 0.0f;
 	float cam_y = 0.0f;
 
+	int score = 0;
+	int time = 0;
+	int player_state = 0;
+	int coin = 0;
+	int lives = 3;
+
 	int screen_width;
 	int screen_height;
 
@@ -48,6 +55,18 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 public:
+	int GetScore() { return score; }
+	int GetTime() { return time; }
+	int GetMario() { return player_state; }
+	int GetCoinPlay() { return coin; }
+	int GetLives() { return lives; }
+
+	void SetScore(int s) { score = s; }
+	void SetTime(int t) { time = t; }
+	void SetMario(int m) { player_state = m; }
+	void SetCoin(int c) { coin = c; }
+	void SetLives(int c) { lives = c; }
+
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);

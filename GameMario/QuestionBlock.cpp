@@ -3,10 +3,12 @@
 #include "Mushroom.h"
 #include "Leaf.h"
 #include "Utils.h"
+#include "Switch.h"
 
 void CQuestionBlock::Render()
 {
-	if (state == QUESTIONBLOCK_ITEM_STATE) 
+	if (form && state == QUESTIONBLOCK_ITEM_STATE) animation_set->at(2)->Render(x, y);
+	else if (state == QUESTIONBLOCK_ITEM_STATE) 
 		animation_set->at(0)->Render(x, y);
 	else animation_set->at(1)->Render(x, y);
 }
@@ -42,6 +44,12 @@ void CQuestionBlock::SetStateItem(int state)
 		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
 		{
 			item[i]->SetPosition(x, y - 4);
+			item[i]->SetState(state);
+			break;
+		}
+		else if (item[i]->GetState() == SWITCH_STATE_HIDEN && dynamic_cast<CSwitch*>(item[i]))
+		{
+			item[i]->SetPosition(x, y - 16);
 			item[i]->SetState(state);
 			break;
 		}
