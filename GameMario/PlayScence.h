@@ -34,11 +34,15 @@
 #include "Lives.h"
 #include "Switch.h"
 #include "GoalCard.h"
+#include "Energy.h"
+#include "Cards.h"
+#include "CardText.h"
 
 #define QUESTIONBLOCK_AMOUNT		9
 #define ITEM_QUESTIONBLOCK_AMOUNT	9
 #define BRICK_AMOUNT				20
 #define ITEM_BRICK_AMOUNT			20
+
 
 class CPlayScene : public CScene
 {
@@ -56,6 +60,7 @@ protected:
 	CScore* score;
 	CArrows* arrows;
 	CCoinPlay* coinPlay;
+	CDarkEnergy* darkEnergy;
 	CLives* lives;
 	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[2];
@@ -64,6 +69,9 @@ protected:
 	CBrick* brick[BRICK_AMOUNT];
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];
 	CGameObject* itemBrick[ITEM_BRICK_AMOUNT];
+	CCard* cards[CARD_AMOUNT];
+	CCard* cardT;
+	CCardText* cardText;
 
 	CScoreEffect* scoreEffect[3];
 

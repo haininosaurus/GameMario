@@ -6,6 +6,7 @@
 #include "Road.h"
 #include "Mario.h"
 #include "Utils.h"
+#include "Energy.h"
 
 CFirePlantBullet::CFirePlantBullet()
 {
@@ -142,11 +143,13 @@ void CFirePlantBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			SetState(FIREPLANTBULLET_DESTROY_STATE);
 		}
+
 	}
 	else
 	{
 		shoot_start = GetTickCount();
 	}
+
 
 
 }

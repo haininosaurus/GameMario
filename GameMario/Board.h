@@ -7,6 +7,9 @@
 #include "Utils.h"
 #include "CoinPlay.h"
 #include "Lives.h"
+#include "Cards.h"
+
+#define CARD_AMOUNT			3
 
 class CScoreBoard : public CGameObject
 {
@@ -16,6 +19,7 @@ class CScoreBoard : public CGameObject
 	CArrows* arrows;
 	CCoinPlay* coin;
 	CLives* lives;
+	CCard* card[CARD_AMOUNT];
 
 public:
 	CScoreBoard() { cam = NULL; time = NULL; score = NULL; arrows = NULL; }
@@ -28,6 +32,12 @@ public:
 	void SetArrows(CArrows* a) { arrows = a; }
 	void SetCoinPlay(CCoinPlay* c) { coin = c; }
 	void SetLives(CLives* l) { lives = l; }
+	void SetCards(CCard* c[CARD_AMOUNT]) {
+		for (int i = 0; i < CARD_AMOUNT; i++)
+		{
+			card[i] = c[i];
+		}
+	}
 
 	void SetWhiteArrows() { arrows->SetWhiteArrows(); }
 	void SetBlackArrows() { arrows->SetBlackArrows(); }

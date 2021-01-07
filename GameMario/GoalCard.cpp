@@ -19,7 +19,7 @@ void CGoalCard::Render()
 
 void CGoalCard::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 {
-	if (GetTickCount64() - create_start > 100)
+	if (GetTickCount64() - create_start > 100 && state != GOALCARD_STATE_HIDEN)
 	{
 		if(state < 4) state += 1;
 		if (state == 4) state = 1;
@@ -30,8 +30,13 @@ void CGoalCard::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 void CGoalCard::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
-	r = x + GOALCARD_BBOX_WIDTH;
-	b = y + GOALCARD_BBOX_HEIGHT;
+	if (state == GOALCARD_STATE_HIDEN) return;
+	else
+	{
+		l = x;
+		t = y;
+		r = x + GOALCARD_BBOX_WIDTH;
+		b = y + GOALCARD_BBOX_HEIGHT;
+	}
+
 }

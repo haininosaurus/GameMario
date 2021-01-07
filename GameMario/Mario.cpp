@@ -19,6 +19,7 @@
 #include "Leaf.h"
 #include "Curtain.h"
 #include "Switch.h"
+#include "GoalCard.h"
 
 CMario::CMario(float x, float y)
 {
@@ -367,6 +368,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}			
 			}
 
+
+			if (dynamic_cast<CGoalCard*>(e->obj)) // if e->obj is Koopa
+			{
+				CGoalCard* goalCard = dynamic_cast<CGoalCard*>(e->obj);
+
+				if (goalCard->GetState() != GOALCARD_STATE_HIDEN)
+				{
+					SetCardState(goalCard->GetState());
+					goalCard->GetCardText()->SetState(1);
+					goalCard->GetCardText()->GetCard()->SetState(goalCard->GetState());
+					goalCard->SetState(COIN_STATE_HIDEN);
+
+				}
+			}
+
 			if (dynamic_cast<CPipe*>(e->obj)) 
 			{
 				CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
@@ -553,6 +569,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				tortoiseshell->y = y + 10;
 			}
 		}
+	}
+
+	if (level == MARIO_LEVEL_DARK)
+	{
+
+		darkEnergy->x = x - 28;
+		darkEnergy->y = y - 40;
 	}
 
 	if (GetTickCount64() - kick_start < 150 && !take_tortoistate_state)
@@ -812,6 +835,57 @@ void CMario::Render()
 				else ani = MARIO_ANI_BIG_WALKING_LEFT;
 			}
 		}
+		else if (level == MARIO_LEVEL_DARK)
+		{
+			if (vx == 0)
+			{
+				if (nx > 0)
+				{
+					if (smoke_state) ani = MARIO_ANI_SMOKE;
+					else if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
+					else if (kick_state == 1) ani = MARIO_ANI_DARK_KICK_RIGHT;
+					//else if (sit_state == 1) ani = MARIO_ANI_DARK_SIT_RIGHT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_DARK_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_DARK_JUMPING_RIGHT;
+					else ani = MARIO_ANI_DARK_IDLE_RIGHT;
+				}
+				else
+				{
+					if (smoke_state) ani = MARIO_ANI_SMOKE;
+					else if (headup_state == 1) ani = MARIO_ANI_HEADUP;
+					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
+					else if (kick_state == 1) ani = MARIO_ANI_DARK_KICK_LEFT;
+					//else if (sit_state == 1) ani = MARIO_ANI_DARK_SIT_LEFT;
+					else if (take_tortoistate_state == 1) ani = MARIO_ANI_DARK_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_DARK_JUMPING_LEFT;
+					else ani = MARIO_ANI_DARK_IDLE_LEFT;
+				}
+			}
+			else if (vx > 0)
+			{
+				if (smoke_state) ani = MARIO_ANI_SMOKE;
+				else if (turn_state == 1) ani = MARIO_ANI_DARK_TURN_LEFT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_DARK_TAKE_TORTOISESHELL_RIGHT;
+				else if (kick_state == 1) ani = MARIO_ANI_DARK_KICK_RIGHT;
+				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_DARK_JUMPING_RIGHT;
+				//else if (run_fast_state == 1) ani = MARIO_ANI_DARK_RUNNING_RIGHT_FAST;
+				else if (run_state == 1)	ani = MARIO_ANI_DARK_RUNNING_RIGHT;
+				else ani = MARIO_ANI_DARK_WALKING_RIGHT;
+			}
+			else
+			{
+				if (smoke_state) ani = MARIO_ANI_SMOKE;
+				else if (turn_state == 1) ani = MARIO_ANI_DARK_TURN_RIGHT;
+				else if (take_tortoistate_state == 1) ani = MARIO_ANI_DARK_TAKE_TORTOISESHELL_LEFT;
+				else if (kick_state == 1) ani = MARIO_ANI_DARK_KICK_LEFT;
+				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_DARK_JUMPING_LEFT;
+				//else if (run_fast_state == 1) ani = MARIO_ANI_DARK_RUNNING_LEFT_FAST;
+				else if (run_state == 1) ani = MARIO_ANI_DARK_RUNNING_LEFT;
+				else ani = MARIO_ANI_DARK_WALKING_LEFT;
+			}
+		}
+
 		else if (level == MARIO_LEVEL_SMALL)
 		{
 			if (vx == 0)
@@ -1273,6 +1347,20 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		{
 			right = x + MARIO_FIRE_BBOX_WIDTH;
 			bottom = y + MARIO_FIRE_BBOX_HEIGHT;
+		}
+	}
+	else if (level == MARIO_LEVEL_DARK)
+	{
+
+		if (sit_state)
+		{
+			right = x + MARIO_DARK_SIT_BBOX_WIDTH;
+			bottom = y + MARIO_DARK_SIT_BBOX_HEIGHT;
+		}
+		else
+		{
+			right = x + MARIO_DARK_BBOX_WIDTH;
+			bottom = y + MARIO_DARK_BBOX_HEIGHT;
 		}
 	}
 	else

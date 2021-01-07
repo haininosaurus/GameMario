@@ -64,6 +64,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LIVES					30
 #define OBJECT_TYPE_SWITCH					31
 #define OBJECT_TYPE_GOALCARDS				32
+#define OBJECT_TYPE_DARK_ENERGY				33
+#define OBJECT_TYPE_CARD					34
+#define OBJECT_TYPE_CARDTEXT				35
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -221,6 +224,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 			break;
 		}
+	case OBJECT_TYPE_CARD:
+		obj = new CCard();
+		{
+			int type = atoi(tokens[4].c_str());
+			if (type == 0)
+			{
+				for (int i = 0; i < CARD_AMOUNT; i++)
+				{
+					if (cards[i] == NULL)
+					{
+						cards[i] = (CCard*)obj;
+						break;
+					}
+				}
+			}
+			else if (type == 1)
+			{
+				cardT = (CCard*)obj;
+			}
+		}
+
+		break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
@@ -229,7 +254,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
-	case OBJECT_TYPE_GOALCARDS: obj = new CGoalCard(); break;
+	case OBJECT_TYPE_GOALCARDS: 
+		obj = new CGoalCard(cardText);
+
+		break;
+	case OBJECT_TYPE_DARK_ENERGY:
+		obj = new CDarkEnergy();
+		darkEnergy = (CDarkEnergy*)obj;
+		break;
+	case OBJECT_TYPE_CARDTEXT:
+		obj = new CCardText(cardT);
+		cardText = (CCardText*)obj;
+
+		break;
 	case OBJECT_TYPE_SCORE_BOARD: 
 		obj = new CScoreBoard(); 
 		sb = (CScoreBoard*)obj;
@@ -238,6 +275,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		sb->SetArrows(arrows);
 		sb->SetCoinPlay(coinPlay);
 		sb->SetLives(lives);
+		sb->SetCards(cards);
 		break;
 	case OBJECT_TYPE_MARIO_FIRE_BULLET:	
 		obj = new CFireBullet();
@@ -585,6 +623,14 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->SetArrows(arrows);
 	}
+	if (player->GetCard() == NULL && !player->GetIntroState())
+	{
+		player->SetCards(cards);
+	}
+	if (player->GetDarkEnergy() == NULL && !player->GetIntroState())
+	{
+		player->SetDarkEnergy(darkEnergy);
+	}
 	if (player->GetCoinPlay() == NULL && !player->GetIntroState())
 	{
 		player->SetCoinPlay(coinPlay);
@@ -727,6 +773,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		else if (mario->GetLevel() == MARIO_LEVEL_TAIL) {
 			mario->SetPosition(mario->x, mario->y - MARIO_SMALL_BBOX_HEIGHT);
 			mario->SetLevel(MARIO_LEVEL_FIRE);
+		}
+		else if (mario->GetLevel() == MARIO_LEVEL_FIRE) {
+			mario->SetPosition(mario->x, mario->y);
+			mario->SetLevel(MARIO_LEVEL_DARK);
+			mario->GetDarkEnergy()->SetPosition(mario->x, mario->y);
+			mario->GetDarkEnergy()->SetState(1);
 		}
 		else mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;

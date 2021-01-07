@@ -5,6 +5,8 @@
 #include "Arrow.h"
 #include "CoinPlay.h"
 #include "Lives.h"
+#include "Cards.h"
+#include "Energy.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -190,11 +192,17 @@
 #define	MARIO_LEVEL_BIG		2
 #define MARIO_LEVEL_TAIL	3
 #define MARIO_LEVEL_FIRE	 4
+#define MARIO_LEVEL_DARK	5
 
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 27
 #define MARIO_BIG_SIT_BBOX_WIDTH	14
 #define MARIO_BIG_SIT_BBOX_HEIGHT	18
+
+#define MARIO_DARK_BBOX_WIDTH  14
+#define MARIO_DARK_BBOX_HEIGHT 27
+#define MARIO_DARK_SIT_BBOX_WIDTH	14
+#define MARIO_DARK_SIT_BBOX_HEIGHT	18
 
 #define MARIO_TAIL_BBOX_WIDTH 21
 #define MARIO_TAIL_BBOX_HEIGHT 28
@@ -264,6 +272,8 @@ class CMario : public CollisionObject
 	CArrows* arrows;
 	CCoinPlay* coinplay;
 	CLives* lives;
+	CCard* card[3];
+	CDarkEnergy* darkEnergy;
 
 	DWORD jump_start;
 	DWORD kick_start;
@@ -293,10 +303,29 @@ public:
 	void SetLevel(int l) { level = l; }
 	void SetArrows(CArrows* ar) { arrows = ar; }
 	void SetCoinPlay(CCoinPlay* cp) { coinplay = cp; }
+	void SetDarkEnergy(CDarkEnergy* e) { darkEnergy = e; }
 	void SetLives(CLives* l) { lives = l; }
+	void SetCards(CCard* c[3]) {
+		for (int i = 0; i < 3; i++)
+		{
+			card[i] = c[i];
+		}
+	}
+	void SetCardState(int s)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (card[i]->GetState() == CARD_STATE_EMPTY) {
+				card[i]->SetState(s);
+				break;
+			}
+		}
+	}
+	CCard* GetCard() { return card[0]; }
 	CArrows* GetArrows() { return arrows; }
 	CCoinPlay* GetCoinPlay() { return coinplay; }
 	CLives* GetLives() { return lives; }
+	CDarkEnergy* GetDarkEnergy() { return darkEnergy; }
 
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }
