@@ -55,6 +55,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="OverworldMap1.cpp" />
+    <ClCompile Include="PieceBrick.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="PlayScence.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="OverworldMap1.h" />
+    <ClInclude Include="PieceBrick.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="PlayScence.h" />

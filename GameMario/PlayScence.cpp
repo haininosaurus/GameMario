@@ -67,6 +67,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_DARK_ENERGY				33
 #define OBJECT_TYPE_CARD					34
 #define OBJECT_TYPE_CARDTEXT				35
+#define OBJECT_PIECE_BRICK					36
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -254,6 +255,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
+	case OBJECT_PIECE_BRICK:
+		obj = new CPieceBrick();
+		for (int i = 0; i < 16; i++)
+		{
+			if (pieceBrick[i] == NULL)
+			{
+				pieceBrick[i] = (CPieceBrick*)obj;
+				break;
+			}
+		}
+		break;
 	case OBJECT_TYPE_GOALCARDS: 
 		obj = new CGoalCard(cardText);
 
@@ -627,6 +639,10 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->SetCards(cards);
 	}
+	if (player->GetPieceBrick() == NULL && !player->GetIntroState())
+	{
+		player->SetPieceBrick(pieceBrick);
+	}
 	if (player->GetDarkEnergy() == NULL && !player->GetIntroState())
 	{
 		player->SetDarkEnergy(darkEnergy);
@@ -683,14 +699,6 @@ void CPlayScene::Render()
 		//if (!dynamic_cast<CPipe*>(objects[i]))
 		effectObjects[i]->Render();
 	}
-
-	//for (int i = objects.size() - 1; i >= 0; i--)
-	//{
-	//	if (dynamic_cast<CPipe*>(objects[i]))
-	//		objects[i]->Render();
-	//}
-
-
 
 }
 

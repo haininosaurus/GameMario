@@ -30,12 +30,3 @@ public:
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 
 };
-
-class CPieceBrick : public CGameObject
-{
-public:
-	//CPieceBrick(float x, float y, float v);
-	virtual void Render();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void GetBoundingBox(float& l, float& t, float& r, float& b) { return; }
-};

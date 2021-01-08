@@ -37,6 +37,7 @@
 #include "Energy.h"
 #include "Cards.h"
 #include "CardText.h"
+#include "PieceBrick.h"
 
 #define QUESTIONBLOCK_AMOUNT		9
 #define ITEM_QUESTIONBLOCK_AMOUNT	9
@@ -72,6 +73,8 @@ protected:
 	CCard* cards[CARD_AMOUNT];
 	CCard* cardT;
 	CCardText* cardText;
+
+	CPieceBrick* pieceBrick[16];
 
 	CScoreEffect* scoreEffect[3];
 

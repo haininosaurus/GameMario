@@ -58,21 +58,3 @@ void CBrick::createEffectDestroy()
 	//for (int i = 0; i < 4; i++)
 	//	CPlayScene::AddEffectObject(obj[i]);
 }
-
-//CPieceBrick::CPieceBrick(float x, float y, float v)
-//{
-//	this->x = x;
-//	this->y = y;
-//	this->vy = v;
-//}
-
-void CPieceBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	CGameObject::Update(dt);
-
-}
-
-void CPieceBrick::Render()
-{
-	animation_set->at(0)->Render(x, y);
-}

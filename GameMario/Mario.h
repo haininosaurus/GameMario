@@ -7,6 +7,7 @@
 #include "Lives.h"
 #include "Cards.h"
 #include "Energy.h"
+#include "PieceBrick.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -273,6 +274,7 @@ class CMario : public CollisionObject
 	CCoinPlay* coinplay;
 	CLives* lives;
 	CCard* card[3];
+	CPieceBrick* pieceBrick[16];
 	CDarkEnergy* darkEnergy;
 
 	DWORD jump_start;
@@ -311,6 +313,13 @@ public:
 			card[i] = c[i];
 		}
 	}
+	void SetPieceBrick(CPieceBrick* p[16])
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			pieceBrick[i] = p[i];
+		}
+	}
 	void SetCardState(int s)
 	{
 		for (int i = 0; i < 3; i++)
@@ -321,11 +330,43 @@ public:
 			}
 		}
 	}
+	void CreatePieceBrick(float x, float y, DWORD t)
+	{
+		int count = 0;
+		for (int i = 0; i < 16; i++)
+		{
+			if (pieceBrick[i]->GetState() == PIECEBRICK_STATE_HIDEN && count < 4)
+			{
+				count++;
+				pieceBrick[i]->SetState(PIECEBRICK_STATE_DISPLAY);
+				
+				switch (count)
+				{
+				case 1:
+					pieceBrick[i]->SetDisplay(x, y, -0.08f, -0.08f, t);
+					break;
+				case 2:
+					pieceBrick[i]->SetDisplay(x + 8, y, 0.08f, -0.08f, t);
+					break;
+				case 3:
+					pieceBrick[i]->SetDisplay(x, y + 8, -0.08f, 0.08f, t);
+					break;
+				case 4:
+					pieceBrick[i]->SetDisplay(x + 8, y + 8, 0.08f, 0.08f, t);
+					break;
+				default:
+					break;
+				}
+
+			}
+		}
+	}
 	CCard* GetCard() { return card[0]; }
 	CArrows* GetArrows() { return arrows; }
 	CCoinPlay* GetCoinPlay() { return coinplay; }
 	CLives* GetLives() { return lives; }
 	CDarkEnergy* GetDarkEnergy() { return darkEnergy; }
+	CPieceBrick* GetPieceBrick() { return pieceBrick[0]; }
 
 	int GetLevel() { return level; }
 	int GetJumpState() { return jump_state; }

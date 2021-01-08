@@ -383,6 +383,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Koopa
+			{
+				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+				if (nx != 0)
+				{
+					if (brick->GetState() == BRICK_STATE_NORMAL && fight_state)
+					{
+
+						brick->SetState(BRICK_STATE_HIDEN);
+						CreatePieceBrick(brick->x, brick->y, GetTickCount64());
+
+					}
+				}
+
+			}
+
 			if (dynamic_cast<CPipe*>(e->obj)) 
 			{
 				CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
@@ -1329,6 +1346,13 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		{
 			right = x + MARIO_TAIL_SIT_BBOX_WIDTH;
 			bottom = y + MARIO_TAIL_SIT_BBOX_HEIGHT;
+		}
+		else if (fight_state)
+		{
+			top = y + 14;
+			right = x + MARIO_TAIL_BBOX_WIDTH;
+			bottom = y + MARIO_TAIL_BBOX_HEIGHT;
+
 		}
 		else
 		{
