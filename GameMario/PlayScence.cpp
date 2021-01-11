@@ -683,6 +683,14 @@ void CPlayScene::Update(DWORD dt)
 		effectObjects[i]->Update(dt, &effObjects);
 
 	}
+
+
+	CGame* game = CGame::GetInstance();
+
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i]->SetState(game->GetItem(i));
+	}
 }
 
 void CPlayScene::Render()
@@ -692,12 +700,6 @@ void CPlayScene::Render()
 	{
 		//if (!dynamic_cast<CPipe*>(objects[i]))
 			objects[i]->Render();
-	}
-
-	for (int i = effectObjects.size() - 1; i >= 0; i--)
-	{
-		//if (!dynamic_cast<CPipe*>(objects[i]))
-		effectObjects[i]->Render();
 	}
 
 }
@@ -711,8 +713,44 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
-	player = NULL;
 
+	player = NULL;
+	cam = NULL;
+	num.clear();
+	numScore.clear();
+	numCoin.clear();
+	numLives.clear();
+	arrow.clear();
+	coin.clear();
+	time = NULL;
+	score = NULL;
+	arrows = NULL;
+	coinPlay = NULL;
+	darkEnergy = NULL;
+	lives = NULL;
+	sb = NULL;
+	cardT = NULL;
+	cardText = NULL;
+
+	for (int i = 0; i < CARD_AMOUNT; i++)
+		cards[i] = NULL;
+	for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
+		itemBrick[i] = NULL;
+	for (int i = 0; i < BRICK_AMOUNT; i++)
+		brick[i] = NULL;
+	for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+		itemQuestionBlock[i] = NULL;
+	for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
+		questionBlock[i] = NULL;
+	for (int i = 0; i < 2; i++)
+	{
+		firePiranhaPlant[i] = NULL;
+		firePlantBullet[i] = NULL;
+	}
+	for (int i = 0; i < 16; i++)
+		pieceBrick[i] = NULL;
+	for (int i = 0; i < 3; i++)
+		scoreEffect[i] = NULL;
 	//DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -725,6 +763,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	switch (KeyCode)
 	{
+	case DIK_R:
+		mario->SetPosition(0, 0);
+		CGame::GetInstance()->SwitchScene(3);
+		break;
 	case DIK_X:
 
 		if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
@@ -788,7 +830,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			mario->GetDarkEnergy()->SetPosition(mario->x, mario->y);
 			mario->GetDarkEnergy()->SetState(1);
 		}
-		else mario->SetLevel(MARIO_LEVEL_SMALL);
+		else
+		{
+			mario->SetLevel(MARIO_LEVEL_SMALL);
+			mario->GetDarkEnergy()->SetState(0);
+		}
+
 		break;
 	case DIK_A:
 		mario->Reset();
@@ -801,6 +848,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->GetWalkingLeftSpeech() != 0) mario->ResetWalkingLeftSpeech();
 		if (mario->GetSlidingTimeLeft() != 0) mario->ResetSlidingTimeLeft();
 		break;
+
 		
 	}
 }

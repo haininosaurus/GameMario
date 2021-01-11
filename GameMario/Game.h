@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "Utils.h"
 
 
 
@@ -44,6 +45,7 @@ class CGame
 	int player_state = 0;
 	int coin = 0;
 	int lives = 3;
+	int item[3];
 
 	int screen_width;
 	int screen_height;
@@ -60,12 +62,25 @@ public:
 	int GetMario() { return player_state; }
 	int GetCoinPlay() { return coin; }
 	int GetLives() { return lives; }
+	int GetItem(int i) { return item[i]; }
 
 	void SetScore(int s) { score = s; }
 	void SetTime(int t) { time = t; }
 	void SetMario(int m) { player_state = m; }
 	void SetCoin(int c) { coin = c; }
 	void SetLives(int c) { lives = c; }
+	void SetItem(int s) {
+		DebugOut(L"item[0]: %d\n", item[0]);
+		for (int i = 0; i < 3; i++)
+		{
+			if (item[i] == 0)
+			{
+				item[i] = s;
+				break;
+			}
+		}
+		DebugOut(L"item[0]: %d\n", item[0]);
+	}
 
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }

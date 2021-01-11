@@ -45,6 +45,17 @@ COverworldMap1::COverworldMap1(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MARIOOVERWORLD			4
 #define	OBJECT_TYPE_TURTLE					5
 
+#define OBJECT_TYPE_SCORE_BOARD				21
+#define OBJECT_TYPE_TIME					23
+#define OBJECT_TYPE_NUMBER					24
+#define OBJECT_TYPE_SCORE					26
+#define OBJECT_TYPE_ARROW					27
+#define OBJECT_TYPE_ARROWS					28
+#define OBJECT_TYPE_COINPLAY				29
+#define OBJECT_TYPE_LIVES					30
+#define OBJECT_TYPE_CARD					34
+
+
 #define MAX_SCENE_LINE						1024
 
 
@@ -175,6 +186,80 @@ void COverworldMap1::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_TURTLE:
 		obj = new CTurtle();
 		break;
+	case OBJECT_TYPE_CARD:
+		obj = new CCard();
+		{
+			int type = atoi(tokens[4].c_str());
+			if (type == 0)
+			{
+				for (int i = 0; i < CARD_AMOUNT; i++)
+				{
+					if (cards[i] == NULL)
+					{
+						cards[i] = (CCard*)obj;
+						break;
+					}
+				}
+			}
+			else if (type == 1)
+			{
+				cardT = (CCard*)obj;
+			}
+		}
+
+		break;
+	case OBJECT_TYPE_SCORE_BOARD:
+		obj = new CScoreBoard();
+		sb = (CScoreBoard*)obj;
+		sb->SetTime(time);
+		sb->SetScore(score);
+		sb->SetArrows(arrows);
+		sb->SetCoinPlay(coinPlay);
+		sb->SetLives(lives);
+		sb->SetCards(cards);
+		break;
+	case OBJECT_TYPE_NUMBER:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CNumber();
+		if (type == 0)
+			num.push_back((CNumber*)obj);
+		if (type == 1)
+			numScore.push_back((CNumber*)obj);
+		if (type == 2)
+			numCoin.push_back((CNumber*)obj);
+		if (type == 3)
+			numLives.push_back((CNumber*)obj);
+		break;
+	}
+	case OBJECT_TYPE_TIME:
+		obj = new CTime(num);
+		time = (CTime*)obj;
+		break;
+	case OBJECT_TYPE_SCORE:
+		obj = new CScore(numScore);
+		score = (CScore*)obj;
+		break;
+	case OBJECT_TYPE_ARROW:
+	{
+		int type = atoi(tokens[4].c_str());
+		obj = new CArrow(type);
+		arrow.push_back((CArrow*)obj);
+		break;
+	}
+	break;
+	case OBJECT_TYPE_ARROWS:
+		obj = new CArrows(arrow);
+		arrows = (CArrows*)obj;
+		break;
+	case OBJECT_TYPE_COINPLAY:
+		obj = new CCoinPlay(numCoin);
+		coinPlay = (CCoinPlay*)obj;
+		break;
+	case OBJECT_TYPE_LIVES:
+		obj = new CLives(numLives);
+		lives = (CLives*)obj;
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -283,6 +368,13 @@ void COverworldMap1::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 
 	}
+
+	CGame* game = CGame::GetInstance();
+
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i]->SetState(game->GetItem(i));
+	}
 }
 void COverworldMap1::Render()
 {
@@ -302,6 +394,23 @@ void COverworldMap1::Unload()
 		delete objects[i];
 
 	objects.clear();
+
+	player = NULL;
+	num.clear();
+	numScore.clear();
+	numCoin.clear();
+	numLives.clear();
+	arrow.clear();
+	time = NULL;
+	score = NULL;
+	arrows = NULL;
+	coinPlay = NULL;
+	lives = NULL;
+	sb = NULL;
+	cardT = NULL;
+
+	for (int i = 0; i < CARD_AMOUNT; i++)
+		cards[i] = NULL;
 }
 
 void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)

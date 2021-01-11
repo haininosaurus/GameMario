@@ -372,10 +372,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoalCard*>(e->obj)) // if e->obj is Koopa
 			{
 				CGoalCard* goalCard = dynamic_cast<CGoalCard*>(e->obj);
+				CGame* game = CGame::GetInstance();
 
 				if (goalCard->GetState() != GOALCARD_STATE_HIDEN)
 				{
 					SetCardState(goalCard->GetState());
+					game->SetItem(goalCard->GetState());
 					goalCard->GetCardText()->SetState(1);
 					goalCard->GetCardText()->GetCard()->SetState(goalCard->GetState());
 					goalCard->SetState(COIN_STATE_HIDEN);
@@ -728,6 +730,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (x > 2800)
+	{
+		CGame* game = CGame::GetInstance();
+
+		SetPosition(0, 0);
+		//CGame::GetInstance()->SwitchScene(3);
+	}
 
 
 	// clean up collision events

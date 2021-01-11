@@ -396,6 +396,8 @@ void CIntroScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+
+	title = NULL;
 }
 
 void CIntroScenceKeyHandler::OnKeyDown(int KeyCode)

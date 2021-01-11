@@ -8,11 +8,29 @@
 #include "BackgroundObject.h"
 #include "MarioOverworld.h"
 #include "Turtle.h"
+#include "TimePlay.h"
+#include "Number.h"
+#include "Cards.h"
+#include "Arrow.h"
 
 class COverworldMap1 : public CScene
 {
 	CMarioOverworld* player;
 	vector<LPGAMEOBJECT> objects;
+
+	vector<CNumber*> num;
+	vector<CNumber*> numScore;
+	vector<CNumber*> numCoin;
+	vector<CNumber*> numLives;
+	vector<CArrow*> arrow;
+	CTime* time;
+	CScore* score;
+	CArrows* arrows;
+	CCoinPlay* coinPlay;
+	CLives* lives;
+	CScoreBoard* sb;
+	CCard* cards[CARD_AMOUNT];
+	CCard* cardT;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
