@@ -1,54 +1,121 @@
-#include "Camera.h"
+﻿#include "Camera.h"
 #include "Utils.h"
 
 
 void CCamera::UpdateCam() {
-	player->GetPosition(cx, cy);
-	CGame* game = CGame::GetInstance();
-	if (cx < WIDTH_MIN_MAP_1) {
-		player->SetPosition(CAM_X_MIN, cy);
-		SetCamPosition(CAM_X_MIN, 0.0f);
-	}
 
-	if (cx > NEAR_WIDTH_LIMIT_MAP_1)
+	if (idScene == ID_SCENE_MAP_4)
 	{
-		if (cx > WIDTH_MAX_MAP_1) player->SetPosition(WIDTH_MAX_MAP_1, cy);
-		cx = CAM_X_MAX;
-		SetCamPosition(cx, 0.0f);
-	}
+		DebugOut(L"da vao cam map 1\n");
+		player->GetPosition(cx, cy);
+		CGame* game = CGame::GetInstance();
+		if (cx < WIDTH_MIN_MAP_1) {
+			player->SetPosition(CAM_X_MIN, cy);
+			SetCamPosition(CAM_X_MIN, 250.0f);
+		}
 
-	else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), round(cy));
-		SetCamPosition(round(cx), round(cy));
-	}
-	else if (cx > game->GetScreenWidth() / 2 && cy > UNDERGROUND_Y)
-	{
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		CGame::GetInstance()->SetCamPos(round(cx), CAM_Y_UNDERGROUND);
-		SetCamPosition(round(cx), CAM_Y_UNDERGROUND);
-	}
-
-	else if (cx > game->GetScreenWidth() / 2)
-	{
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		SetCamPosition(round(cx), 0.0f);
-		CGame::GetInstance()->SetCamPos(round(cx), 0.0f);
-	}
-	else {
-		if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
+		if (cx > NEAR_WIDTH_LIMIT_MAP_1)
 		{
+			if (cx > WIDTH_MAX_MAP_1) player->SetPosition(WIDTH_MAX_MAP_1, cy);
+			cx = CAM_X_MAX;
+			SetCamPosition(cx, 250.0f);
+		}
+
+		else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
+			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
-			SetCamPosition(0.0f, round(cy));
+			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+			SetCamPosition(round(cx), round(cy));
 		}
-		else
+		else if (cx > game->GetScreenWidth() / 2 && cy > UNDERGROUND_Y)
 		{
-			CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
-			SetCamPosition(0.0f, 0.0f);
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), CAM_Y_UNDERGROUND);
+			SetCamPosition(round(cx), CAM_Y_UNDERGROUND);
 		}
-	}	
+
+		else if (cx > game->GetScreenWidth() / 2)
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			SetCamPosition(round(cx), 0.0f);
+			CGame::GetInstance()->SetCamPos(round(cx), 250.0f);
+		}
+		else {
+			if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
+			{
+				cy -= game->GetScreenHeight() / 2;
+				CGame::GetInstance()->SetCamPos(0.0f, round(cy));
+				SetCamPosition(0.0f, round(cy));
+			}
+			else
+			{
+				CGame::GetInstance()->SetCamPos(0.0f, 250.0f);
+				SetCamPosition(0.0f, 250.0f);
+			}
+		}
+		cy -= game->GetScreenHeight() / 2;
+	}
+	else if (idScene == ID_SCENE_MAP_1)
+	{
+		player->GetPosition(cx, cy);
+		CGame* game = CGame::GetInstance();
+
+		//Mario chạm biên map bên phải
+		if (cx < WIDTH_MIN_MAP_1) {
+			player->SetPosition(CAM_X_MIN, cy);
+			SetCamPosition(CAM_X_MIN, 267.0f);
+		}
+
+		//Nếu mario đến gần biên map bên trái
+		if (cx > NEAR_WIDTH_LIMIT_MAP_1)
+		{
+			if (cx > WIDTH_MAX_MAP_1) player->SetPosition(WIDTH_MAX_MAP_1, cy);
+			cx = CAM_X_MAX;
+			SetCamPosition(cx, 267.0f);
+		}
+
+		//Nếu Mario có đuôi và ở vị trí giữa màn hình
+		else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+			SetCamPosition(round(cx), round(cy));
+		}
+
+		//Khi mario ở giữa màn hình và ở dưới cống
+		else if (cx > game->GetScreenWidth() / 2 && cy > UNDERGROUND_Y)
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), CAM_Y_UNDERGROUND);
+			SetCamPosition(round(cx), CAM_Y_UNDERGROUND);
+		}
+
+		//Khi mario ở giữa màn hình
+		else if (cx > game->GetScreenWidth() / 2)
+		{
+			DebugOut(L"Mario ở giữa màn hình\n");
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			SetCamPosition(round(cx), 267.0f);
+			CGame::GetInstance()->SetCamPos(round(cx), 267.0f);
+		}
+		else {
+
+			if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2)
+			{
+				cy -= game->GetScreenHeight() / 2;
+				CGame::GetInstance()->SetCamPos(0.0f, round(cy));
+				SetCamPosition(0.0f, round(cy));
+			}
+			else
+			{
+				CGame::GetInstance()->SetCamPos(0.0f, 267.0f);
+				SetCamPosition(0.0f, 267.0f);
+			}
+		}
+		cy -= game->GetScreenHeight() / 2;
+	}
 }

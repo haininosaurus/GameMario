@@ -38,6 +38,7 @@
 #include "Cards.h"
 #include "CardText.h"
 #include "PieceBrick.h"
+#include "Map.h"
 
 #define QUESTIONBLOCK_AMOUNT		9
 #define ITEM_QUESTIONBLOCK_AMOUNT	9
@@ -48,6 +49,7 @@
 class CPlayScene : public CScene
 {
 protected:
+	Map* map;
 
 	CMario* player;
 	CCamera* cam;
@@ -88,6 +90,7 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_ITEM_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
+	void _ParseSection_MAP(string line);
 
 
 public:

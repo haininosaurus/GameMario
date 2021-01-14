@@ -202,7 +202,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
-		if (nx != 0) vx = 0;
+		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
 		if (vy < 0.02 && vy >= 0) {
@@ -427,7 +427,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				}
 				if (e->ny != 0 && sit_state)
-					SetPosition(2272, 357);
+					SetPosition(2256, 623);
 			}
 
 			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block
@@ -765,7 +765,6 @@ void CMario::CreateScore(CScoreEffect* s)
 	{
 		if (score[i] == NULL) {
 			score[i] = s;
-			DebugOut(L"da tao score\n");
 			break;
 		}
 		else if (score[i]->GetState() != SCORE_STATE_HIDEN)

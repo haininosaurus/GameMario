@@ -30,6 +30,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_OBJECTS					6
 #define SCENE_SECTION_ITEM_QUESTION_OBJECTS		7
 #define SCENE_SECTION_ENEMIES					8
+#define SCENE_SECTION_MAP						9
 
 #define OBJECT_TYPE_MARIO					0
 #define OBJECT_TYPE_BRICK					3
@@ -110,6 +111,25 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
+}
+
+void CPlayScene::_ParseSection_MAP(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 7) return; // skip invalid lines
+
+	int idTileSet = atoi(tokens[0].c_str());
+	int totalRowsTileSet = atoi(tokens[1].c_str());
+	int totalColumnsTileSet = atoi(tokens[2].c_str());
+	int totalRowsMap = atoi(tokens[3].c_str());
+	int totalColumnsMap = atoi(tokens[4].c_str());
+	int totalTiles = atoi(tokens[5].c_str());
+	wstring file_path = ToWSTR(tokens[6]);
+
+	map = new Map(idTileSet, totalRowsTileSet, totalColumnsTileSet, totalRowsMap, totalColumnsMap, totalTiles);
+	map->LoadMap(file_path.c_str());
+	map->ExtractTileFromTileSet();
 }
 
 void CPlayScene::_ParseSection_ANIMATIONS(string line)
@@ -410,6 +430,7 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_COIN:
+		DebugOut(L"da tao coin\n");
 		obj = new CCoin();
 		obj->SetState(state);
 		if (state == 0)
@@ -430,7 +451,6 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 				{
 					if (itemBrick[i] == NULL)
 					{
-						DebugOut(L"1\n");
 						itemBrick[i] = (CCoin*)obj;
 						brick[i]->AddItemBrick(itemBrick[i]);
 						break;
@@ -446,7 +466,6 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 				{
 					if (itemBrick[i] == NULL)
 					{
-						DebugOut(L"1\n");
 						itemBrick[i] = (CCoin*)obj;
 						brick[i]->AddItemBrick(itemBrick[i]);
 						break;
@@ -570,6 +589,7 @@ void CPlayScene::Load()
 		if (line[0] == '#') continue;	// skip comment lines	
 
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
+		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -602,6 +622,7 @@ void CPlayScene::Load()
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_OBJECTS(line); break;
 		case SCENE_SECTION_ENEMIES: _ParseSection_ENEMIES(line); break;
+		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
 		}
 	}
 
@@ -626,7 +647,8 @@ void CPlayScene::Update(DWORD dt)
 
 	// Update camera to follow mario
 	if (cam == NULL) {
-		cam = new CCamera(player);
+		DebugOut(L"id: %d", id);
+		cam = new CCamera(player,id);
 		sb->SetCam(cam);
 	}
 	cam->UpdateCam();
@@ -695,7 +717,8 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-
+	if (map)
+		map->Render();
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
 		//if (!dynamic_cast<CPipe*>(objects[i]))

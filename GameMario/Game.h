@@ -70,7 +70,6 @@ public:
 	void SetCoin(int c) { coin = c; }
 	void SetLives(int c) { lives = c; }
 	void SetItem(int s) {
-		DebugOut(L"item[0]: %d\n", item[0]);
 		for (int i = 0; i < 3; i++)
 		{
 			if (item[i] == 0)
@@ -79,7 +78,6 @@ public:
 				break;
 			}
 		}
-		DebugOut(L"item[0]: %d\n", item[0]);
 	}
 
 	void InitKeyboard();

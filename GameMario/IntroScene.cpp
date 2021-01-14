@@ -218,7 +218,6 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 		}
 	case OBJECT_TYPE_MUSHROOM:
 		{
-		DebugOut(L"da tao nam \n");
 			obj = new CMushroom();
 			CMushroom* mushroom = dynamic_cast<CMushroom*>(obj);
 			mushroom->SetIntroState(1);
