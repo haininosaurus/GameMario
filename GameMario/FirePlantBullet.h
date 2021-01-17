@@ -20,7 +20,7 @@
 #define FIREPLANTBULLET_SHOOTED_LEFT_150_STATE		330
 #define FIREPLANTBULLET_TRANSPARENT_STATE			400
 
-class CFirePlantBullet : public CGameObject
+class CFirePlantBullet : public CollisionObject
 {
 
 	DWORD shoot_start;
@@ -43,7 +43,5 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 };
 

@@ -5,6 +5,8 @@
 #include "TransObject.h"
 #include "Road.h"
 
+#include "FirePiranhaPlant.h"
+
 CFireBullet::CFireBullet()
 {
 	state = FIREBULLET_TRANSPARENT_STATE;
@@ -13,61 +15,19 @@ CFireBullet::CFireBullet()
 
 void CFireBullet::Render()
 {
-	if(state == FIREBULLET_SHOOTED_RIGHT_STATE || state == FIREBULLET_SHOOTED_LEFT_STATE)
-		animation_set->at(0)->Render(x, y);
-
-}
-void CFireBullet::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT>* coObjects,
-	vector<LPCOLLISIONEVENT>& coEvents)
-{
-	for (UINT i = 0; i < coObjects->size(); i++)
+	int ani = FIREBULLET_ANI_NORMAL;
+	if (state == FIREBULLET_TRANSPARENT_STATE) {
+		return;
+	}
+	else if (state == FIREBULLET_SHOOTED_RIGHT_STATE || state == FIREBULLET_SHOOTED_LEFT_STATE) ani = FIREBULLET_ANI_NORMAL;
+	else if (state == FIREBULLET_DESTROY_STATE)
 	{
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-		if (e->t > 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
-		else
-			delete e;
+		ani = FIREBULLET_ANI_DESTROY;
 	}
 
-	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
-}
+	animation_set->at(ani)->Render(x, y);
+	
 
-LPCOLLISIONEVENT CFireBullet::SweptAABBEx(LPGAMEOBJECT coO)
-{
-	float sl, st, sr, sb;		// static object bbox
-	float ml, mt, mr, mb;		// moving object bbox
-	float t, nx, ny;
-
-	coO->GetBoundingBox(sl, st, sr, sb);
-
-	// deal with moving object: m speed = original m speed - collide object speed
-	float svx, svy;
-	coO->GetSpeed(svx, svy);
-
-	float sdx = svx * dt;
-	float sdy = svy * dt;
-
-	// (rdx, rdy) is RELATIVE movement distance/velocity 
-	float rdx = this->dx - sdx;
-	float rdy = this->dy - sdy;
-
-	GetBoundingBox(ml, mt, mr, mb);
-
-	CGame::SweptAABB(
-		ml, mt, mr, mb,
-		rdx, rdy,
-		sl, st, sr, sb,
-		t, nx, ny
-		);
-
-
-
-
-	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, rdx, rdy, coO);
-	return e;
-	return 0;
 }
 
 void CFireBullet::FilterCollision(
@@ -152,37 +112,72 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
 
-				if (dynamic_cast<CRoad*>(e->obj) || dynamic_cast<CColorBrickTop*>(e->obj))
+				if(e->ny != 0) vy = -FIRE_BULLET_DEFLECT_SPEED;
+
+				else if (e->nx != 0 && -y - FIREBULLET_BBOX_HEIGHT + e->obj->y < 0)
 				{
-					vy = -FIRE_BULLET_DEFLECT_SPEED;
+					DebugOut(L"da vao destroy bullet\n");
+					destroy_start = GetTickCount64();
+					SetState(FIREBULLET_DESTROY_STATE);
+				}
+
+				//if (dynamic_cast<CRoad*>(e->obj) || dynamic_cast<CColorBrickTop*>(e->obj))
+				//{
+				//	vy = -FIRE_BULLET_DEFLECT_SPEED;
+
+				//}
+
+				if (dynamic_cast<CFirePiranhaPlant*>(e->obj))
+				{
+					if (nx != 0 || ny != 0)
+					{
+						CFirePiranhaPlant* plant = dynamic_cast<CFirePiranhaPlant*>(e->obj);
+						destroy_start = GetTickCount64();
+						plant->SetState(FIREPIRANHAPLANT_STATE_DESTROY);
+						SetState(FIREBULLET_DESTROY_STATE);
+					}
 
 				}
 
 			}
 
 		}
-
-
-
-		if (GetTickCount() - shoot_start > 1000)
+		if (GetTickCount64() - shoot_start > 1000)
 		{
-			SetState(FIREBULLET_DESTROY_STATE);
+			SetState(FIREBULLET_TRANSPARENT_STATE);
 		}
 	}
 	else
 	{
-		shoot_start = GetTickCount();
+		shoot_start = GetTickCount64();
 	}
 
+	if (state == FIREBULLET_DESTROY_STATE)
+	{
+		if (GetTickCount64() - destroy_start < 700)
+			SetState(FIREBULLET_DESTROY_STATE);
+		else SetState(FIREBULLET_TRANSPARENT_STATE);
+	}
 
 }
 
 void CFireBullet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	t = y;
-	r = x + FIREBULLET_BBOX_WIDTH;
-	b = y + FIREBULLET_BBOX_HEIGHT;
+	if (state == FIREBULLET_DESTROY_STATE)
+	{
+		l = x;
+		t = y;
+		r = 0;
+		b = 0;
+	}
+	if (state == FIREBULLET_SHOOTED_RIGHT_STATE || state == FIREBULLET_SHOOTED_LEFT_STATE)
+	{
+		l = x;
+		t = y;
+		r = x + FIREBULLET_BBOX_WIDTH;
+		b = y + FIREBULLET_BBOX_HEIGHT;
+	}
+
 }
 
 void CFireBullet::SetState(int state)
@@ -192,6 +187,8 @@ void CFireBullet::SetState(int state)
 	switch (state)
 	{
 	case FIREBULLET_DESTROY_STATE:
+		vx = 0;
+		vy = 0;
 		break;
 	case FIREBULLET_SHOOTED_RIGHT_STATE:
 		vx = FIRE_BULLET_FLYING_SPEECH;

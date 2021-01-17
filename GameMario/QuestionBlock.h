@@ -34,6 +34,13 @@ public:
 			item[i] = NULL;
 	}
 	void AddItemQuestionBlock(CGameObject* item);
+	bool CheckItem() {
+		for (int i = 0; i < ITEM_AMOUNT; i++)
+		{
+			if (item[i] != NULL) return true;
+		}
+		return false;
+	}
 	void SetStateItem(int state);
 	CGameObject* GetItemObject() {
 		for (int i = 0; i < ITEM_AMOUNT; i++)

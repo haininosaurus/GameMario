@@ -69,6 +69,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CARD					34
 #define OBJECT_TYPE_CARDTEXT				35
 #define OBJECT_PIECE_BRICK					36
+#define OBJECT_TYPE_LONG_WOODEN_BLOCK		37
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -275,6 +276,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_HEADROAD: obj = new CHeadRoad(); break;
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
+	case OBJECT_TYPE_LONG_WOODEN_BLOCK: obj = new CLongWoodenBlock(); break;
 	case OBJECT_PIECE_BRICK:
 		obj = new CPieceBrick();
 		for (int i = 0; i < 16; i++)
@@ -430,31 +432,22 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_COIN:
-		DebugOut(L"da tao coin\n");
 		obj = new CCoin();
 		obj->SetState(state);
 		if (state == 0)
 		{
-			if (item_object == 0) {
-				for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			{
+				if (itemQuestionBlock[i] == NULL)
 				{
-					if (itemQuestionBlock[i] == NULL)
-					{
-						itemQuestionBlock[i] = (CCoin*)obj;
+					itemQuestionBlock[i] = (CCoin*)obj;
+					for (int j = 0; j < item_object; j++) {
+						DebugOut(L"da them coin\n");
 						questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-						break;
+						if(i>0 && questionBlock[i-1] == NULL) 	DebugOut(L"chua them coin\n");
 					}
-				}
-			}
-			else if (item_object == 1) {
-				for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
-				{
-					if (itemBrick[i] == NULL)
-					{
-						itemBrick[i] = (CCoin*)obj;
-						brick[i]->AddItemBrick(itemBrick[i]);
-						break;
-					}
+
+					break;
 				}
 			}
 		}
@@ -515,7 +508,7 @@ void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
 			{
 				if (itemQuestionBlock[i] == NULL)
 				{
-					itemQuestionBlock[i] = (CLeaf*)obj;
+					itemQuestionBlock[i] = (CSwitch*)obj;
 					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
 					break;
 				}

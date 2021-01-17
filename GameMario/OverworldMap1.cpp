@@ -1,4 +1,4 @@
-#include "OverworldMap1.h"
+#include "OverworldMap.h"
 
 #include "IntroScene.h"
 
@@ -20,7 +20,7 @@ using namespace std;
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
-COverworldMap1::COverworldMap1(int id, LPCWSTR filePath) :
+COverworldMap::COverworldMap(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	key_handler = new COverworldMapScenceKeyHandler(this);
@@ -59,7 +59,7 @@ COverworldMap1::COverworldMap1(int id, LPCWSTR filePath) :
 #define MAX_SCENE_LINE						1024
 
 
-void COverworldMap1::_ParseSection_TEXTURES(string line)
+void COverworldMap::_ParseSection_TEXTURES(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -74,7 +74,7 @@ void COverworldMap1::_ParseSection_TEXTURES(string line)
 	CTextures::GetInstance()->Add(texID, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
-void COverworldMap1::_ParseSection_SPRITES(string line)
+void COverworldMap::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -97,7 +97,7 @@ void COverworldMap1::_ParseSection_SPRITES(string line)
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
 }
 
-void COverworldMap1::_ParseSection_ANIMATIONS(string line)
+void COverworldMap::_ParseSection_ANIMATIONS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -118,7 +118,7 @@ void COverworldMap1::_ParseSection_ANIMATIONS(string line)
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
-void COverworldMap1::_ParseSection_ANIMATION_SETS(string line)
+void COverworldMap::_ParseSection_ANIMATION_SETS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -144,7 +144,7 @@ void COverworldMap1::_ParseSection_ANIMATION_SETS(string line)
 /*
 	Parse a line in section [OBJECTS]
 */
-void COverworldMap1::_ParseSection_OBJECTS(string line)
+void COverworldMap::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -276,7 +276,7 @@ void COverworldMap1::_ParseSection_OBJECTS(string line)
 
 }
 
-void COverworldMap1::_ParseSection_NODES(string line)
+void COverworldMap::_ParseSection_NODES(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -298,7 +298,7 @@ void COverworldMap1::_ParseSection_NODES(string line)
 
 
 
-void COverworldMap1::Load()
+void COverworldMap::Load()
 {
 
 	ifstream f;
@@ -353,7 +353,7 @@ void COverworldMap1::Load()
 	//DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
-void COverworldMap1::Update(DWORD dt)
+void COverworldMap::Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
 
@@ -376,7 +376,7 @@ void COverworldMap1::Update(DWORD dt)
 		cards[i]->SetState(game->GetItem(i));
 	}
 }
-void COverworldMap1::Render()
+void COverworldMap::Render()
 {
 
 	for (int i = objects.size() - 1; i >= 0; i--)
@@ -388,7 +388,7 @@ void COverworldMap1::Render()
 /*
 	Unload current scene
 */
-void COverworldMap1::Unload()
+void COverworldMap::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
 		delete objects[i];
@@ -416,7 +416,7 @@ void COverworldMap1::Unload()
 void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	CGame* game = CGame::GetInstance();
-	CMarioOverworld* mariooverworld = ((COverworldMap1*)scence)->GetPlayer();
+	CMarioOverworld* mariooverworld = ((COverworldMap*)scence)->GetPlayer();
 
 	if (game->IsKeyDown(DIK_X))
 	{

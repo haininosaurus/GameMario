@@ -51,66 +51,72 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	if (check_y_limit == false)
+	if (state != PIRANHAPLANT_STATE_DESTROY)
 	{
-		y_limit = y - PIRANHAPLANT_BBOX_HEIGHT;
-		check_y_limit = true;
-	}
-
-	if (y >= y_limit)
-		y += dy;
-	else y = y_limit;
-
-	sx = x - player->x;
-	sy = y - player->y;
-	tan = sx / sy;
-
-
-	if (abs(x - player->x) < 150)
-	{
-		if (state == PIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == PIRANHAPLANT_STATE_HIDE && tan < -1.0f)
-			found_player = true;
-	}
-
-	//Update state
-	if (found_player)
-	{
-		if (hide_state)
+		if (check_y_limit == false)
 		{
-			move_up_state = 1;
-			move_up_time = GetTickCount();
+			y_limit = y - PIRANHAPLANT_BBOX_HEIGHT;
+			check_y_limit = true;
 		}
 
-		if (move_up_state)
+		if (y >= y_limit)
+			y += dy;
+		else y = y_limit;
+
+		sx = x - player->x;
+		sy = y - player->y;
+		tan = sx / sy;
+
+
+		if (abs(x - player->x) < 150)
 		{
-			if (GetTickCount() - move_up_time < 920)
-				SetState(PIRANHAPLANT_STATE_MOVE_UP);
-			else SetState(PIRANHAPLANT_STATE_APPEARANCE);
+			if (state == PIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == PIRANHAPLANT_STATE_HIDE && tan < -1.0f)
+				found_player = true;
 		}
-		if (appearance_state)
+
+		//Update state
+		if (found_player)
 		{
-			if (GetTickCount() - move_up_time < 2000)
-				SetState(PIRANHAPLANT_STATE_APPEARANCE);
-			if (GetTickCount() - move_up_time > 2500)
-				SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
-		}
-		if (move_down_state)
-		{
-			if (GetTickCount() - move_up_time < 3420)
-				SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
-			else
+			if (hide_state)
 			{
-				SetState(PIRANHAPLANT_STATE_HIDE);
-				found_player = false;
+				move_up_state = 1;
+				move_up_time = GetTickCount();
+			}
+
+			if (move_up_state)
+			{
+				if (GetTickCount() - move_up_time < 920)
+					SetState(PIRANHAPLANT_STATE_MOVE_UP);
+				else SetState(PIRANHAPLANT_STATE_APPEARANCE);
+			}
+			if (appearance_state)
+			{
+				if (GetTickCount() - move_up_time < 2000)
+					SetState(PIRANHAPLANT_STATE_APPEARANCE);
+				if (GetTickCount() - move_up_time > 2500)
+					SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
+			}
+			if (move_down_state)
+			{
+				if (GetTickCount() - move_up_time < 3420)
+					SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
+				else
+				{
+					SetState(PIRANHAPLANT_STATE_HIDE);
+					found_player = false;
+				}
 			}
 		}
+
 	}
-	
+
+
 }
 
 void CPiranhaPlant::Render()
 {
 	if (hide_state) return;
+	else if (state == PIRANHAPLANT_STATE_DESTROY) return;
 	else animation_set->at(0)->Render(x, y);
 
 }
@@ -120,6 +126,8 @@ void CPiranhaPlant::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case PIRANHAPLANT_STATE_DESTROY:
+		break;
 	case PIRANHAPLANT_STATE_MOVE_UP:
 		hide_state = 0;
 		move_up_state = 1;

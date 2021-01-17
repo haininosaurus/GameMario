@@ -9,7 +9,6 @@ void CBrick::Render()
 {
 	if (state == BRICK_STATE_HIDEN) return;
 	else animation_set->at(0)->Render(x, y);
-	//RenderBoundingBox();
 }
 
 void CBrick::GetBoundingBox(float& l, float& t, float& r, float& b)

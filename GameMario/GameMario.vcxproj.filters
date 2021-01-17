@@ -73,11 +73,11 @@
     <Filter Include="Header Files\Score">
       <UniqueIdentifier>{71581915-d4ef-4faa-8bf7-ee683f428b94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\WorldMap1">
-      <UniqueIdentifier>{dba663f9-a957-43e1-84e7-bb1c6fff52e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\WorldMap1">
+    <Filter Include="Source Files\WorldMap">
       <UniqueIdentifier>{4a9a7c79-869e-496e-8f92-edd55a35c128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WorldMap">
+      <UniqueIdentifier>{dba663f9-a957-43e1-84e7-bb1c6fff52e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -190,16 +190,16 @@
       <Filter>Source Files\EventObject</Filter>
     </ClCompile>
     <ClCompile Include="Map1.cpp">
-      <Filter>Source Files\WorldMap1</Filter>
+      <Filter>Source Files\WorldMap</Filter>
     </ClCompile>
     <ClCompile Include="MarioOverworld.cpp">
-      <Filter>Source Files\WorldMap1</Filter>
+      <Filter>Source Files\WorldMap</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
-      <Filter>Source Files\WorldMap1</Filter>
+      <Filter>Source Files\WorldMap</Filter>
     </ClCompile>
     <ClCompile Include="Turtle.cpp">
-      <Filter>Source Files\WorldMap1</Filter>
+      <Filter>Source Files\WorldMap</Filter>
     </ClCompile>
     <ClCompile Include="Number.cpp">
       <Filter>Source Files\Score</Filter>
@@ -243,10 +243,10 @@
     <ClCompile Include="PieceBrick.cpp">
       <Filter>Source Files\SolidObject</Filter>
     </ClCompile>
-    <ClCompile Include="PlayScence4.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LongWoodenBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -255,9 +255,6 @@
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayScence.h">
-      <Filter>Header Files\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="OverworldMap1.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="BuzzyBeetle.h">
@@ -363,16 +360,16 @@
       <Filter>Header Files\EventObject</Filter>
     </ClInclude>
     <ClInclude Include="Map1.h">
-      <Filter>Header Files\WorldMap1</Filter>
+      <Filter>Header Files\WorldMap</Filter>
     </ClInclude>
     <ClInclude Include="MarioOverworld.h">
-      <Filter>Header Files\WorldMap1</Filter>
+      <Filter>Header Files\WorldMap</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Header Files\WorldMap1</Filter>
+      <Filter>Header Files\WorldMap</Filter>
     </ClInclude>
     <ClInclude Include="Turtle.h">
-      <Filter>Header Files\WorldMap1</Filter>
+      <Filter>Header Files\WorldMap</Filter>
     </ClInclude>
     <ClInclude Include="Number.h">
       <Filter>Header Files\Score</Filter>
@@ -413,13 +410,16 @@
     <ClInclude Include="ScoreEffect.h">
       <Filter>Header Files\EventObject</Filter>
     </ClInclude>
-    <ClInclude Include="PlayScence4.h">
-      <Filter>Header Files\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Energy.h">
       <Filter>Header Files\EventObject</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OverworldMap.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LongWoodenBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -46,6 +46,7 @@
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="Lives.cpp" />
+    <ClCompile Include="LongWoodenBlock.cpp" />
     <ClCompile Include="Luigi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -60,7 +61,6 @@
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="PlayScence.cpp" />
-    <ClCompile Include="PlayScence4.cpp" />
     <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Road.cpp" />
     <ClCompile Include="Scence.cpp" />
@@ -106,6 +106,7 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Lives.h" />
+    <ClInclude Include="LongWoodenBlock.h" />
     <ClInclude Include="Luigi.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Map1.h" />
@@ -114,12 +115,11 @@
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Number.h" />
-    <ClInclude Include="OverworldMap1.h" />
+    <ClInclude Include="OverworldMap.h" />
     <ClInclude Include="PieceBrick.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="PlayScence.h" />
-    <ClInclude Include="PlayScence4.h" />
     <ClInclude Include="QuestionBlock.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Scence.h" />

@@ -23,10 +23,21 @@ CFirePiranhaPlant::CFirePiranhaPlant(CGameObject* mario)
 
 void CFirePiranhaPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + FIREPIRANHAPLANT_BBOX_WIDTH;
-	bottom = y + FIREPIRANHAPLANT_BBOX_HEIGHT;
+	if (state == FIREPIRANHAPLANT_STATE_DESTROY || state == FIREPIRANHAPLANT_STATE_HIDE)
+	{
+		left = x;
+		top = y;
+		right = 0;
+		bottom = 0;
+	}
+	else
+	{
+		left = x;
+		top = y;
+		right = x + FIREPIRANHAPLANT_BBOX_WIDTH;
+		bottom = y + FIREPIRANHAPLANT_BBOX_HEIGHT;
+	}
+
 }
 
 
@@ -62,110 +73,115 @@ void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
-	if (check_y_limit == false)
+	if (state != FIREPIRANHAPLANT_STATE_DESTROY)
 	{
-		y_limit = y - FIREPIRANHAPLANT_BBOX_HEIGHT;
-		check_y_limit = true;
-	}
-
-	if (y >= y_limit)
-		y += dy;
-	else y = y_limit;
-
-	sx = x - player->x;
-	sy = y - player->y;
-	tan = sx / sy;
-
-	
-	if (abs(x - player->x) < 150)
-	{
-		if (state == FIREPIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == FIREPIRANHAPLANT_STATE_HIDE && tan < -1.0f)
-			found_player = true;
-	}
-	
-	//Update state
-	if (found_player)
-	{
-		if (hide_state)
+		if (check_y_limit == false)
 		{
-			move_up_state = 1;
-			move_up_time = GetTickCount();
+			y_limit = y - FIREPIRANHAPLANT_BBOX_HEIGHT;
+			check_y_limit = true;
 		}
 
-		if (move_up_state)
+		if (y >= y_limit)
+			y += dy;
+		else y = y_limit;
+
+		sx = x - player->x;
+		sy = y - player->y;
+		tan = sx / sy;
+
+
+		if (abs(x - player->x) < 150)
 		{
-			if (GetTickCount() - move_up_time < 920)
-				SetState(FIREPIRANHAPLANT_STATE_MOVE_UP);
-			else SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
+			if (state == FIREPIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == FIREPIRANHAPLANT_STATE_HIDE && tan < -1.0f)
+				found_player = true;
 		}
-		if (appearance_state)
+
+		//Update state
+		if (found_player)
 		{
-			if (GetTickCount() - move_up_time < 3000)
-				SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
-			if (GetTickCount() - move_up_time > 2000 && fire_plant_bullet->GetState() == FIREPLANTBULLET_TRANSPARENT_STATE)
-				ShootFirePlantBullet();
-			if (GetTickCount() - move_up_time > 3500)
-				SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
+			if (hide_state)
+			{
+				move_up_state = 1;
+				move_up_time = GetTickCount();
+			}
+
+			if (move_up_state)
+			{
+				if (GetTickCount() - move_up_time < 920)
+					SetState(FIREPIRANHAPLANT_STATE_MOVE_UP);
+				else SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
+			}
+			if (appearance_state)
+			{
+				if (GetTickCount() - move_up_time < 3000)
+					SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
+				if (GetTickCount() - move_up_time > 2000 && fire_plant_bullet->GetState() == FIREPLANTBULLET_TRANSPARENT_STATE)
+					ShootFirePlantBullet();
+				if (GetTickCount() - move_up_time > 3500)
+					SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
+			}
+			if (move_down_state)
+			{
+				if (GetTickCount() - move_up_time < 4420)
+					SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
+				else
+				{
+					SetState(FIREPIRANHAPLANT_STATE_HIDE);
+					found_player = false;
+				}
+			}
 		}
-		if (move_down_state)
+
+
+		// Check direction
+		if (y - player->y < 0)
 		{
-			if (GetTickCount() - move_up_time < 4420)
-				SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
+			if (x - player->x < 0)
+			{
+				nx = 1;
+				down_right_state = 1;
+				top_right_state = 0;
+				down_left_state = 0;
+				top_left_state = 0;
+			}
 			else
 			{
-				SetState(FIREPIRANHAPLANT_STATE_HIDE);
-				found_player = false;
+				nx = 0;
+				down_left_state = 1;
+				top_left_state = 0;
+				down_right_state = 0;
+				top_right_state = 0;
+			}
+
+		}
+		else
+		{
+			if ((x - player->x < 0))
+			{
+				nx = 1;
+				down_right_state = 0;
+				top_right_state = 1;
+				down_left_state = 0;
+				top_left_state = 0;
+			}
+			else
+			{
+				nx = 0;
+				top_left_state = 1;
+				down_left_state = 0;
+				down_right_state = 0;
+				top_right_state = 0;
 			}
 		}
 	}
 
-
-	// Check direction
-	if (y - player->y < 0)
-	{
-		if (x - player->x < 0)
-		{
-			nx = 1;
-			down_right_state = 1;
-			top_right_state = 0;
-			down_left_state = 0;
-			top_left_state = 0;
-		}
-		else
-		{
-			nx = 0;
-			down_left_state = 1;
-			top_left_state = 0;
-			down_right_state = 0;
-			top_right_state = 0;
-		}
-
-	}
-	else
-	{
-		if ((x - player->x < 0))
-		{
-			nx = 1;
-			down_right_state = 0;
-			top_right_state = 1;
-			down_left_state = 0;
-			top_left_state = 0;
-		}
-		else
-		{
-			nx = 0;
-			top_left_state = 1;
-			down_left_state = 0;
-			down_right_state = 0;
-			top_right_state = 0;
-		}
-
-	}
 }
 
 void CFirePiranhaPlant::Render()
 {
+	
 	if (hide_state) return;
+	else if (state == FIREPIRANHAPLANT_STATE_DESTROY) return;
 	else {
 		int ani = FIREPIRANHAPLANT_ANI_DOWN_LEFT;
 
@@ -245,6 +261,8 @@ void CFirePiranhaPlant::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case FIREPIRANHAPLANT_STATE_DESTROY:
+		break;
 	case FIREPIRANHAPLANT_STATE_MOVE_UP:
 		//appearance_state = 0;
 		hide_state = 0;

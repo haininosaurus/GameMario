@@ -29,30 +29,38 @@ void CQuestionBlock::SetStateItem(int state)
 {
 	for (int i = 0; i < ITEM_AMOUNT; i++)
 	{
-		if (item[i]->GetState() == COIN_STATE_HIDEN && dynamic_cast<CCoin*>(item[i]))
+		if (item[i] != NULL)
 		{
-			item[i]->SetPosition(x + 4, y - 16);
-			item[i]->SetState(state);
-			break;
+			if (item[i]->GetState() == COIN_STATE_HIDEN && dynamic_cast<CCoin*>(item[i]))
+			{
+				item[i]->SetPosition(x + 4, y - 16);
+				item[i]->SetState(state);
+				item[i] = NULL;
+				break;
+			}
+			else if (item[i]->GetState() == LEAF_STATE_HIDEN && dynamic_cast<CLeaf*>(item[i]))
+			{
+				item[i]->SetPosition(x, y - 4);
+				item[i]->SetState(state);
+				item[i] = NULL;
+				break;
+			}
+			else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
+			{
+				item[i]->SetPosition(x, y - 4);
+				item[i]->SetState(state);
+				item[i] = NULL;
+				break;
+			}
+			else if (item[i]->GetState() == SWITCH_STATE_HIDEN && dynamic_cast<CSwitch*>(item[i]))
+			{
+				item[i]->SetPosition(x, y - 16);
+				item[i]->SetState(state);
+				item[i] = NULL;
+				break;
+			}
 		}
-		else if (item[i]->GetState() == LEAF_STATE_HIDEN && dynamic_cast<CLeaf*>(item[i]))
-		{
-			item[i]->SetPosition(x, y - 4);
-			item[i]->SetState(state);
-			break;
-		}
-		else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
-		{
-			item[i]->SetPosition(x, y - 4);
-			item[i]->SetState(state);
-			break;
-		}
-		else if (item[i]->GetState() == SWITCH_STATE_HIDEN && dynamic_cast<CSwitch*>(item[i]))
-		{
-			item[i]->SetPosition(x, y - 16);
-			item[i]->SetState(state);
-			break;
-		}
+		
 
 	}
 }
@@ -76,7 +84,8 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				SetState(QUESTIONBLOCK_FALL_STATE);
 				if (y < init_location_y) {
 					y = init_location_y;
-					SetState(QUESTIONBLOCK_NORMAL_STATE);
+					if(!CheckItem()) SetState(QUESTIONBLOCK_NORMAL_STATE);
+					else SetState(QUESTIONBLOCK_ITEM_STATE);
 				}
 				else y += dy;
 			}

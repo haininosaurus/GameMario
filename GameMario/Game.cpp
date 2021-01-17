@@ -5,9 +5,8 @@
 #include "Utils.h"
 
 #include "PlayScence.h"
-#include "PlayScence4.h"
 #include "IntroScene.h"
-#include "OverworldMap1.h"
+#include "OverworldMap.h"
 
 CGame* CGame::__instance = NULL;
 
@@ -347,9 +346,9 @@ void CGame::_ParseSection_SCENES(string line)
 	if(id == 2)
 		scene = new CIntroScene(id, path);
 	if (id == 3)
-		scene = new COverworldMap1(id, path);
+		scene = new COverworldMap(id, path);
 	if (id == 4)
-		scene = new CPlayScene4(id, path);
+		scene = new CPlayScene(id, path);
 	scenes[id] = scene;
 }
 
@@ -414,12 +413,12 @@ void CGame::SwitchScene(int scene_id)
 		s->Load();
 	}
 	if (scene_id == 3) {
-		COverworldMap1* s = (COverworldMap1*)scenes[scene_id];
+		COverworldMap* s = (COverworldMap*)scenes[scene_id];
 		CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 		s->Load();
 	}
 	if (scene_id == 4) {
-		CPlayScene4* s = (CPlayScene4*)scenes[scene_id];
+		CPlayScene* s = (CPlayScene*)scenes[scene_id];
 		CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 		s->Load();
 	}

@@ -39,6 +39,7 @@
 #include "CardText.h"
 #include "PieceBrick.h"
 #include "Map.h"
+#include "LongWoodenBlock.h"
 
 #define QUESTIONBLOCK_AMOUNT		9
 #define ITEM_QUESTIONBLOCK_AMOUNT	9

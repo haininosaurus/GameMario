@@ -14,9 +14,13 @@
 #define FIREBULLET_SHOOTED_LEFT_STATE		300
 #define FIREBULLET_TRANSPARENT_STATE		400
 
-class CFireBullet : public CGameObject
+#define FIREBULLET_ANI_NORMAL		0
+#define FIREBULLET_ANI_DESTROY		1
+
+class CFireBullet : public CollisionObject
 {
 	DWORD shoot_start;
+	DWORD destroy_start;
 public:
 	CFireBullet();
 
@@ -36,8 +40,6 @@ public:
 		float& ny,
 		float& rdx,
 		float& rdy);
-	virtual LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 	
 };
 

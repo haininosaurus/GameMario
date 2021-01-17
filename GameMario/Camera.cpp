@@ -6,7 +6,6 @@ void CCamera::UpdateCam() {
 
 	if (idScene == ID_SCENE_MAP_4)
 	{
-		DebugOut(L"da vao cam map 1\n");
 		player->GetPosition(cx, cy);
 		CGame* game = CGame::GetInstance();
 		if (cx < WIDTH_MIN_MAP_1) {
@@ -96,7 +95,6 @@ void CCamera::UpdateCam() {
 		//Khi mario ở giữa màn hình
 		else if (cx > game->GetScreenWidth() / 2)
 		{
-			DebugOut(L"Mario ở giữa màn hình\n");
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
 			SetCamPosition(round(cx), 267.0f);
