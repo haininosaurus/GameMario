@@ -116,7 +116,6 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				else if (e->nx != 0 && -y - FIREBULLET_BBOX_HEIGHT + e->obj->y < 0)
 				{
-					DebugOut(L"da vao destroy bullet\n");
 					destroy_start = GetTickCount64();
 					SetState(FIREBULLET_DESTROY_STATE);
 				}

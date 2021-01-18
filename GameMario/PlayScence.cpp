@@ -857,12 +857,18 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->Reset();
 		break;
 	case DIK_RIGHT:
-		if (mario->GetWalkingRightSpeech() != 0) mario->ResetWalkingRightSpeech();
-		if (mario->GetSlidingTimeRight() != 0) mario->ResetSlidingTimeRight();
+		if (!mario->GetIdle())
+		{
+			if (mario->GetWalkingRightSpeech() != 0) mario->ResetWalkingRightSpeech();
+			if (mario->GetSlidingTimeRight() != 0) mario->ResetSlidingTimeRight();
+		}
 		break;
 	case DIK_LEFT:
-		if (mario->GetWalkingLeftSpeech() != 0) mario->ResetWalkingLeftSpeech();
-		if (mario->GetSlidingTimeLeft() != 0) mario->ResetSlidingTimeLeft();
+		if (!mario->GetIdle())
+		{
+			if (mario->GetWalkingLeftSpeech() != 0) mario->ResetWalkingLeftSpeech();
+			if (mario->GetSlidingTimeLeft() != 0) mario->ResetSlidingTimeLeft();
+		}
 		break;
 
 		
@@ -912,7 +918,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 	}
 	//if key right is down, disable key left and key down
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && !mario->GetIdle())
 	{
 		mario->SetWalkRightTime((DWORD)GetTickCount64());
 		//mario doesn't turn left
@@ -941,7 +947,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	}
 	//if key left is down, disable key right and key down
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN))
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && !mario->GetIdle())
 	{
 		mario->SetWalkLeftTime(GetTickCount64());
 		if (GetTickCount64() - mario->GetWalkRightTime() > 200)
@@ -972,7 +978,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();
-			if (mario->GetJumpState() != -1 && mario->vy <= 0) mario->SetState(MARIO_STATE_JUMP);
+			if (mario->GetJumpState() != -1 && mario->vy <= 0)
+				mario->SetState(MARIO_STATE_JUMP);
 		}
 	}
 }

@@ -22,6 +22,7 @@ public:
 	void SetWhiteState() { isBlack = 0; }
 	void SetBlackState() { isBlack = 1; }
 	int GetIsBlack() { return isBlack; }
+	int GetIsP() { return isP; }
 	void SetState(int state);
 
 	virtual void Render();
@@ -32,6 +33,7 @@ public:
 class CArrows : public CGameObject
 {
 	vector<CArrow*> arrows;
+	DWORD p_start;
 
 public:
 	CArrows() {};
@@ -49,6 +51,9 @@ public:
 	void SetPositionArrows(float x, float y);
 	void SetWhiteArrows();
 	void SetBlackArrows();
+	void SetPStart(DWORD t) { p_start = t; }
+
+	int GetPState(){ return arrows[6]->GetIsBlack(); }
 
 	virtual void Render() {};
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

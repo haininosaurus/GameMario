@@ -15,6 +15,7 @@
 #define MARIO_RUNNING_FAST_SPEED						0.2f
 
 #define MARIO_JUMP_SPEED_Y								0.15f
+#define MARIO_JUMMP_SPEED_Y_MAX_POWER					0.2f
 #define MARIO_FLYING_SPEED_Y							0.05f
 #define MARIO_JUMP_DEFLECT_SPEED						0.2f
 #define MARIO_GRAVITY									0.001f
@@ -48,6 +49,7 @@
 #define MARIO_STATE_HEADUP								980
 #define MARIO_STATE_SMOKE								990
 #define MARIO_STATE_GROWUP								1000
+#define MARIO_STATE_MAX_POWER							1010
 
 
 
@@ -187,7 +189,14 @@
 #define MARIO_ANI_GROWUP_RIGHT							96
 #define MARIO_ANI_GROWUP_LEFT							97
 
-#define MARIO_ANI_DIE									116
+#define MARIO_ANI_SMALL_MAX_POWER_RIGHT					116
+#define MARIO_ANI_SMALL_MAX_POWER_LEFT					117
+#define MARIO_ANI_BIG_MAX_POWER_RIGHT					118
+#define MARIO_ANI_BIG_MAX_POWER_LEFT					119
+#define MARIO_ANI_FIRE_MAX_POWER_RIGHT					120
+#define MARIO_ANI_FIRE_MAX_POWER_LEFT					121
+
+#define MARIO_ANI_DIE									122
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -233,6 +242,7 @@ class CMario : public CollisionObject
 	float start_y;
 
 	bool is_high;
+	bool is_idle;
 	int intro_state;
 	int run_state;
 	int run_fast_state;
@@ -247,6 +257,7 @@ class CMario : public CollisionObject
 	int headup_state;
 	int sit_state;
 	int slide_state;
+	int maxpower_state;
 
 	int smoke_state;
 	int growup_state;
@@ -398,6 +409,17 @@ public:
 	DWORD GetFlyLowStart() { return fly_low_start; }
 	DWORD GetFlyHighStart() { return fly_high_start; }
 	DWORD GetShootFireBulletStart() { return shoot_fire_bullet_start; }
+	bool IsIdle(float x, float y, float ox, float oy, int ony)
+	{
+		if (ony != 0 && x + GetCurrentWidthMario() - ox >= 0) return 1;
+		return 0;
+	}
+	int GetIdle() { return is_idle; }
+	int GetMaxPower()
+	{
+		if (arrows->GetPState()) return 0; 
+		return 1;
+	}
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = (DWORD)GetTickCount64(); }
 

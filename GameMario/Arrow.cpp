@@ -75,5 +75,16 @@ void CArrows::SetBlackArrows()
 
 void CArrows::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGameObject::Update(dt, coObjects);
+
+
+	if (arrows[6] != NULL)
+	{
+		if (arrows[6]->GetState() != ARROW_STATE_WHITE_P) SetPStart(GetTickCount64());
+		else if (arrows[6]->GetState() == ARROW_STATE_WHITE_P)
+		{
+			if (GetTickCount64() - p_start > 2000) SetBlackArrows();
+		}
+	}
 
 }

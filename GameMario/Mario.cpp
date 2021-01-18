@@ -20,6 +20,7 @@
 #include "Curtain.h"
 #include "Switch.h"
 #include "GoalCard.h"
+#include "BlueBrick.h"
 
 CMario::CMario(float x, float y)
 {
@@ -137,6 +138,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
 	if (intro_state) CreateIntroAnimationMario();
+
+	is_idle = 0;
 
 
 	if (vy > 0) jump_state = 1;
@@ -391,6 +394,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (nx != 0)
 				{
+					is_idle = 1;
 					if (brick->GetState() == BRICK_STATE_NORMAL && fight_state)
 					{
 
@@ -399,8 +403,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 				}
-
+				if (ny != 0)
+				{
+					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
+				}
 			}
+
 
 			if (dynamic_cast<CPipe*>(e->obj)) 
 			{
@@ -408,6 +416,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (e->nx != 0)
 				{
+					is_idle = 1;
 					if (y < 149 - GetCurrentHeightMario() - 5) {
 						x += vx * min_tx;
 						y += vy;
@@ -427,7 +436,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				}
 				if (e->ny != 0 && sit_state)
+				{
+					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
 					SetPosition(2256, 623);
+				}
+
 			}
 
 			if (dynamic_cast<CQuestionBlock*>(e->obj)) // if e->obj is question block
@@ -522,6 +535,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (!dynamic_cast<CGoomba*>(e->obj) && !dynamic_cast<CKoopa*>(e->obj))
 				streak_Kill = -1;
 		}
+	}
+
+	if (!intro_state)
+	{
+		if (GetMaxPower()) maxpower_state = 1;
+		else maxpower_state = 0;
 	}
 
 
@@ -713,9 +732,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == MARIO_STATE_RUNNING_LEFT || state == MARIO_STATE_RUNNING_RIGHT || state == MARIO_STATE_RUNNING_LEFT_FAST || state == MARIO_STATE_RUNNING_RIGHT_FAST)
 		{
-			if (GetTickCount64() - running_start > 200)
+			if (GetTickCount64() - running_start > 200 && !is_idle)
 			{
 				arrows->SetWhiteArrows();
+				running_start = (DWORD)GetTickCount64();
+			}
+			else if (is_idle && GetTickCount64() - running_start > 200)
+			{
+				arrows->SetBlackArrows();
 				running_start = (DWORD)GetTickCount64();
 			}
 
@@ -833,6 +857,7 @@ void CMario::Render()
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_BIG_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_BIG_MAX_POWER_LEFT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
 					else ani = MARIO_ANI_BIG_IDLE_LEFT;
 				}
@@ -843,6 +868,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_BIG_MAX_POWER_RIGHT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_BIG_JUMPING_RIGHT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_BIG_RUNNING_RIGHT_FAST;
 				else if (run_state == 1)	ani = MARIO_ANI_BIG_RUNNING_RIGHT;
@@ -854,6 +880,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_BIG_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_BIG_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_LEFT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_BIG_MAX_POWER_LEFT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_BIG_JUMPING_LEFT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_BIG_RUNNING_LEFT_FAST;
 				else if (run_state == 1) ani = MARIO_ANI_BIG_RUNNING_LEFT;
@@ -921,6 +948,7 @@ void CMario::Render()
 					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_SMALL_MAX_POWER_RIGHT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
 					else ani = MARIO_ANI_SMALL_IDLE_RIGHT;
 				}
@@ -930,6 +958,7 @@ void CMario::Render()
 					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_SMALL_MAX_POWER_LEFT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
 					else ani = MARIO_ANI_SMALL_IDLE_LEFT;
 				}
@@ -940,6 +969,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_SMALL_MAX_POWER_RIGHT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_RIGHT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_SMALL_RUNNING_RIGHT_FAST;
 				else if (run_state == 1)	ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
@@ -951,6 +981,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_SMALL_MAX_POWER_LEFT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_SMALL_JUMPING_LEFT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_SMALL_RUNNING_LEFT_FAST;
 				else if (run_state == 1) ani = MARIO_ANI_SMALL_RUNNING_LEFT;
@@ -1024,6 +1055,7 @@ void CMario::Render()
 					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_RIGHT;
+					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_FIRE_MAX_POWER_RIGHT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 					else ani = MARIO_ANI_FIRE_IDLE_RIGHT;
 				}
@@ -1033,6 +1065,7 @@ void CMario::Render()
 					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_LEFT;
+					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_FIRE_MAX_POWER_LEFT;
 					else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 					else ani = MARIO_ANI_FIRE_IDLE_LEFT;
 				}
@@ -1043,6 +1076,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_FIRE_MAX_POWER_RIGHT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_RIGHT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_FIRE_RUNNING_RIGHT_FAST;
 				else if (run_state == 1)	ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
@@ -1054,6 +1088,7 @@ void CMario::Render()
 				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
+				else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_FIRE_MAX_POWER_LEFT;
 				else if (jump_state == 1 || jump_state == -1) ani = MARIO_ANI_FIRE_JUMPING_LEFT;
 				else if (run_fast_state == 1) ani = MARIO_ANI_FIRE_RUNNING_LEFT_FAST;
 				else if (run_state == 1) ani = MARIO_ANI_FIRE_RUNNING_LEFT;
@@ -1111,10 +1146,11 @@ void CMario::SetState(int state)
 		kick_state = 0;
 		turn_state = 0;
 		fight_state = 0;
-		run_fast_state = 0;
+		//run_fast_state = 0;
 		running_time_right = -1;
 		running_time_left = -1;
-		vy = -MARIO_JUMP_SPEED_Y - speech_Jump;
+		if (maxpower_state) vy = -MARIO_JUMMP_SPEED_Y_MAX_POWER - speech_Jump;
+		else vy = -MARIO_JUMP_SPEED_Y - speech_Jump;
 		if (slide_state)
 		{
 			if (nx > 0) vx = walking_right_speech;
