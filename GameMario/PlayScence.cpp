@@ -269,7 +269,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
-	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
+	case OBJECT_TYPE_PIPE:
+		{
+			int type = atoi(tokens[4].c_str());
+			obj = new CPipe(type);
+		}
+		break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;
@@ -710,14 +715,20 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	if (map)
-		map->Render();
+	if (map) map->Render();
+
+
+
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
-		//if (!dynamic_cast<CPipe*>(objects[i]))
+		if (!dynamic_cast<CPipe*>(objects[i]))
 			objects[i]->Render();
 	}
-
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
+		if (dynamic_cast<CPipe*>(objects[i]))
+			objects[i]->Render();
+	}
 }
 
 /*
@@ -889,7 +900,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 		if (mario->GetSitState())
 		{
-			mario->y -= 10;
+			if(mario->GetLevel() != MARIO_LEVEL_SMALL) mario->y -= 10;
 			mario->SetSitState(0);
 		}
 		break;
@@ -905,10 +916,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
-	if (game->IsKeyDown(DIK_DOWN))
+	if (game->IsKeyDown(DIK_DOWN) && mario->GetState() != MARIO_STATE_PIPE_DOWN)
 	{
-		if (mario->GetLevel() != MARIO_LEVEL_SMALL &&
-			mario->GetState() == MARIO_STATE_IDLE)
+		if (mario->GetState() == MARIO_STATE_IDLE)
 		{
 			mario->SetState(MARIO_STATE_SIT);
 			

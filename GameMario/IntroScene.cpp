@@ -194,7 +194,6 @@ void CIntroScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
-	case OBJECT_TYPE_PIPE: obj = new CPipe(); break;
 	case OBJECT_TYPE_WOOD_BLOCK: obj = new CWoodBlock(); break;
 	case OBJECT_TYPE_COLOR_BRICK_TOP: obj = new CColorBrickTop(); break;
 	case OBJECT_TYPE_TRANS: obj = new CTransObject(); break;

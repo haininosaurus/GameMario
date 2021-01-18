@@ -50,7 +50,8 @@
 #define MARIO_STATE_SMOKE								990
 #define MARIO_STATE_GROWUP								1000
 #define MARIO_STATE_MAX_POWER							1010
-
+#define MARIO_STATE_PIPE_DOWN							1020
+#define MARIO_STATE_PIPE_UP								1030
 
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT						0
@@ -196,7 +197,12 @@
 #define MARIO_ANI_FIRE_MAX_POWER_RIGHT					120
 #define MARIO_ANI_FIRE_MAX_POWER_LEFT					121
 
-#define MARIO_ANI_DIE									122
+#define MARIO_ANI_SMALL_WORLDMAP						122
+#define MARIO_ANI_BIG_WORLDMAP							123
+#define MARIO_ANI_TAIL_WORLDMAP							124
+#define MARIO_ANI_FIRE_WORLDMAP							125
+
+#define MARIO_ANI_DIE									126
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
@@ -258,12 +264,15 @@ class CMario : public CollisionObject
 	int sit_state;
 	int slide_state;
 	int maxpower_state;
+	int pipe_down_state;
+	int pipe_up_state;
 
 	int smoke_state;
 	int growup_state;
 
 
-
+	DWORD pipe_down_start;
+	DWORD pipe_up_start;
 	DWORD smoke_start;
 	DWORD growup_start;
 	int shoot_fire_bullet_state;
