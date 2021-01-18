@@ -790,10 +790,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
-			if (mario->GetState() == MARIO_STATE_RUNNING_RIGHT_FAST
-				|| mario->GetState() == MARIO_STATE_FLYING_HIGH_RIGHT
-				|| mario->GetState() == MARIO_STATE_RUNNING_LEFT_FAST
-				|| mario->GetState() == MARIO_STATE_FLYING_HIGH_LEFT)
+			if (mario->GetMaxPower())
 			{
 				mario->SetFlyHighStart((DWORD)GetTickCount64());
 				if(mario->nx > 0)
@@ -928,7 +925,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
 				//mario run fast right
-				if ((DWORD)GetTickCount64() - mario->GetRunningRightTime() > 1000 && mario->GetRunningRightTime() != -1)
+				if (mario->GetMaxPower())
 					mario->SetState(MARIO_STATE_RUNNING_RIGHT_FAST);
 				else mario->SetState(MARIO_STATE_RUNNING_RIGHT); 					//mario run right
 			}
@@ -954,7 +951,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		{
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))
 			{
-				if (GetTickCount64() - mario->GetRunningLeftTime() > 1000 && mario->GetRunningLeftTime() != -1)
+				if (mario->GetMaxPower())
 					mario->SetState(MARIO_STATE_RUNNING_LEFT_FAST);
 				else mario->SetState(MARIO_STATE_RUNNING_LEFT);
 			}
