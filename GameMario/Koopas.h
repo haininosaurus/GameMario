@@ -66,6 +66,8 @@ class CKoopa : public CollisionObject
 	int form;
 	int isSpin = 0;
 	int isDown = 1;
+
+	float preY;
 	int hiden_state;
 	int tortoiseshell_state;
 	int intro_state;

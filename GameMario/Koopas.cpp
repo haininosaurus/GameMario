@@ -110,6 +110,9 @@ void CKoopa::FilterCollision(
 			if (c->t < min_tx && c->nx != 0) {
 				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
 			}
+			if (c->t < min_ty && c->ny != 0) {
+				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+			}
 		}
 		else {
 			
@@ -193,6 +196,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (!dynamic_cast<CMario*>(e->obj) && e->ny != 0)
+			{
+				preY = y;
+			}
+
 			if (form != PARAKOOPA_GREEN_FORM)
 			{
 				if (state == KOOPA_STATE_WALKING_LEFT || state == KOOPA_STATE_WALKING_RIGHT)
@@ -292,6 +300,34 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			
 		}
 	}
+
+	DebugOut(L"prey: %f, y: %f\n", preY, y);
+
+	if (form == KOOPA_RED_FORM)
+	{
+		DebugOut(L"state: %d\n", state);
+		if (state == KOOPA_STATE_WALKING_RIGHT || state == KOOPA_STATE_WALKING_LEFT)
+		{
+
+			if (y - preY > 1 && preY != 0) {
+				if (vx > 0)
+				{
+					SetPosition(x - 5, preY);
+					SetState(KOOPA_STATE_WALKING_LEFT);
+					preY = y;
+				}
+				else
+				{
+
+					SetPosition(x + 5, preY);
+					SetState(KOOPA_STATE_WALKING_RIGHT);
+					preY = y;
+				}
+
+			}
+		}
+	}
+
 
 
 
