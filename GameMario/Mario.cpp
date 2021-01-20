@@ -623,6 +623,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			}
 
+			if (dynamic_cast<CLongWoodenBlock*>(e->obj))
+			{
+				CLongWoodenBlock* wood = dynamic_cast<CLongWoodenBlock*>(e->obj);
+
+				if (ny < 0)
+				{
+					if (wood->GetState() == LONG_WOODEN_BLOCK_STATE_NORMAL)
+					{
+						wood->SetFall(1);
+						wood->SetFallTime(GetTickCount64());
+					}
+
+				}
+
+			}
+
+
 			if (!dynamic_cast<CGoomba*>(e->obj) && !dynamic_cast<CKoopa*>(e->obj))
 				streak_Kill = -1;
 		}

@@ -659,8 +659,10 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> effObjects;
 
+
 	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
+
 
 	// Update camera to follow mario
 	if (cam == NULL) {
@@ -668,6 +670,12 @@ void CPlayScene::Update(DWORD dt)
 		cam = new CCamera(player,id);
 		sb->SetCam(cam);
 	}
+
+	if (player->GetSmokeState() || player->GetGrowupState()) {
+		player->Update(dt, &coObjects);
+		return;
+	}
+
 	cam->UpdateCam();
 
 	if (player->GetArrows() == NULL && !player->GetIntroState())
@@ -700,10 +708,7 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	if (player->GetSmokeState() || player->GetGrowupState()) {
-		player->Update(dt, &coObjects);
-		return;
-	}
+
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -730,6 +735,8 @@ void CPlayScene::Update(DWORD dt)
 	{
 		cards[i]->SetState(game->GetItem(i));
 	}
+
+
 }
 
 void CPlayScene::Render()

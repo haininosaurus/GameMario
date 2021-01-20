@@ -8,6 +8,7 @@
 #include "Cards.h"
 #include "Energy.h"
 #include "PieceBrick.h"
+#include "LongWoodenBlock.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
