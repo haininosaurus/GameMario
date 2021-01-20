@@ -972,8 +972,6 @@ void CMario::ShootFireBullet()
 				fire_bullet[i]->SetPosition(x, y);
 				fire_bullet[i]->SetState(FIREBULLET_SHOOTED_LEFT_STATE);
 			}
-
-
 			break;
 		}
 	}
@@ -1441,8 +1439,6 @@ void CMario::SetState(int state)
 	case MARIO_STATE_FIGHT:
 		deflect_state = 0;
 		fight_state = 1;
-		if (nx > 0) vx = MARIO_WALKING_SPEED;
-		else vx = -MARIO_WALKING_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_RIGHT_FAST:
 		deflect_state = 0;
