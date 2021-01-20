@@ -676,7 +676,6 @@ void CPlayScene::Update(DWORD dt)
 		return;
 	}
 
-	cam->UpdateCam();
 
 	if (player->GetArrows() == NULL && !player->GetIntroState())
 	{
@@ -703,19 +702,23 @@ void CPlayScene::Update(DWORD dt)
 		player->SetLives(lives);
 	}
 
+
+
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
 
+	objects[0]->Update(dt, &coObjects);
 
+	cam->UpdateCam();
 
-	for (size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 1; i < objects.size(); i++)
 	{
 
 		objects[i]->Update(dt, &coObjects);
 
-	}	
+	}
 
 	for (size_t i = 1; i < effectObjects.size(); i++)
 	{

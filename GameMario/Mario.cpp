@@ -91,7 +91,6 @@ double CMario::GetCenterHeightMario()
 }
 
 
-
 void CMario::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,
 	vector<LPCOLLISIONEVENT>& coEventsResult,
@@ -875,12 +874,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == MARIO_STATE_RUNNING_LEFT || state == MARIO_STATE_RUNNING_RIGHT || state == MARIO_STATE_RUNNING_LEFT_FAST || state == MARIO_STATE_RUNNING_RIGHT_FAST)
 		{
-			if (GetTickCount64() - running_start > 200 && !is_idle)
+			if (GetTickCount64() - running_start > 400 && !is_idle)
 			{
 				arrows->SetWhiteArrows();
 				running_start = (DWORD)GetTickCount64();
 			}
-			else if (is_idle && GetTickCount64() - running_start > 200)
+			else if (is_idle && GetTickCount64() - running_start > 400)
 			{
 				arrows->SetBlackArrows();
 				running_start = (DWORD)GetTickCount64();
@@ -888,7 +887,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 		else {
-			if (GetTickCount64() - running_start > 200)
+			if (GetTickCount64() - running_start > 400)
 			{
 				arrows->SetBlackArrows();
 				running_start = (DWORD)GetTickCount64();
@@ -896,6 +895,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 	}
+
+	if (!arrows->GetPState())
+	{
+		if (!is_maxp)
+		{
+			arrows->SetPStart(GetTickCount64());
+			is_maxp = true;
+		}
+
+	}
+	//else is_maxp = false;
 
 	if (x > 2800)
 	{

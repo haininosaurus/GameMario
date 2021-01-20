@@ -14,7 +14,6 @@ void CArrow::Render()
 void CArrow::SetState(int state)
 {
 	CGameObject::SetState(state);
-
 	switch (state)
 	{
 	case ARROW_STATE_BLACK:
@@ -73,6 +72,17 @@ void CArrows::SetBlackArrows()
 	}
 }
 
+void CArrows::ResetArrows()
+{
+	for (int i = arrows.size() - 1; i >= 0; i--)
+	{
+		if (!arrows[i]->GetIsBlack())
+		{
+			arrows[i]->SetBlackState();
+		}
+	}
+}
+
 void CArrows::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -80,10 +90,11 @@ void CArrows::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (arrows[6] != NULL)
 	{
-		if (arrows[6]->GetState() != ARROW_STATE_WHITE_P) SetPStart(GetTickCount64());
-		else if (arrows[6]->GetState() == ARROW_STATE_WHITE_P)
+		if (GetPState()) SetPStart(GetTickCount64());
+		else if (!GetPState())
 		{
-			if (GetTickCount64() - p_start > 2000) SetBlackArrows();
+			DebugOut(L"da vao ham chuan bi reset\n");
+			if (GetTickCount64() - p_start > 2000) ResetArrows();
 		}
 	}
 

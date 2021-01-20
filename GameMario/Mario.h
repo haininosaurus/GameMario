@@ -250,6 +250,7 @@ class CMario : public CollisionObject
 
 	bool is_high;
 	bool is_idle;
+	bool is_maxp = false;
 	int intro_state;
 	int run_state;
 	int run_fast_state;

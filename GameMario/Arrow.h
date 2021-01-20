@@ -53,6 +53,8 @@ public:
 	void SetBlackArrows();
 	void SetPStart(DWORD t) { p_start = t; }
 
+	void ResetArrows();
+
 	int GetPState(){ return arrows[6]->GetIsBlack(); }
 
 	virtual void Render() {};

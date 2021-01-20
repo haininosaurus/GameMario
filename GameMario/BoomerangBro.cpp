@@ -8,7 +8,6 @@ CBoomerangBro::CBoomerangBro(CBoomerang* boom[2])
 	found_player = false;
 	for (int i = 0; i < 2; i++)
 	{
-		DebugOut(L"da tao boomerang\n");
 		boomerang[i] = boom[i];
 	}
 	is_shoot = 0;
@@ -203,7 +202,6 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			is_back = 1;
 			if (mario->x - x >= 18)
 			{
-				DebugOut(L"quay phai: %d\n", nx);
 				is_right = 1;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = -BOOMERANG_WALKING_SPEED;
@@ -221,7 +219,6 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			SetState(BOOMERANGBRO_STATE_THROWING);
 			if (!is_shoot)
 			{
-				DebugOut(L"nx: %d\n", nx);
 				for (int i = 0; i < 2; i++)
 				{
 					if (boomerang[i]->GetState() == BOOMERANG_STATE_HIDEN)
