@@ -24,6 +24,7 @@ class CBrick : public CGameObject
 public:
 	void SetState(int state) { CGameObject::SetState(state); }
 	void SetItem() { item[0]->SetState(2); item[0]->SetPosition(x, y); }
+	CGameObject* GetItem() { return item[0]; }
 	void AddItemBrick(CGameObject* i);
 	void createEffectDestroy();
 	virtual void Render();

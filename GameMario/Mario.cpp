@@ -587,6 +587,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						switchs->SetSwitch();
 						switchs->SetState(SWITCH_STATE_ACTIVE);
 						switchs->SetPosition(switchs->x, switchs->y + 9);
+						switchs->SetSwitchTime(GetTickCount64());
 					}
 
 				}
@@ -896,16 +897,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (!arrows->GetPState())
-	{
-		if (!is_maxp)
-		{
-			arrows->SetPStart(GetTickCount64());
-			is_maxp = true;
-		}
+	//if (!arrows->GetPState())
+	//{
+	//	if (!is_maxp)
+	//	{
+	//		arrows->SetPStart(GetTickCount64());
+	//		is_maxp = true;
+	//	}
 
-	}
-	//else is_maxp = false;
+	//}
+	////else is_maxp = false;
 
 	if (x > 2800)
 	{

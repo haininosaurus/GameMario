@@ -13,13 +13,13 @@
 
 class CSwitch : public CGameObject
 {
-	CBrick* brick[20];
-	
+	CBrick* brick[19];
+	DWORD switch_time;
 public:
 
-	CSwitch(CBrick* b[20])
+	CSwitch(CBrick* b[19])
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 19; i++)
 		{
 			brick[i] = b[i];
 		}
@@ -35,7 +35,7 @@ public:
 		}
 	}
 	void SetSwitch() {
-		for (int i = 0; i < 19; i++)
+		for (int i = 0; i < 18; i++)
 		{
 			if (brick[i]->GetState() == BRICK_STATE_NORMAL)
 			{
@@ -45,6 +45,18 @@ public:
 
 		}
 	}
+	void ResetItem() {
+		for (int i = 0; i < 18; i++)
+		{
+			if (brick[i]->GetItem()->GetState() == 2)
+			{
+				brick[i]->SetState(0);
+				brick[i]->GetItem()->SetState(0);
+			}
+
+		}
+	}
+	void SetSwitchTime(DWORD t) { switch_time = t; }
 	virtual void Render() {
 		int ani;
 		if (state == SWITCH_STATE_HIDEN) return;
@@ -53,7 +65,14 @@ public:
 
 		animation_set->at(ani)->Render(x, y);
 	}
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects){}
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
+	{
+		if (state == SWITCH_STATE_ACTIVE)
+		{
+			if (GetTickCount64() - switch_time > 5000)
+				ResetItem();
+		}
+	}
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b)
 	{
 		if (state == 0) return;
