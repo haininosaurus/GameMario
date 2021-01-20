@@ -497,7 +497,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->ny != 0 && sit_state && pipe->GetType() == PIPE_STATE_UP_DOWN)
 				{
-					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
+					//is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
 					if (!pipe_down_state)
 					{
 						SetState(MARIO_STATE_PIPE_DOWN);
@@ -506,7 +506,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->ny != 0 && pipe->GetType() == PIPE_STATE_DOWN_UP)
 				{
-					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
+					//is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
 					if (!pipe_up_state)
 					{
 						SetState(MARIO_STATE_PIPE_UP);

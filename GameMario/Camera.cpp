@@ -76,12 +76,12 @@ void CCamera::UpdateCam() {
 		}
 
 		//Nếu Mario có đuôi và ở vị trí giữa màn hình
-		else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
-			cx -= game->GetScreenWidth() / 2;
-			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
-			SetCamPosition(round(cx), round(cy));
-		}
+		//else if (player->GetLevel() == MARIO_LEVEL_TAIL && cy < game->GetScreenHeight() / 2 && cx > game->GetScreenWidth() / 2) {
+		//	cx -= game->GetScreenWidth() / 2;
+		//	cy -= game->GetScreenHeight() / 2;
+		//	CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+		//	SetCamPosition(round(cx), round(cy));
+		//}
 
 		//Khi mario ở giữa màn hình và ở dưới cống
 		else if (cx > game->GetScreenWidth() / 2 && cy > UNDERGROUND_Y)

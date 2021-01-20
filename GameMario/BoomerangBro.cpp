@@ -11,6 +11,7 @@ CBoomerangBro::CBoomerangBro(CBoomerang* boom[2])
 		DebugOut(L"da tao boomerang\n");
 		boomerang[i] = boom[i];
 	}
+	is_shoot = 0;
 }
 
 void CBoomerangBro::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -133,7 +134,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if (state != BOOMERANGBRO_STATE_DIE)
 	{
-		float min_tx, min_ty, nx = 0, ny;
+		float min_tx, min_ty, nx, ny;
 		float rdx = 0;
 		float rdy = 0;
 
@@ -153,14 +154,28 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (GetTickCount64() - time_start < 1500)
 		{
-			SetState(BOOMERANGBRO_STATE_THROWING);
+			is_back = 0;
+			if (mario->x - x >= 18)
+			{
+				is_right = 1;
+				SetState(BOOMERANGBRO_STATE_WALKING);
+				vx = BOOMERANG_WALKING_SPEED;
+			}
+			else if (mario->x - x <= -1)
+			{
+				is_right = 0;
+				SetState(BOOMERANGBRO_STATE_WALKING);
+				vx = -BOOMERANG_WALKING_SPEED;
+			}
+
+			//SetState(BOOMERANGBRO_STATE_THROWING);
 			if (!is_shoot)
 			{
 				for (int i = 0; i < 2; i++)
 				{
 					if (boomerang[i]->GetState() == BOOMERANG_STATE_HIDEN)
 					{
-						if (nx < 0)
+						if (is_right)
 						{
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x - 8, y - 8);
@@ -181,19 +196,6 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			is_back = 0;
-			if (mario->x - x >= 18)
-			{
-				nx = -1;
-				SetState(BOOMERANGBRO_STATE_WALKING);
-				vx = BOOMERANG_WALKING_SPEED;
-			}
-			else if (mario->x - x <= -1)
-			{
-				nx = 1;
-				SetState(BOOMERANGBRO_STATE_WALKING);
-				vx = -BOOMERANG_WALKING_SPEED;
-			}
 		}
 		else if (GetTickCount64() - time_start < 3000)
 		{
@@ -201,27 +203,30 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			is_back = 1;
 			if (mario->x - x >= 18)
 			{
-				nx = -1;
+				DebugOut(L"quay phai: %d\n", nx);
+				is_right = 1;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = -BOOMERANG_WALKING_SPEED;
 			}
 			else if (mario->x - x <= -1)
 			{
-				nx = 1;
+				is_right = 0;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = BOOMERANG_WALKING_SPEED;
 			}
 		}
 		else if (GetTickCount64() - time_start < 4000)
 		{
+
 			SetState(BOOMERANGBRO_STATE_THROWING);
 			if (!is_shoot)
 			{
+				DebugOut(L"nx: %d\n", nx);
 				for (int i = 0; i < 2; i++)
 				{
 					if (boomerang[i]->GetState() == BOOMERANG_STATE_HIDEN)
 					{
-						if (nx < 0)
+						if (is_right)
 						{
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x - 8, y - 8);
@@ -272,8 +277,8 @@ void CBoomerangBro::Render()
 	else if (vx < 0 && state == BOOMERANGBRO_STATE_WALKING && !is_idle && is_back) ani = BOOMERANGBRO_ANI_WALKING_RIGHT;
 	else if (vx > 0 && state == BOOMERANGBRO_STATE_WALKING && !is_idle && !is_back) ani = BOOMERANGBRO_ANI_WALKING_RIGHT;
 	else if (vx > 0 && state == BOOMERANGBRO_STATE_WALKING && !is_idle && is_back) ani = BOOMERANGBRO_ANI_WALKING_LEFT;
-	else if (nx > 0) ani = BOOMERANGBRO_ANI_THROWING_LEFT;
-	else if (nx < 0) ani = BOOMERANGBRO_ANI_THROWING_RIGHT;
+	else if (!is_right) ani = BOOMERANGBRO_ANI_THROWING_LEFT;
+	else if (is_right) ani = BOOMERANGBRO_ANI_THROWING_RIGHT;
 
 	animation_set->at(ani)->Render(x, y);
 }

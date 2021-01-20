@@ -50,7 +50,7 @@ void CKoopa::Render()
 	{
 		if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_TORTOISESHELL_DOWN)
 			ani = KOOPA_ANI_GREEN_TAKEN_DOWN;
-		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT)
+		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
 			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
 		else if (state == KOOPA_STATE_REBORN && isDown)
 			ani = KOOPA_ANI_GREEN_REBORN_DOWN;

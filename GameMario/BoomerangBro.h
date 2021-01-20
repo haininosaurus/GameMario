@@ -29,6 +29,7 @@ class CBoomerangBro : public CollisionObject
 	bool is_idle;
 	bool is_back;
 	bool is_shoot;
+	bool is_right;
 public:
 	CBoomerangBro(CBoomerang* boomerang[2]);
 
