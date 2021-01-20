@@ -24,6 +24,8 @@
     <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="BlueBrick.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BuzzyBeetle.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -82,6 +84,8 @@
     <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="BlueBrick.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BuzzyBeetle.h" />
     <ClInclude Include="Camera.h" />

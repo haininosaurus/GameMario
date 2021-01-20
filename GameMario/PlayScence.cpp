@@ -70,6 +70,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CARDTEXT				35
 #define OBJECT_PIECE_BRICK					36
 #define OBJECT_TYPE_LONG_WOODEN_BLOCK		37
+#define OBJECT_TYPE_BOOMERANG_BRO			38
+#define OBJECT_TYPE_BOOMERANG				39
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -282,6 +284,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CLOUD_BRICK: obj = new CCloudBrick(); break;
 	case OBJECT_TYPE_BLUE_BRICK: obj = new CBlueBrick(); break;
 	case OBJECT_TYPE_LONG_WOODEN_BLOCK: obj = new CLongWoodenBlock(); break;
+	case OBJECT_TYPE_BOOMERANG: 
+
+		obj = new CBoomerang(); 
+		for (int i = 0; i < 2; i++)
+		{
+			if (boomerang[i] == NULL)
+			{
+				DebugOut(L"da tao dan cho rua\n");
+				boomerang[i] = (CBoomerang*)obj;
+				break;
+			}
+		}
+		break;
+	case OBJECT_TYPE_BOOMERANG_BRO:
+		DebugOut(L"da tao rua\n");
+		obj = new CBoomerangBro(boomerang); 
+		break;
 	case OBJECT_PIECE_BRICK:
 		obj = new CPieceBrick();
 		for (int i = 0; i < 16; i++)
@@ -721,7 +740,8 @@ void CPlayScene::Render()
 
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
-		if (!dynamic_cast<CPipe*>(objects[i]))
+		if (!dynamic_cast<CPipe*>(objects[i]) && !dynamic_cast<CBoomerang*>(objects[i]) && !dynamic_cast<CNumber*>(objects[i])
+			&& !dynamic_cast<CScoreBoard*>(objects[i]) && !dynamic_cast<CCard*>(objects[i]) && !dynamic_cast<CArrow*>(objects[i]))
 			objects[i]->Render();
 	}
 	for (int i = objects.size() - 1; i >= 0; i--)
@@ -729,6 +749,17 @@ void CPlayScene::Render()
 		if (dynamic_cast<CPipe*>(objects[i]))
 			objects[i]->Render();
 	}
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
+		if (dynamic_cast<CBoomerang*>(objects[i]))
+			objects[i]->Render();
+	}
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
+		if (dynamic_cast<CNumber*>(objects[i]) || dynamic_cast<CScoreBoard*>(objects[i]) || dynamic_cast<CCard*>(objects[i]) || dynamic_cast<CArrow*>(objects[i]))
+			objects[i]->Render();
+	}
+
 }
 
 /*
@@ -791,7 +822,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_R:
-		mario->SetPosition(0, 0);
+		CGame::GetInstance()->SetCamPos(0, 0);
 		CGame::GetInstance()->SwitchScene(3);
 		break;
 	case DIK_X:

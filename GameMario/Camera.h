@@ -7,7 +7,7 @@
 #define WIDTH_MAX_MAP_1				2816
 #define NEAR_WIDTH_LIMIT_MAP_1		2656
 
-#define CAM_X_MAX					2520
+#define CAM_X_MAX					2504
 #define CAM_X_MIN					0
 
 #define UNDERGROUND_Y				432.0f

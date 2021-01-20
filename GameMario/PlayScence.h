@@ -40,6 +40,8 @@
 #include "PieceBrick.h"
 #include "Map.h"
 #include "LongWoodenBlock.h"
+#include "Boomerang.h"
+#include "BoomerangBro.h"
 
 #define QUESTIONBLOCK_AMOUNT		9
 #define ITEM_QUESTIONBLOCK_AMOUNT	9
@@ -69,6 +71,7 @@ protected:
 	CScoreBoard* sb;
 	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];
+	CBoomerang* boomerang[2];
 	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];
 	CBrick* brick[BRICK_AMOUNT];
 	CGameObject* itemQuestionBlock[ITEM_QUESTIONBLOCK_AMOUNT];

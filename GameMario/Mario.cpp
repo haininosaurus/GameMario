@@ -21,6 +21,8 @@
 #include "Switch.h"
 #include "GoalCard.h"
 #include "BlueBrick.h"
+#include "Boomerang.h"
+#include "BoomerangBro.h"
 
 CMario::CMario(float x, float y)
 {
@@ -115,7 +117,7 @@ void CMario::FilterCollision(
 				coEventsResult.push_back(coEvents[i]);
 			}
 		}
-		else if (!dynamic_cast<CColorBrick*>(c->obj) && !dynamic_cast<CTransObject*>(c->obj) && !dynamic_cast<CFireBullet*>(c->obj))
+		else if (!dynamic_cast<CColorBrick*>(c->obj) && !dynamic_cast<CTransObject*>(c->obj) && !dynamic_cast<CFireBullet*>(c->obj) && !dynamic_cast<CBoomerang*>(c->obj))
 		{
 			if (c->nx != 0 && c->t < 1.0f)
 			{
@@ -127,6 +129,24 @@ void CMario::FilterCollision(
 			{
 				min_ty = c->t; ny = c->ny; rdy = c->dy;
 				coEventsResult.push_back(coEvents[i]);
+			}
+
+		}
+		else if (untouchable == 0)
+		{
+			if (dynamic_cast<CBoomerang*>(c->obj))
+			{
+				if (c->nx != 0 && c->t < 1.0f)
+				{
+					min_tx = c->t; nx = c->nx; rdx = c->dx;
+					coEventsResult.push_back(coEvents[i]);
+				}
+
+				if (c->ny != 0 && c->t < 1.0f)
+				{
+					min_ty = c->t; ny = c->ny; rdy = c->dy;
+					coEventsResult.push_back(coEvents[i]);
+				}
 			}
 
 		}
@@ -275,6 +295,45 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			} 
+
+			if (dynamic_cast<CBoomerangBro*>(e->obj)) // if e->obj is Goomba 
+			{
+				CBoomerangBro* boomerangbro = dynamic_cast<CBoomerangBro*>(e->obj);
+
+				// jump on top >> kill Goomba and deflect a bit 
+				if (e->ny < 0)
+				{
+					if (boomerangbro->GetState() != BOOMERANGBRO_STATE_DIE)
+					{
+						streak_Kill++;
+						if (!intro_state) DisplayScores(streak_Kill, boomerangbro->x, boomerangbro->y, GetTickCount64());
+						boomerangbro->SetState(BOOMERANGBRO_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						jump_state = 1;
+					}
+				}
+
+				else if (e->nx != 0)
+				{
+					if (untouchable == 0)
+					{
+						if (boomerangbro->GetState() != BOOMERANGBRO_STATE_DIE)
+						{
+							if (level > MARIO_LEVEL_SMALL && !fight_state && !intro_state)
+							{
+								SetLevel(GetLevel() - 1);
+								StartUntouchable();
+							}
+							else if (fight_state)
+							{
+								boomerangbro->SetState(BOOMERANGBRO_STATE_DIE);
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}
+			}
 
 			if (dynamic_cast<CKoopa*>(e->obj)) // if e->obj is Koopa
 			{
@@ -441,7 +500,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
 					if (!pipe_down_state)
 					{
-						DebugOut(L"da vao ong\n");
 						SetState(MARIO_STATE_PIPE_DOWN);
 						pipe_down_start = GetTickCount64();
 					}
@@ -451,7 +509,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
 					if (!pipe_up_state)
 					{
-						DebugOut(L"da vao ong\n");
 						SetState(MARIO_STATE_PIPE_UP);
 						pipe_up_start = GetTickCount64();
 					}
@@ -488,21 +545,39 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			if (dynamic_cast<CFirePlantBullet*>(e->obj))
+			if (untouchable == 0)
 			{
-				CFirePlantBullet* fireplantbullet = dynamic_cast<CFirePlantBullet*>(e->obj);
-				if (fireplantbullet->GetState() != FIREBULLET_DESTROY_STATE && fireplantbullet->GetState() != FIREBULLET_TRANSPARENT_STATE)
+				if (dynamic_cast<CFirePlantBullet*>(e->obj))
 				{
-					if (level > MARIO_LEVEL_SMALL)
+					CFirePlantBullet* fireplantbullet = dynamic_cast<CFirePlantBullet*>(e->obj);
+					if (fireplantbullet->GetState() != FIREBULLET_DESTROY_STATE && fireplantbullet->GetState() != FIREBULLET_TRANSPARENT_STATE)
 					{
-						SetLevel(GetLevel() - 1);
-						fireplantbullet->SetState(FIREBULLET_DESTROY_STATE);
-						StartUntouchable();
+						if (level > MARIO_LEVEL_SMALL)
+						{
+							SetLevel(GetLevel() - 1);
+							fireplantbullet->SetState(FIREBULLET_DESTROY_STATE);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
 					}
-					else
-						SetState(MARIO_STATE_DIE);
+				}
+				if (dynamic_cast<CBoomerang*>(e->obj))
+				{
+					CBoomerang* boomerang = dynamic_cast<CBoomerang*>(e->obj);
+					if (boomerang->GetState() != BOOMERANG_STATE_HIDEN)
+					{
+						if (level > MARIO_LEVEL_SMALL)
+						{
+							SetLevel(GetLevel() - 1);
+							StartUntouchable();
+						}
+						else SetState(MARIO_STATE_DIE);
+					}
 				}
 			}
+
+			
 			if (dynamic_cast<CSwitch*>(e->obj))
 			{
 				CSwitch* switchs = dynamic_cast<CSwitch*>(e->obj);
