@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Collision.h"
+#include "PlayScence.h"
 
 #define PIRANHAPLANT_SPEECH_Y			0.035f
 
@@ -46,7 +47,7 @@ class CPiranhaPlant : public CollisionObject
 		float& rdy);
 
 public:
-	CPiranhaPlant(CGameObject* mario);
+	CPiranhaPlant();
 	virtual void SetState(int state);
 	virtual int GetState();
 };

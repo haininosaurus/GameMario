@@ -31,6 +31,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ITEM_QUESTION_OBJECTS		7
 #define SCENE_SECTION_ENEMIES					8
 #define SCENE_SECTION_MAP						9
+#define SCENE_SECTION_GRID						10
 
 #define OBJECT_TYPE_MARIO					0
 #define OBJECT_TYPE_BRICK					3
@@ -216,17 +217,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_BRICK:
-		obj = new CBrick();
-		for (int i = 0; i < BRICK_AMOUNT; i++)
-		{
-			if (brick[i] == NULL)
-			{
-				brick[i] = (CBrick*)obj;
-				break;
-			}
-		}
-		break;
 	case OBJECT_TYPE_ROAD: 
 		{
 			int type = atoi(tokens[4].c_str());
@@ -234,20 +224,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
-	case OBJECT_TYPE_QUESTION_BLOCK:
-		{
-			int form = atoi(tokens[4].c_str());
-			obj = new CQuestionBlock(form);
-			for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (questionBlock[i] == NULL)
-				{
-					questionBlock[i] = (CQuestionBlock*)obj;
-					break;
-				}
-			}
-			break;
-		}
 	case OBJECT_TYPE_CARD:
 		obj = new CCard();
 		{
@@ -339,31 +315,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
 		break;
-
-	case OBJECT_TYPE_FIREPIRANHAPLANT:
-		obj = new CFirePiranhaPlant(player);
-		for (int i = 0; i < 2; i++)
-		{
-			if (firePiranhaPlant[i] == NULL) {
-				firePiranhaPlant[i] = (CFirePiranhaPlant*)obj;
-				break;
-			}
-		}
-		break;
-	case OBJECT_TYPE_PIRANHA_PLANT:
-		obj = new CPiranhaPlant(player);
-		break;
-	case OBJECT_TYPE_FIRE_PLANT_BULLET:
-		obj = new CFirePlantBullet();
-		for (int i = 0; i < 2; i++)
-		{
-			if (firePlantBullet[i] == NULL) {
-				firePlantBullet[i] = (CFirePlantBullet*)obj;
-				firePiranhaPlant[i]->CreateFirePlantBullet(firePlantBullet[i]);
-				break;
-			}
-		}
-		break;
 	case OBJECT_TYPE_NUMBER:
 		{
 			int type = atoi(tokens[4].c_str());
@@ -424,131 +375,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
-	// General object setup
-	obj->SetPosition(x, y);
-
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	if (obj != NULL)
+	{
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		obj->SetOrigin(x, y, obj->GetState());
+		obj->SetisOriginObj(true);
+		objects.push_back(obj);
+	}
 
 }
 
-void CPlayScene::_ParseSection_ITEM_OBJECTS(string line)
+void CPlayScene::_ParseSection_GRID(string line)
 {
 	vector<string> tokens = split(line);
 
+	if (tokens.size() < 1) return;
 
-	if (tokens.size() < 6) return; // skip invalid lines - an object set must have at least id, x, y
+	wstring file_path = ToWSTR(tokens[0]);
 
-	int object_type = atoi(tokens[0].c_str());
-	float x = (float)atof(tokens[1].c_str());
-	float y = (float)atof(tokens[2].c_str());
-
-	int ani_set_id = atoi(tokens[3].c_str());
-	int state = atoi(tokens[4].c_str());
-	int item_object = atoi(tokens[5].c_str());
-
-	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	CGameObject* obj = NULL;
-
-	switch (object_type)
-	{
-	case OBJECT_TYPE_COIN:
-		obj = new CCoin();
-		obj->SetState(state);
-		if (state == 0)
-		{
-			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (itemQuestionBlock[i] == NULL)
-				{
-					itemQuestionBlock[i] = (CCoin*)obj;
-					for (int j = 0; j < item_object; j++) {
-						DebugOut(L"da them coin\n");
-						questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-						if(i>0 && questionBlock[i-1] == NULL) 	DebugOut(L"chua them coin\n");
-					}
-
-					break;
-				}
-			}
-		}
-
-		if (state == 1)
-		{
-			if (item_object == 1) {
-				for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
-				{
-					if (itemBrick[i] == NULL)
-					{
-						itemBrick[i] = (CCoin*)obj;
-						brick[i]->AddItemBrick(itemBrick[i]);
-						break;
-					}
-				}
-			}
-		}
-		break;
-	case OBJECT_TYPE_MUSHROOM:
-		obj = new CMushroom();
-		obj->SetState(state);
-		if (state == 0)
-		{
-			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (itemQuestionBlock[i] == NULL)
-				{
-					itemQuestionBlock[i] = (CSwitch*)obj;
-					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-					break;
-				}
-			}
-		}
-		break;
-	case OBJECT_TYPE_LEAF:
-		obj = new CLeaf();
-		obj->SetState(state);
-		if (state == 0)
-		{
-			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (itemQuestionBlock[i] == NULL)
-				{
-					itemQuestionBlock[i] = (CLeaf*)obj;
-					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-					break;
-				}
-			}
-		}
-		break;
-	case OBJECT_TYPE_SWITCH:
-		obj = new CSwitch(brick);
-		obj->SetState(state);
-		if (state == 0)
-		{
-			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-			{
-				if (itemQuestionBlock[i] == NULL)
-				{
-					itemQuestionBlock[i] = (CSwitch*)obj;
-					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
-					break;
-				}
-			}
-		}
-		break;
-	default:
-		break;
-	}
-
-	obj->SetPosition(x, y);
-
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	grid = new CGrid(file_path.c_str());
 }
 
 void CPlayScene::_ParseSection_ENEMIES(string line)
@@ -580,12 +428,30 @@ void CPlayScene::_ParseSection_ENEMIES(string line)
 	default:
 		break;
 	}
-	obj->SetPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	if (obj != NULL)
+	{
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		obj->SetOrigin(x, y, obj->GetState());
+		obj->SetisOriginObj(true);
+		objects.push_back(obj);
+	}
+}
+
+bool CPlayScene::IsInUseArea(float Ox, float Oy)
+{
+	float CamX, CamY;
+
+	CamX = cam->GetCx();
+
+	CamY = cam->GetCy();
+
+	if (((CamX - 10 < Ox) && (Ox < CamX + 260)) && ((CamY < Oy) && (Oy < CamY + 260)))
+		return true;
+	return false;
 }
 
 void CPlayScene::Load()
@@ -607,6 +473,7 @@ void CPlayScene::Load()
 
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
+		if (line == "[GRID]") { section = SCENE_SECTION_GRID; continue; }
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -637,9 +504,9 @@ void CPlayScene::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-		case SCENE_SECTION_ITEM_QUESTION_OBJECTS: _ParseSection_ITEM_OBJECTS(line); break;
 		case SCENE_SECTION_ENEMIES: _ParseSection_ENEMIES(line); break;
 		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
+		case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
 		}
 	}
 
@@ -709,16 +576,35 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	objects[0]->Update(dt, &coObjects);
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		float Ox, Oy;
+		objects[i]->GetPosition(Ox, Oy);
+		if (!IsInUseArea(Ox, Oy) && !objects[i]->GetisOriginObj())
+		{
+			objects[i]->SetActive(false);
+			objects.erase(objects.begin() + i);
+		}
+	}
+
+	objects[0]->Update(dt, &objects);
 
 	cam->UpdateCam();
 
+	grid->GetObjects(objects, cam->GetCx(), cam->GetCy());
+
+
+
+	//objects.clear();
+	
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 
-		objects[i]->Update(dt, &coObjects);
+		objects[i]->Update(dt, &objects);
 
 	}
+
+	DebugOut(L"object size: %d\n", objects.size());
 
 	for (size_t i = 1; i < effectObjects.size(); i++)
 	{
@@ -738,15 +624,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		cards[i]->SetState(game->GetItem(i));
 	}
-
-
 }
 
 void CPlayScene::Render()
 {
 	if (map) map->Render();
-
-
 
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
@@ -802,19 +684,6 @@ void CPlayScene::Unload()
 
 	for (int i = 0; i < CARD_AMOUNT; i++)
 		cards[i] = NULL;
-	for (int i = 0; i < ITEM_BRICK_AMOUNT; i++)
-		itemBrick[i] = NULL;
-	for (int i = 0; i < BRICK_AMOUNT; i++)
-		brick[i] = NULL;
-	for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
-		itemQuestionBlock[i] = NULL;
-	for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
-		questionBlock[i] = NULL;
-	for (int i = 0; i < 2; i++)
-	{
-		firePiranhaPlant[i] = NULL;
-		firePlantBullet[i] = NULL;
-	}
 	for (int i = 0; i < 16; i++)
 		pieceBrick[i] = NULL;
 	for (int i = 0; i < 3; i++)

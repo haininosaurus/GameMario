@@ -4,6 +4,7 @@
 void CRoad::Render()
 {
 	animation_set->at(0)->Render(x, y);
+	//RenderBoundingBox();
 }
 
 void CRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -22,6 +23,8 @@ void CRoad::GetBoundingBox(float& l, float& t, float& r, float& b)
 		r = x + ROAD_BBOX_WIDTH;
 		b = y + ROAD_BBOX_HEIGHT;
 	}
+
+
 
 }
 

@@ -27,7 +27,7 @@ public:
 	CCamera(CMario* p, int idS) {
 		player = p; 
 		cam_x = 0.0f;
-		cam_y = 0.0f;
+		cam_y = 267.0f;
 		cx = 0.0f;
 		cy = 0.0f;
 		idScene = idS;

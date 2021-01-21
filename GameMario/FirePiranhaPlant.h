@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Collision.h"
+#include "PlayScence.h"
 
 #define FIREPIRANHAPLANT_SPEECH_Y			0.035f
 
@@ -61,7 +62,7 @@ class CFirePiranhaPlant : public CollisionObject
 public:
 	void CreateFirePlantBullet(CGameObject* fireplantbullet);
 	void ShootFirePlantBullet();
-	CFirePiranhaPlant(CGameObject* mario);
+	CFirePiranhaPlant();
 	virtual void SetState(int state);
 	virtual int GetState();
 };

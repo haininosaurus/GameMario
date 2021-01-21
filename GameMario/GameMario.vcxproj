@@ -31,6 +31,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cards.cpp" />
     <ClCompile Include="CardText.cpp" />
+    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CloudBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="CoinPlay.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GoalCard.cpp" />
     <ClCompile Include="Goombas.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Leaf.cpp" />
@@ -91,6 +93,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cards.h" />
     <ClInclude Include="CardText.h" />
+    <ClInclude Include="Cell.h" />
     <ClInclude Include="CloudBrick.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="CoinPlay.h" />
@@ -105,6 +108,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GoalCard.h" />
     <ClInclude Include="Goombas.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />

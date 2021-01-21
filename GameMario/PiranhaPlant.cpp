@@ -3,12 +3,12 @@
 #include <algorithm>
 #include "Mario.h"
 
-CPiranhaPlant::CPiranhaPlant(CGameObject* mario)
+CPiranhaPlant::CPiranhaPlant()
 {
 	check_y_limit = false;
 	found_player = false;
 	SetState(PIRANHAPLANT_STATE_HIDE);
-	player = mario;
+	player = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 }
 
 void CPiranhaPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)

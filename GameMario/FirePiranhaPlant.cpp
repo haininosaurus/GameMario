@@ -13,12 +13,12 @@
 #include "Utils.h"
 #include "FirePlantBullet.h"
 
-CFirePiranhaPlant::CFirePiranhaPlant(CGameObject* mario)
+CFirePiranhaPlant::CFirePiranhaPlant()
 {
 	check_y_limit = false;
 	found_player = false;
 	SetState(FIREPIRANHAPLANT_STATE_HIDE);
-	player = mario;
+	player = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 }
 
 void CFirePiranhaPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -179,7 +179,7 @@ void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CFirePiranhaPlant::Render()
 {
-	
+
 	if (hide_state) return;
 	else if (state == FIREPIRANHAPLANT_STATE_DESTROY) return;
 	else {

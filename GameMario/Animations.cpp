@@ -44,7 +44,7 @@ void CAnimation::Render(float x, float y, int alpha)
 	{
 		frames[currentFrame]->GetSprite()->Draw(x - 9, y, alpha);
 	}
-	else if (sprite->GetIdSprite() == 10041 || sprite->GetIdSprite() == 10052 || sprite->GetIdSprite() == 10053 || sprite->GetIdSprite() == 10054 || sprite->GetIdSprite() == 10055 || sprite->GetIdSprite() == 10056 || sprite->GetIdSprite() == 10057 || sprite->GetIdSprite() == 10058 || sprite->GetIdSprite() == 10059
+	else if (sprite->GetIdSprite() == 10041 || sprite->GetIdSprite() == 10051 || sprite->GetIdSprite() == 10052 || sprite->GetIdSprite() == 10053 || sprite->GetIdSprite() == 10054 || sprite->GetIdSprite() == 10055 || sprite->GetIdSprite() == 10056 || sprite->GetIdSprite() == 10057 || sprite->GetIdSprite() == 10058 || sprite->GetIdSprite() == 10059
 		|| sprite->GetIdSprite() == 10042 || sprite->GetIdSprite() == 10043 || sprite->GetIdSprite() == 10044 || sprite->GetIdSprite() == 10045 || sprite->GetIdSprite() == 10046 || sprite->GetIdSprite() == 10047 || sprite->GetIdSprite() == 10048 || sprite->GetIdSprite() == 10049)
 	{
 		frames[currentFrame]->GetSprite()->Draw(x - 5, y, alpha);
