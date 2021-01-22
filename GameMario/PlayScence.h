@@ -102,7 +102,7 @@ class CGrid
 
 	vector<CGameObject*> objects;
 
-	//CFirePiranhaPlant* firePiranhaPlant[2];
+	CFirePiranhaPlant* firePiranhaPlant[2];
 	CFirePlantBullet* firePlantBullet[2];
 	CBoomerang* boomerang[2];
 	CQuestionBlock* questionBlock[QUESTIONBLOCK_AMOUNT];

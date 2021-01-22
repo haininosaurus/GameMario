@@ -38,6 +38,8 @@ public:
 
 	int state;
 
+	int alive = true;
+
 	int Actived = false;
 
 	DWORD dt;
@@ -74,6 +76,10 @@ public:
 	{
 		return	Actived;
 	}
+
+	bool GetAlive() { return alive; }
+	void SetAlive(int s) { alive = s; }
+
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }

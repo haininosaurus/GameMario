@@ -301,11 +301,9 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	DebugOut(L"prey: %f, y: %f\n", preY, y);
 
 	if (form == KOOPA_RED_FORM)
 	{
-		DebugOut(L"state: %d\n", state);
 		if (state == KOOPA_STATE_WALKING_RIGHT || state == KOOPA_STATE_WALKING_LEFT)
 		{
 
@@ -328,7 +326,19 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
+	if (form == PARAKOOPA_GREEN_FORM)
+	{
+		if (mario->x - x >= 18)
+		{
+			vx = KOOPA_WALKING_SPEED;
+		}
+		else if (mario->x - x <= -1)
+		{
+			vx = -KOOPA_WALKING_SPEED;
+		}
+	}
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

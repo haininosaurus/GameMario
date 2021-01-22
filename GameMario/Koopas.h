@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Collision.h"
+#include "PlayScence.h"
 
 #define KOOPA_GRAVITY					0.001f
 #define PARAKOOPA_JUMP_SPEED			0.3f

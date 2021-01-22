@@ -266,7 +266,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						streak_Kill++;
 						if(!intro_state) DisplayScores(streak_Kill, goomba->x, goomba->y, GetTickCount64());
 						if (goomba->GetForm() != PARAGOOMBA_BROWN_FORM)
+						{
 							goomba->SetState(GOOMBA_STATE_DIE);
+							goomba->SetAlive(false);
+						}
 						else goomba->SetForm(GOOMBA_BROWN_FORM);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 						jump_state = 1;

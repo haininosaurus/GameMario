@@ -449,7 +449,7 @@ bool CPlayScene::IsInUseArea(float Ox, float Oy)
 
 	CamY = cam->GetCy();
 
-	if (((CamX - 10 < Ox) && (Ox < CamX + 260)) && ((CamY < Oy) && (Oy < CamY + 260)))
+	if (((CamX - 10 < Ox) && (Ox < CamX + 320)) && ((CamY < Oy) && (Oy < CamY + 320)))
 		return true;
 	return false;
 }
@@ -580,7 +580,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		float Ox, Oy;
 		objects[i]->GetPosition(Ox, Oy);
-		if (!IsInUseArea(Ox, Oy) && !objects[i]->GetisOriginObj())
+		if (!IsInUseArea(Ox, Oy) && !objects[i]->GetisOriginObj() && objects[i]->GetAlive())
 		{
 			objects[i]->SetActive(false);
 			objects.erase(objects.begin() + i);
@@ -604,7 +604,6 @@ void CPlayScene::Update(DWORD dt)
 
 	}
 
-	DebugOut(L"object size: %d\n", objects.size());
 
 	for (size_t i = 1; i < effectObjects.size(); i++)
 	{
@@ -612,9 +611,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	for (size_t i = 0; i < effectObjects.size(); i++)
 	{
-
 		effectObjects[i]->Update(dt, &effObjects);
-
 	}
 
 
@@ -632,8 +629,13 @@ void CPlayScene::Render()
 
 	for (int i = objects.size() - 1; i >= 0; i--)
 	{
+		if (dynamic_cast<CColorBrickTop*>(objects[i]))
+			objects[i]->Render();
+	}
+	for (int i = objects.size() - 1; i >= 0; i--)
+	{
 		if (!dynamic_cast<CPipe*>(objects[i]) && !dynamic_cast<CBoomerang*>(objects[i]) && !dynamic_cast<CNumber*>(objects[i])
-			&& !dynamic_cast<CScoreBoard*>(objects[i]) && !dynamic_cast<CCard*>(objects[i]) && !dynamic_cast<CArrow*>(objects[i]))
+			&& !dynamic_cast<CScoreBoard*>(objects[i]) && !dynamic_cast<CCard*>(objects[i]) && !dynamic_cast<CArrow*>(objects[i]) && !dynamic_cast<CColorBrickTop*>(objects[i]))
 			objects[i]->Render();
 	}
 	for (int i = objects.size() - 1; i >= 0; i--)

@@ -258,6 +258,20 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else time_start = GetTickCount64();
 	}
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+	if (form == PARAGOOMBA_BROWN_FORM)
+	{
+		if (mario->x - x >= 18)
+		{
+			vx = GOOMBA_WALKING_SPEED;
+		}
+		else if (mario->x - x <= -1)
+		{
+			vx = -GOOMBA_WALKING_SPEED;
+		}
+	}
+
 }
 
 void CGoomba::Render()

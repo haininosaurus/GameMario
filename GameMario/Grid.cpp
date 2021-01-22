@@ -186,28 +186,29 @@ void CGrid::_ParseSection_OBJECTS(string line)
 		break;
 
 	case OBJECT_TYPE_FIREPIRANHAPLANT:
-		//obj = new CFirePiranhaPlant();
-		//for (int i = 0; i < 2; i++)
-		//{
-		//	if (firePiranhaPlant[i] == NULL) {
-		//		firePiranhaPlant[i] = (CFirePiranhaPlant*)obj;
-		//		break;
-		//	}
-		//}
+		DebugOut(L"da tai fire plant\n");
+		obj = new CFirePiranhaPlant(((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer());
+		for (int i = 0; i < 2; i++)
+		{
+			if (firePiranhaPlant[i] == NULL) {
+				firePiranhaPlant[i] = (CFirePiranhaPlant*)obj;
+				break;
+			}
+		}
 		break;
 	case OBJECT_TYPE_PIRANHA_PLANT:
-		obj = new CPiranhaPlant();
+		obj = new CPiranhaPlant(((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer());
 		break;
 	case OBJECT_TYPE_FIRE_PLANT_BULLET:
 		obj = new CFirePlantBullet();
-		//for (int i = 0; i < 2; i++)
-		//{
-		//	if (firePlantBullet[i] == NULL) {
-		//		firePlantBullet[i] = (CFirePlantBullet*)obj;
-		//		firePiranhaPlant[i]->CreateFirePlantBullet(firePlantBullet[i]);
-		//		break;
-		//	}
-		//}
+		for (int i = 0; i < 2; i++)
+		{
+			if (firePlantBullet[i] == NULL) {
+				firePlantBullet[i] = (CFirePlantBullet*)obj;
+				firePiranhaPlant[i]->CreateFirePlantBullet(firePlantBullet[i]);
+				break;
+			}
+		}
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", type);
