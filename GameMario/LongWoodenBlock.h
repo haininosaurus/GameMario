@@ -17,6 +17,7 @@ class CLongWoodenBlock : public CGameObject
 	DWORD start_fall;
 public:
 	CLongWoodenBlock() {
+		alive = false;
 		SetState(LONG_WOODEN_BLOCK_STATE_NORMAL);
 	}
 	void SetFallTime(DWORD t) { start_fall = t; }

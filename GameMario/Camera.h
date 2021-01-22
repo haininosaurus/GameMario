@@ -36,6 +36,6 @@ public:
 	float GetCx() { return cam_x; }
 	float GetCy() { return cam_y; }
 	void SetCamPosition(float x, float y) { cam_x = x; cam_y = y; }
-	void UpdateCam();
+	void UpdateCam(DWORD dt);
 };
 

@@ -634,6 +634,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (wood->GetState() == LONG_WOODEN_BLOCK_STATE_NORMAL)
 					{
+						wood->SetAlive(false);
 						wood->SetFall(1);
 						wood->SetFallTime(GetTickCount64());
 					}

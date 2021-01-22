@@ -589,7 +589,7 @@ void CPlayScene::Update(DWORD dt)
 
 	objects[0]->Update(dt, &objects);
 
-	cam->UpdateCam();
+	cam->UpdateCam(dt);
 
 	grid->GetObjects(objects, cam->GetCx(), cam->GetCy());
 
@@ -702,6 +702,21 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	switch (KeyCode)
 	{
+	case DIK_1:
+		mario->SetPosition(50, 384);
+		break;
+	case DIK_2:
+		mario->SetPosition(500, 336);
+		break;
+	case DIK_3:
+		mario->SetPosition(1152, 384);
+		break;
+	case DIK_4:
+		mario->SetPosition(2064, 320);
+		break;
+	case DIK_5:
+		mario->SetPosition(2257, 80);
+		break;
 	case DIK_R:
 		CGame::GetInstance()->SetCamPos(0, 0);
 		CGame::GetInstance()->SwitchScene(3);

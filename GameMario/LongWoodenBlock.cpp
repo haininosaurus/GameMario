@@ -22,7 +22,7 @@ void CLongWoodenBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (is_fall)
 	{
-		if (GetTickCount64() - start_fall > 300)
+		if (GetTickCount64() - start_fall > 200)
 		{
 			SetState(LONG_WOODEN_BLOCK_STATE_FALL);
 		}
