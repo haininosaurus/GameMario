@@ -75,13 +75,13 @@ void CGrid::_ParseSection_OBJECTS(string line)
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
-	if (tokens.size() < 4) return; // skip invalid lines
+	if (tokens.size() < 6) return; // skip invalid lines
 
 	int x = atoi(tokens[1].c_str());
 	int y = atoi(tokens[2].c_str());
 
-	int cellX = (x / cellWidth);
-	int cellY = (y / cellHeight);
+	int cellX = atoi(tokens[4].c_str());
+	int cellY = atoi(tokens[5].c_str());
 
 	int type = atoi(tokens[0].c_str());
 
@@ -104,14 +104,14 @@ void CGrid::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_ROAD:
 	{
-		int type = atoi(tokens[4].c_str());
+		int type = atoi(tokens[6].c_str());
 		obj = new CRoad(type);
 	}
 	break;
 	case OBJECT_TYPE_BACKGROUND: obj = new CBackgroundObject(); break;
 	case OBJECT_TYPE_QUESTION_BLOCK:
 	{
-		int form = atoi(tokens[4].c_str());
+		int form = atoi(tokens[6].c_str());
 		obj = new CQuestionBlock(form);
 		for (int i = 0; i < QUESTIONBLOCK_AMOUNT; i++)
 		{
@@ -126,7 +126,7 @@ void CGrid::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CARD:
 		obj = new CCard();
 		{
-			int type = atoi(tokens[4].c_str());
+			int type = atoi(tokens[6].c_str());
 			if (type == 0)
 			{
 				for (int i = 0; i < CARD_AMOUNT; i++)
@@ -148,7 +148,7 @@ void CGrid::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_COLOR_BRICK: obj = new CColorBrick(); break;
 	case OBJECT_TYPE_PIPE:
 	{
-		int type = atoi(tokens[4].c_str());
+		int type = atoi(tokens[6].c_str());
 		obj = new CPipe(type);
 	}
 	break;
@@ -232,21 +232,20 @@ void CGrid::_ParseSection_OBJECTS(string line)
 void CGrid::_ParseSection_ITEM_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
+	DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 
-
-	if (tokens.size() < 6) return; // skip invalid lines - an object set must have at least id, x, y
+	if (tokens.size() < 8) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
 	float x = (float)atof(tokens[1].c_str());
 	float y = (float)atof(tokens[2].c_str());
 
-
-	int cellX = (x / cellWidth);
-	int cellY = (y / cellHeight);
-
 	int ani_set_id = atoi(tokens[3].c_str());
-	int state = atoi(tokens[4].c_str());
-	int item_object = atoi(tokens[5].c_str());
+	int state = atoi(tokens[6].c_str());
+	int item_object = atoi(tokens[7].c_str());
+
+	int cellX = atoi(tokens[4].c_str());
+	int cellY = atoi(tokens[5].c_str());
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
@@ -372,19 +371,21 @@ void CGrid::_ParseSection_ITEM_OBJECTS(string line)
 void CGrid::_ParseSection_ENEMIES(string line)
 {
 	vector<string> tokens = split(line);
+	DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 
-
-	if (tokens.size() < 5) return; // skip invalid lines - an object set must have at least id, x, y
+	if (tokens.size() < 7) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
 	float x = (float)atof(tokens[1].c_str());
 	float y = (float)atof(tokens[2].c_str());
 
-	int cellX = (x / cellWidth);
-	int cellY = (y / cellHeight);
+
 
 	int ani_set_id = atoi(tokens[3].c_str());
-	int state = atoi(tokens[4].c_str());
+	int state = atoi(tokens[6].c_str());
+
+	int cellX = atoi(tokens[4].c_str());
+	int cellY = atoi(tokens[5].c_str());
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
@@ -393,6 +394,7 @@ void CGrid::_ParseSection_ENEMIES(string line)
 	{
 	case OBJECT_TYPE_GOOMBA:
 	{
+		DebugOut(L"da tao goomba\n");
 		obj = new CGoomba(state);
 		break;
 	}
