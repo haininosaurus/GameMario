@@ -39,6 +39,7 @@
     <ClCompile Include="Curtain.cpp" />
     <ClCompile Include="Energy.cpp" />
     <ClCompile Include="FireBullet.cpp" />
+    <ClCompile Include="FireFlower.cpp" />
     <ClCompile Include="FirePiranhaPlant.cpp" />
     <ClCompile Include="FirePlantBullet.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Curtain.h" />
     <ClInclude Include="Energy.h" />
     <ClInclude Include="FireBullet.h" />
+    <ClInclude Include="FireFlower.h" />
     <ClInclude Include="FirePiranhaPlant.h" />
     <ClInclude Include="FirePlantBullet.h" />
     <ClInclude Include="Game.h" />

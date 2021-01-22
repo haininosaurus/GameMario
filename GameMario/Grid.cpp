@@ -40,6 +40,7 @@
 #define OBJECT_TYPE_LONG_WOODEN_BLOCK		37
 #define OBJECT_TYPE_BOOMERANG_BRO			38
 #define OBJECT_TYPE_BOOMERANG				39
+#define OBJECT_TYPE_FIRE_FLOWER				40
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -306,6 +307,22 @@ void CGrid::_ParseSection_ITEM_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_LEAF:
 		obj = new CLeaf();
+		obj->SetState(state);
+		if (state == 0)
+		{
+			for (int i = 0; i < ITEM_QUESTIONBLOCK_AMOUNT; i++)
+			{
+				if (itemQuestionBlock[i] == NULL)
+				{
+					itemQuestionBlock[i] = (CLeaf*)obj;
+					questionBlock[i]->AddItemQuestionBlock(itemQuestionBlock[i]);
+					break;
+				}
+			}
+		}
+		break;
+	case OBJECT_TYPE_FIRE_FLOWER:
+		obj = new CFireFlower();
 		obj->SetState(state);
 		if (state == 0)
 		{

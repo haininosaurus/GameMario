@@ -74,11 +74,12 @@
 #include "LongWoodenBlock.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
+#include "FireFlower.h"
 
 #include "Cell.h"
 
-#define QUESTIONBLOCK_AMOUNT		10
-#define ITEM_QUESTIONBLOCK_AMOUNT	10
+#define QUESTIONBLOCK_AMOUNT		11
+#define ITEM_QUESTIONBLOCK_AMOUNT	11
 #define BRICK_AMOUNT				20
 #define ITEM_BRICK_AMOUNT			20
 

@@ -4,6 +4,7 @@
 #include "Leaf.h"
 #include "Utils.h"
 #include "Switch.h"
+#include "FireFlower.h"
 
 void CQuestionBlock::Render()
 {
@@ -53,6 +54,13 @@ void CQuestionBlock::SetStateItem(int state)
 				break;
 			}
 			else if (item[i]->GetState() == SWITCH_STATE_HIDEN && dynamic_cast<CSwitch*>(item[i]))
+			{
+				item[i]->SetPosition(x, y - 16);
+				item[i]->SetState(state);
+				item[i] = NULL;
+				break;
+			}
+			else if (item[i]->GetState() == FIRE_FLOWER_STATE_HIDEN && dynamic_cast<CFireFlower*>(item[i]))
 			{
 				item[i]->SetPosition(x, y - 16);
 				item[i]->SetState(state);

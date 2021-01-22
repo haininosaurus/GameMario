@@ -73,6 +73,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LONG_WOODEN_BLOCK		37
 #define OBJECT_TYPE_BOOMERANG_BRO			38
 #define OBJECT_TYPE_BOOMERANG				39
+#define OBJECT_TYPE_FIRE_FLOWER				40
 
 #define OBJECT_TYPE_PORTAL					50
 

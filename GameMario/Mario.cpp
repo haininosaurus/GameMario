@@ -23,6 +23,7 @@
 #include "BlueBrick.h"
 #include "Boomerang.h"
 #include "BoomerangBro.h"
+#include "FireFlower.h"
 
 CMario::CMario(float x, float y)
 {
@@ -190,7 +191,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	// Simple fall down
-	if(!pipe_down_state && !pipe_up_state)
+	if(!pipe_down_state && !pipe_up_state && !pipe_down_fast_state)
 		vy += MARIO_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -634,6 +635,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+			if (dynamic_cast<CFireFlower*>(e->obj))
+			{
+				CFireFlower* flower = dynamic_cast<CFireFlower*>(e->obj);
+				flower->SetState(FIRE_FLOWER_STATE_HIDEN);
+				SetLevel(MARIO_LEVEL_FIRE);
+				SetPosition(x, y - 2);
+				smoke_start = (DWORD)GetTickCount64();
+				//SetLevel(GetLevel() + 1);
+
+			}
 
 			if (dynamic_cast<CLongWoodenBlock*>(e->obj))
 			{
@@ -681,16 +692,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (pipe_down_fast_state)
 	{
-		DebugOut(L"da xuong cong\n");
 		if (GetTickCount64() - pipe_down_fast_start < 400)
 		{
-			SetState(MARIO_STATE_PIPE_DOWN);
+			SetState(MARIO_STATE_PIPE_DOWN_FAST);
 			y += 1;
 		}
-		else if (GetTickCount64() - pipe_down_fast_start < 410) SetPosition(2198, 384);
+		else if (GetTickCount64() - pipe_down_fast_start < 410)
+		{
+			SetState(MARIO_STATE_PIPE_DOWN_FAST);
+			SetPosition(2198, 369);
+		}
 		else if (GetTickCount64() - pipe_down_fast_start < 800)
 		{
-			SetState(MARIO_STATE_PIPE_UP);
+			SetState(MARIO_STATE_PIPE_DOWN_FAST);
 			y -= 2;
 		}
 		else
@@ -1027,7 +1041,7 @@ void CMario::Render()
 				if (nx > 0)
 				{
 					if (smoke_state) ani = MARIO_ANI_SMOKE;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_BIG_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_BIG_WORLDMAP;
 					else if (headup_state == 1) ani = MARIO_ANI_HEADUP;
 					else if (deflect_state == 1) ani = MARIO_ANI_DEFLECT;
 					else if (kick_state == 1) ani = MARIO_ANI_BIG_KICK_RIGHT;
@@ -1133,7 +1147,7 @@ void CMario::Render()
 				if (nx > 0)
 				{
 					if (growup_state) ani = MARIO_ANI_GROWUP_RIGHT;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_SMALL_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_SMALL_WORLDMAP;
 					else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_IDLE_RIGHT;
 					else if (jump_state == 1 && maxpower_state == 1) ani = MARIO_ANI_SMALL_MAX_POWER_RIGHT;
@@ -1154,7 +1168,7 @@ void CMario::Render()
 			else if (vx > 0)
 			{
 				if (growup_state) ani = MARIO_ANI_GROWUP_RIGHT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_SMALL_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_SMALL_WORLDMAP;
 				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_RIGHT;
@@ -1167,7 +1181,7 @@ void CMario::Render()
 			else
 			{
 				if (growup_state) ani = MARIO_ANI_GROWUP_LEFT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_SMALL_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_SMALL_WORLDMAP;
 				else if (turn_state == 1) ani = MARIO_ANI_SMALL_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_SMALL_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_SMALL_KICK_LEFT;
@@ -1187,7 +1201,7 @@ void CMario::Render()
 				{
 					if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_RIGHT;
 					else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_RIGHT;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_TAIL_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_TAIL_WORLDMAP;
 					else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
 					else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_RIGHT;
@@ -1200,7 +1214,7 @@ void CMario::Render()
 				{
 					if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_LEFT;
 					else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_LEFT;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_TAIL_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_TAIL_WORLDMAP;
 					else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
 					else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_TAIL_SIT_LEFT;
@@ -1214,7 +1228,7 @@ void CMario::Render()
 			{
 				if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_RIGHT;
 				else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_RIGHT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_TAIL_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_TAIL_WORLDMAP;
 				else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
 				else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_RIGHT;
@@ -1228,7 +1242,7 @@ void CMario::Render()
 			{
 				if (fly_high_state == 1) ani = MARIO_ANI_FLY_HIGH_LEFT;
 				else if (fly_low_state == 1) ani = MARIO_ANI_FLY_LOW_LEFT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_TAIL_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_TAIL_WORLDMAP;
 				else if (fight_state == 1) ani = MARIO_ANI_TAIL_FIGHT;
 				else if (turn_state == 1) ani = MARIO_ANI_TAIL_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_TAIL_TAKE_TORTOISESHELL_LEFT;
@@ -1246,7 +1260,7 @@ void CMario::Render()
 				if (nx > 0)
 				{
 					if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_RIGHT;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_FIRE_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_FIRE_WORLDMAP;
 					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_RIGHT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_RIGHT;
@@ -1257,7 +1271,7 @@ void CMario::Render()
 				else
 				{
 					if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_LEFT;
-					else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_FIRE_WORLDMAP;
+					else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_FIRE_WORLDMAP;
 					else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
 					else if (sit_state == 1) ani = MARIO_ANI_FIRE_SIT_LEFT;
 					else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_IDLE_LEFT;
@@ -1269,7 +1283,7 @@ void CMario::Render()
 			else if (vx > 0)
 			{
 				if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_RIGHT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_FIRE_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_FIRE_WORLDMAP;
 				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_LEFT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_RIGHT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_RIGHT;
@@ -1282,7 +1296,7 @@ void CMario::Render()
 			else
 			{
 				if (shoot_fire_bullet_state) ani = MARIO_ANI_SHOOT_FIRE_BULLET_LEFT;
-				else if (pipe_down_state || pipe_up_state) ani = MARIO_ANI_FIRE_WORLDMAP;
+				else if (pipe_down_state || pipe_up_state || pipe_down_fast_state) ani = MARIO_ANI_FIRE_WORLDMAP;
 				else if (turn_state == 1) ani = MARIO_ANI_FIRE_TURN_RIGHT;
 				else if (take_tortoistate_state == 1) ani = MARIO_ANI_FIRE_TAKE_TORTOISESHELL_LEFT;
 				else if (kick_state == 1) ani = MARIO_ANI_FIRE_KICK_LEFT;
@@ -1567,7 +1581,7 @@ void CMario::SetState(int state)
 		pipe_up_state = 1;
 		break;
 	case MARIO_STATE_PIPE_DOWN_FAST:
-		pipe_down_fast_start = 1;
+		pipe_down_fast_state = 1;
 		break;
 	}
 
