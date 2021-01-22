@@ -356,7 +356,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							streak_Kill++;
 							DisplayScores(streak_Kill, koopa->x, koopa->y, GetTickCount64());
-							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM)
+							if (koopa->GetForm() == PARAKOOPA_GREEN_FORM || koopa->GetForm() == PARAKOOPA_RED_FORM)
 								koopa->SetForm(KOOPA_GREEN_FORM);
 							else if (koopa->GetIsDown()) koopa->SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 							else koopa->SetState(KOOPA_STATE_TORTOISESHELL_UP);
@@ -504,6 +504,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						SetState(MARIO_STATE_PIPE_DOWN);
 						pipe_down_start = GetTickCount64();
+					}
+				}
+				if (e->ny != 0 && sit_state && pipe->GetType() == PIPE_STATE_UP_DOWN_FAST)
+				{
+					//is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
+					if (!pipe_down_fast_state)
+					{
+						SetState(MARIO_STATE_PIPE_DOWN_FAST);
+						pipe_down_fast_start = GetTickCount64();
 					}
 				}
 				if (e->ny != 0 && pipe->GetType() == PIPE_STATE_DOWN_UP)
@@ -667,6 +676,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			pipe_down_state = 0;
 			SetState(MARIO_STATE_IDLE);
 			SetPosition(2260, 500);
+		}
+	}
+
+	if (pipe_down_fast_state)
+	{
+		DebugOut(L"da xuong cong\n");
+		if (GetTickCount64() - pipe_down_fast_start < 400)
+		{
+			SetState(MARIO_STATE_PIPE_DOWN);
+			y += 1;
+		}
+		else if (GetTickCount64() - pipe_down_fast_start < 410) SetPosition(2198, 384);
+		else if (GetTickCount64() - pipe_down_fast_start < 800)
+		{
+			SetState(MARIO_STATE_PIPE_UP);
+			y -= 2;
+		}
+		else
+		{
+			pipe_down_fast_state = 0;
+			SetState(MARIO_STATE_IDLE);
 		}
 	}
 
@@ -1535,6 +1565,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_PIPE_UP:
 		pipe_up_state = 1;
+		break;
+	case MARIO_STATE_PIPE_DOWN_FAST:
+		pipe_down_fast_start = 1;
 		break;
 	}
 

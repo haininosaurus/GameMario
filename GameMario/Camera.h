@@ -18,6 +18,7 @@
 
 class CCamera
 {
+	bool auto_cam = 1;
 	float cam_x, cam_y;
 	float cx, cy;
 	int idScene;
@@ -33,6 +34,8 @@ public:
 		idScene = idS;
 	}
 
+	void SetAuto(int m) { auto_cam = m; }
+	bool GetAuto() { return auto_cam; }
 	float GetCx() { return cam_x; }
 	float GetCy() { return cam_y; }
 	void SetCamPosition(float x, float y) { cam_x = x; cam_y = y; }

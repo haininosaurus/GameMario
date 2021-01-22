@@ -67,6 +67,8 @@ public:
 		x = origin_x;
 		y = origin_y;
 	}
+
+	float GetOriginLocationY() { return origin_y; }
 	void SetActive(bool value)
 	{
 		Actived = value;

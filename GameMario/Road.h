@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define ROAD_BBOX_WIDTH  16
-#define ROAD_BBOX_HEIGHT 16
+#define ROAD_BBOX_HEIGHT 14
 
 #define INTRO_ROAD_BBOX_WIDTH	32
 #define INTRO_ROAD_BBOX_HEIGHT	37

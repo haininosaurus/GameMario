@@ -53,6 +53,7 @@
 #define MARIO_STATE_MAX_POWER							1010
 #define MARIO_STATE_PIPE_DOWN							1020
 #define MARIO_STATE_PIPE_UP								1030
+#define MARIO_STATE_PIPE_DOWN_FAST						1040
 
 
 #define MARIO_ANI_SMALL_IDLE_RIGHT						0
@@ -268,6 +269,7 @@ class CMario : public CollisionObject
 	int maxpower_state;
 	int pipe_down_state;
 	int pipe_up_state;
+	int pipe_down_fast_state;
 
 	int smoke_state;
 	int growup_state;
@@ -275,6 +277,7 @@ class CMario : public CollisionObject
 
 	DWORD pipe_down_start;
 	DWORD pipe_up_start;
+	DWORD pipe_down_fast_start;
 	DWORD smoke_start;
 	DWORD growup_start;
 	int shoot_fire_bullet_state;

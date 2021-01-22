@@ -5,6 +5,7 @@
 #define PIPE_STATE_UP_DOWN		1
 #define PIPE_STATE_DOWN_UP		2
 #define PIPE_STATE_UP			3
+#define PIPE_STATE_UP_DOWN_FAST	4
 
 #define PIPE_BBOX_WIDTH 15
 #define PIPE_BBOX_HEIGHT 15

@@ -11,6 +11,7 @@
 #define KOOPA_GREEN_FORM				1
 #define PARAKOOPA_GREEN_FORM			2	
 #define KOOPA_BLACK_FORM				3
+#define PARAKOOPA_RED_FORM				4
 
 #define KOOPA_WALKING_SPEED				0.03f;
 #define KOOPA_SPINNING_SPEED			0.25f;
@@ -21,7 +22,7 @@
 #define KOOPA_BBOX_HIDE_WIDTH			15
 #define KOOPA_BBOX_HIDE_HEIGHT			16
 
-#define KOOPA_BBOX_SPIN_WIDTH			15
+#define KOOPA_BBOX_SPIN_WIDTH			13
 #define KOOPA_BBOX_SPIN_HEIGHT			16
 
 
@@ -72,7 +73,9 @@ class CKoopa : public CollisionObject
 	int hiden_state;
 	int tortoiseshell_state;
 	int intro_state;
+	int isFlyDown = false;
 	DWORD create_time;
+	DWORD fly_time;
 	int deflect_state = 0;
 	DWORD defect_start;
 	DWORD tortoiseshell_start;
@@ -98,6 +101,10 @@ public:
 	void SetForm(int f) { form = f; }
 	int GetIsDown() { return isDown; }
 	void SetDefectStart(DWORD t) { defect_start = t; }
+	void SetTimeFly() { 
+		if(fly_time == 0)
+			fly_time = GetTickCount64();
+	}
 	void SetDefectState(int d) { deflect_state = d; }
 	int GetForm() { return form; }
 

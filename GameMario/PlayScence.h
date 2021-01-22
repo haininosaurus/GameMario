@@ -183,6 +183,7 @@ public:
 	virtual void Unload();
 
 	CMario* GetPlayer() { return player; }
+	CCamera* GetCamera() { return cam; }
 	virtual bool IsInUseArea(float x, float y);
 
 	friend class CPlayScenceKeyHandler;

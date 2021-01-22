@@ -396,7 +396,8 @@ void CPlayScene::_ParseSection_GRID(string line)
 
 	wstring file_path = ToWSTR(tokens[0]);
 
-	grid = new CGrid(file_path.c_str());
+	if (grid == NULL)
+		grid = new CGrid(file_path.c_str());
 }
 
 void CPlayScene::_ParseSection_ENEMIES(string line)
@@ -699,6 +700,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
+	CCamera* camera = ((CPlayScene*)scence)->GetCamera();
+
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	switch (KeyCode)
 	{
@@ -716,6 +719,14 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_5:
 		mario->SetPosition(2257, 80);
+		break;
+	case DIK_6:
+		mario->SetPosition(1936, 310);
+		break;
+	case DIK_C:
+		if (camera->GetAuto() == true)
+			camera->SetAuto(false);
+		else camera->SetAuto(true);
 		break;
 	case DIK_R:
 		CGame::GetInstance()->SetCamPos(0, 0);

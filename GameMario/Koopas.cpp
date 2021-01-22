@@ -12,6 +12,7 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Leaf.h"
+#include "WoodBlock.h"
 
 CKoopa::CKoopa(int form)
 {
@@ -70,9 +71,9 @@ void CKoopa::Render()
 			ani = KOOPA_ANI_GREEN_TAKEN_UP;
 		else  ani = KOOPA_ANI_GREEN_WALKING_RIGHT;
 	}
-	else if (form == PARAKOOPA_GREEN_FORM)
+	else if (form == PARAKOOPA_GREEN_FORM || form == PARAKOOPA_RED_FORM)
 	{
-		if (vx < 0) ani = PARAKOOPA_ANI_GREEN_JUMPING_LEFT;
+		if (nx < 0) ani = PARAKOOPA_ANI_GREEN_JUMPING_LEFT;
 		else ani = PARAKOOPA_ANI_GREEN_JUMPING_RIGHT;
 	}
 
@@ -201,11 +202,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				preY = y;
 			}
 
-			if (form != PARAKOOPA_GREEN_FORM)
+			if (form != PARAKOOPA_GREEN_FORM && form != PARAKOOPA_RED_FORM)
 			{
 				if (state == KOOPA_STATE_WALKING_LEFT || state == KOOPA_STATE_WALKING_RIGHT)
 				{
-					if (dynamic_cast<CTransObject*>(e->obj))
+					if (dynamic_cast<CPipe*>(e->obj))
 					{
 						if (e->nx > 0) {
 
@@ -240,7 +241,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (state == KOOPA_STATE_SPIN_LEFT)
 				{
-					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj))
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj) || dynamic_cast<CWoodBlock*>(e->obj))
 					{
 						if (e->nx > 0) {
 							if (dynamic_cast<CBrick*>(e->obj))
@@ -270,7 +271,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (state == KOOPA_STATE_SPIN_RIGHT)
 				{
-					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj))
+					if (dynamic_cast<CPipe*>(e->obj) || dynamic_cast<CQuestionBlock*>(e->obj) || dynamic_cast<CHeadRoad*>(e->obj) || dynamic_cast<CBrick*>(e->obj) || dynamic_cast<CWoodBlock*>(e->obj))
 					{
 						if (e->nx < 0) {
 							if (dynamic_cast<CBrick*>(e->obj))
@@ -292,7 +293,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
-			else
+			else if (form == PARAKOOPA_GREEN_FORM)
 			{
 				if (e->ny < 0)
 					vy = -PARAKOOPA_JUMP_SPEED;
@@ -339,6 +340,50 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = -KOOPA_WALKING_SPEED;
 		}
 	}
+	if (form == PARAKOOPA_RED_FORM)
+	{
+		if (mario->x - x >= 18)
+		{
+			nx = 1;
+		}
+		else if (mario->x - x <= -1)
+		{
+			nx = -1;
+		}
+	}
+
+	if (form == PARAKOOPA_RED_FORM)
+	{
+		vx = 0;
+		SetTimeFly();
+		if (isFlyDown)
+		{
+			if (GetTickCount64() - fly_time >= 2000)
+			{
+				isFlyDown = false;
+				fly_time = 0;
+			}
+			else
+			{
+				//vy += 0.00001f *dt;
+				vy = 0.06f;
+			}
+		}
+		else
+		{
+			if (GetTickCount64() - fly_time >= 2000)
+			{
+				isFlyDown = true;
+				fly_time = 0;
+			}
+			else
+			{
+				//vy -= 0.00001f *dt;
+				vy = -0.06f;
+			}
+		}
+	}
+
 
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
