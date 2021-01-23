@@ -13,7 +13,7 @@ public:
 	CScore();
 	CScore(vector<CNumber*> num) {
 		score = 0;
-		for (int i = 0; i < num.size(); i++)
+		for (unsigned int i = 0; i < num.size(); i++)
 		{
 			numbers.push_back(num[i]);
 		}

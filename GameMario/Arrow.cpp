@@ -50,7 +50,7 @@ void CArrows::SetPositionArrows(float x, float y)
 
 void CArrows::SetWhiteArrows()
 {
-	for (int i = 0; i < arrows.size(); i++)
+	for (unsigned int i = 0; i < arrows.size(); i++)
 	{
 		if (arrows[i]->GetIsBlack())
 		{

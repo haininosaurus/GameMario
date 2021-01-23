@@ -30,7 +30,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else
 			{
-				effect_right_time_start = GetTickCount64();
+				effect_right_time_start = (DWORD)GetTickCount64();
 			}
 		}
 
@@ -44,7 +44,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - effect_right_time_start >= EFFECT_LIMIT_TIME && effect_right_time_start != 0)
 		{
 			effect_right_time_start = 0;
-			effect_left_time_start = GetTickCount64();
+			effect_left_time_start = (DWORD)GetTickCount64();
 		}
 
 		if (GetTickCount64() - effect_left_time_start < EFFECT_LIMIT_TIME && effect_left_time_start != 0)
@@ -56,7 +56,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - effect_left_time_start >= EFFECT_LIMIT_TIME && effect_left_time_start != 0)
 		{
 			effect_left_time_start = 0;
-			effect_right_time_start = GetTickCount64();
+			effect_right_time_start = (DWORD)GetTickCount64();
 		}
 		
 		y += dy;
@@ -97,7 +97,7 @@ void CLeaf::SetState(int state)
 		{
 			DebugOut(L"effect state \n");
 			effect_state = 1;
-			effect_time_start = GetTickCount64();
+			effect_time_start = (DWORD)GetTickCount64();
 		}
 		break;
 	case LEAF_STATE_HIDEN:

@@ -16,7 +16,7 @@ public:
 		time = TIME_LIMIT;
 		time_start = (DWORD)GetTickCount64();
 
-		for (int i = 0; i < num.size(); i++)
+		for (unsigned int i = 0; i < num.size(); i++)
 			numbers.push_back(num[i]);
 	}
 	void PushNumbers(CNumber* num);

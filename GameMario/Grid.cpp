@@ -471,7 +471,8 @@ void CGrid::GetObjects(vector<LPGAMEOBJECT>& listObject, int CamX, int CamY)
 	//listObject.clear();
 
 	int left, top, right, bottom;
-	int i, j, k;
+	int i, j;
+	//int k;
 
 	left = ((CamX) / cellWidth);
 	right = (CamX + IN_USE_WIDTH) / cellWidth;
@@ -480,7 +481,7 @@ void CGrid::GetObjects(vector<LPGAMEOBJECT>& listObject, int CamX, int CamY)
 	top = (CamY) / cellHeight;
 	bottom = (CamY + IN_USE_HEIGHT) / cellHeight;
 
-	LPGAMEOBJECT obj;
+	//LPGAMEOBJECT obj;
 
 	if (right < 0 || left > numCol || bottom < 0 && top > numRow)
 	{
@@ -510,7 +511,7 @@ void CGrid::GetObjects(vector<LPGAMEOBJECT>& listObject, int CamX, int CamY)
 		{
 			if (!cells[i][j].GetListObjects().empty())
 			{
-				for (k = 0; k < cells[i][j].GetListObjects().size(); k++)
+				for (unsigned int k = 0; k < cells[i][j].GetListObjects().size(); k++)
 				{
 					if (!cells[i][j].GetListObjects().at(k)->Actived)
 					{

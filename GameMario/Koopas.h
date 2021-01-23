@@ -61,6 +61,8 @@
 #define KOOPA_STATE_TAKEN					600
 #define KOOPA_STATE_REBORN					900
 
+#define KOOPA_STATE_DIE						1000
+
 #define KOOPA_STATE_HIDEN					700
 
 class CKoopa : public CollisionObject
@@ -68,6 +70,7 @@ class CKoopa : public CollisionObject
 	int form;
 	int isSpin = 0;
 	int isDown = 1;
+	int isDie = 0;
 
 	float preY;
 	int hiden_state;

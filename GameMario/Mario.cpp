@@ -277,7 +277,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 
-				else if (e->nx != 0)
+				else if (e->nx != 0 || e->ny > 0)
 				{
 					if (untouchable == 0)
 					{
@@ -574,6 +574,46 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							SetState(MARIO_STATE_DIE);
 					}
 				}
+
+				if (dynamic_cast<CFirePiranhaPlant*>(e->obj))
+				{
+					CFirePiranhaPlant* fireplant = dynamic_cast<CFirePiranhaPlant*>(e->obj);
+					if (fireplant->GetState() != FIREPIRANHAPLANT_STATE_HIDE && !fight_state)
+					{
+						if (level > MARIO_LEVEL_SMALL)
+						{
+							SetLevel(GetLevel() - 1);
+							fireplant->SetState(FIREBULLET_DESTROY_STATE);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
+					}
+					else if (fight_state)
+					{
+						fireplant->SetState(FIREPIRANHAPLANT_STATE_DESTROY);
+					}
+				}
+				if (dynamic_cast<CPiranhaPlant*>(e->obj))
+				{
+					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+					if (plant->GetState() != PIRANHAPLANT_STATE_HIDE && !fight_state)
+					{
+						if (level > MARIO_LEVEL_SMALL)
+						{
+							SetLevel(GetLevel() - 1);
+							plant->SetState(FIREBULLET_DESTROY_STATE);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
+					}
+					else if (fight_state)
+					{
+						plant->SetState(PIRANHAPLANT_STATE_DESTROY);
+					}
+				}
+
 				if (dynamic_cast<CBoomerang*>(e->obj))
 				{
 					CBoomerang* boomerang = dynamic_cast<CBoomerang*>(e->obj);

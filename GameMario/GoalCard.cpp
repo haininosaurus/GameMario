@@ -24,7 +24,7 @@ void CGoalCard::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		if(state < 4) state += 1;
 		if (state == 4) state = 1;
 
-		create_start = GetTickCount64();
+		create_start = (DWORD)GetTickCount64();
 	}
 }
 

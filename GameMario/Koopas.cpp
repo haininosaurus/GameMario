@@ -27,7 +27,8 @@ void CKoopa::Render()
 	int ani = KOOPA_ANI_RED_WALKING_RIGHT;
 	if (form == KOOPA_RED_FORM)
 	{
-		if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
+		if (isDie) ani = KOOPA_ANI_RED_TAKEN_UP;
+		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
 			ani = KOOPA_ANI_RED_WALKING_LEFT;
 		else if (state == KOOPA_STATE_REBORN && isDown)
 			ani = KOOPA_ANI_RED_REBORN_DOWN;
@@ -49,7 +50,8 @@ void CKoopa::Render()
 	}
 	else if(form == KOOPA_GREEN_FORM)
 	{
-		if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_TORTOISESHELL_DOWN)
+		if (isDie) ani = KOOPA_ANI_GREEN_TAKEN_UP;
+		else if (intro_state && state == KOOPA_STATE_TAKEN || intro_state && state == KOOPA_STATE_TORTOISESHELL_DOWN)
 			ani = KOOPA_ANI_GREEN_TAKEN_DOWN;
 		else if (vx < 0 && state != KOOPA_STATE_SPIN_LEFT && state != KOOPA_STATE_SPIN_RIGHT && !deflect_state)
 			ani = KOOPA_ANI_GREEN_WALKING_LEFT;
@@ -73,7 +75,8 @@ void CKoopa::Render()
 	}
 	else if (form == PARAKOOPA_GREEN_FORM || form == PARAKOOPA_RED_FORM)
 	{
-		if (nx < 0) ani = PARAKOOPA_ANI_GREEN_JUMPING_LEFT;
+		if (isDie) ani = KOOPA_ANI_GREEN_TAKEN_UP;
+		else if (nx < 0) ani = PARAKOOPA_ANI_GREEN_JUMPING_LEFT;
 		else ani = PARAKOOPA_ANI_GREEN_JUMPING_RIGHT;
 	}
 
@@ -215,6 +218,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else if (e->nx < 0) SetState(KOOPA_STATE_WALKING_LEFT);
 
 					}
+					if (dynamic_cast<CKoopa*>(e->obj))
+					{
+						CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+
+						if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT)
+						{
+							koopa->SetState(KOOPA_STATE_DIE);
+						}
+
+					}
+					
 
 					if (dynamic_cast<CFireBullet*>(e->obj))
 					{
@@ -295,6 +309,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (form == PARAKOOPA_GREEN_FORM)
 			{
+				if (dynamic_cast<CKoopa*>(e->obj))
+				{
+					CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+
+					if (koopa->GetState() == KOOPA_STATE_SPIN_LEFT || koopa->GetState() == KOOPA_STATE_SPIN_RIGHT)
+					{
+						SetState(KOOPA_STATE_DIE);
+					}
+
+				}
+
 				if (e->ny < 0)
 					vy = -PARAKOOPA_JUMP_SPEED;
 			}
@@ -390,8 +415,6 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-			
-
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -399,6 +422,7 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 
+	if (isDie) return;
 	if (state == KOOPA_STATE_TORTOISESHELL_DOWN || state == KOOPA_STATE_TORTOISESHELL_UP || state == KOOPA_STATE_REBORN)
 	{
 		right = x + KOOPA_BBOX_HIDE_WIDTH;
@@ -471,6 +495,10 @@ void CKoopa::SetState(int state)
 		break;
 	case KOOPA_STATE_HIDEN:
 		hiden_state = 1;
+		break;
+	case KOOPA_STATE_DIE:
+		alive = false;
+		isDie = 1;
 		break;
 	}
 }

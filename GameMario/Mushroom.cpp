@@ -7,8 +7,11 @@
 
 CMushroom::CMushroom()
 {
+	effect_state = 0;
+	hiden_state = 0;
+	effect_time_start = 0;
 	intro_state = 0;
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 }
 
 void CMushroom::Render()
@@ -146,7 +149,7 @@ void CMushroom::SetState(int state)
 		if (effect_state == 0)
 		{
 			effect_state = 1;
-			effect_time_start = GetTickCount64();
+			effect_time_start = (DWORD)GetTickCount64();
 		}
 		break;
 	case MUSHROOM_STATE_HIDEN:

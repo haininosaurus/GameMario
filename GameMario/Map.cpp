@@ -32,7 +32,7 @@ void Map::Render()
 	for (int r = 0; r < TotalRowsOfMap; r++)
 		for (int c = 0; c < TotalColumnsOfMap; c++)
 		{
-			Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, r * TILE_HEIGHT, 255); //(x,y,alpha)
+			Tiles[TileMap[r][c] - 1]->Draw(float(c * TILE_WIDTH), float(r * TILE_HEIGHT), 255); //(x,y,alpha)
 		}
 }
 

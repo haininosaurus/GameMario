@@ -33,9 +33,4 @@ void CFireFlower::GetBoundingBox(float& l, float& t, float& r, float& b)
 void CFireFlower::SetState(int state)
 {
 	CGameObject::SetState(state);
-	switch (state)
-	{
-	default:
-		break;
-	}
 }

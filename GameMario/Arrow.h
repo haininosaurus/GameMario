@@ -38,7 +38,7 @@ public:
 
 	CArrows(vector<CArrow*> arr) {
 		p_start = 0;
-		for (int i = 0; i < arr.size(); i++)
+		for (unsigned int i = 0; i < arr.size(); i++)
 		{
 			arrows.push_back(arr[i]);
 		}

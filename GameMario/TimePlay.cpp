@@ -4,7 +4,7 @@
 CTime::CTime()
 {
 	time = TIME_LIMIT;
-	time_start = GetTickCount64();
+	time_start = (DWORD)GetTickCount64();
 }
 
 void CTime::PushNumbers(CNumber* num)
@@ -39,6 +39,6 @@ void CTime::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount64() - time_start > 1000)
 	{
 		time -= 1;
-		time_start = GetTickCount64();
+		time_start = (DWORD)GetTickCount64();
 	}
 }

@@ -6,9 +6,12 @@
 #include "Road.h"
 
 #include "FirePiranhaPlant.h"
+#include "PiranhaPlant.h"
 
 CFireBullet::CFireBullet()
 {
+	destroy_start = 0;
+	shoot_start = 0;
 	state = FIREBULLET_TRANSPARENT_STATE;
 	vx = 0;
 }
@@ -114,9 +117,9 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if(e->ny != 0) vy = -FIRE_BULLET_DEFLECT_SPEED;
 
-				else if (e->nx != 0 && -y - FIREBULLET_BBOX_HEIGHT + e->obj->y < 0)
+				else if (e->nx != 0 && (-y - FIREBULLET_BBOX_HEIGHT + e->obj->y < 0))
 				{
-					destroy_start = GetTickCount64();
+					destroy_start = (DWORD)GetTickCount64();
 					SetState(FIREBULLET_DESTROY_STATE);
 				}
 
@@ -131,13 +134,23 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (nx != 0 || ny != 0)
 					{
 						CFirePiranhaPlant* plant = dynamic_cast<CFirePiranhaPlant*>(e->obj);
-						destroy_start = GetTickCount64();
+						destroy_start = (DWORD)GetTickCount64();
 						plant->SetState(FIREPIRANHAPLANT_STATE_DESTROY);
 						SetState(FIREBULLET_DESTROY_STATE);
 					}
 
 				}
+				if (dynamic_cast<CPiranhaPlant*>(e->obj))
+				{
+					if (nx != 0 || ny != 0)
+					{
+						CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+						destroy_start = (DWORD)GetTickCount64();
+						plant->SetState(PIRANHAPLANT_STATE_DESTROY);
+						SetState(FIREBULLET_DESTROY_STATE);
+					}
 
+				}
 			}
 
 		}
@@ -148,7 +161,7 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		shoot_start = GetTickCount64();
+		shoot_start = (DWORD)GetTickCount64();
 	}
 
 	if (state == FIREBULLET_DESTROY_STATE)
