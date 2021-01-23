@@ -19,6 +19,7 @@ public:
 
 	CSwitch(CBrick* b[19])
 	{
+		switch_time = 0;
 		for (int i = 0; i < 19; i++)
 		{
 			brick[i] = b[i];
@@ -27,12 +28,6 @@ public:
 	void SetState(int state)
 	{
 		CGameObject::SetState(state);
-
-		switch (state)
-		{
-		default:
-			break;
-		}
 	}
 	void SetSwitch() {
 		for (int i = 0; i < 18; i++)

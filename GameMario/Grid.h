@@ -35,7 +35,6 @@ class CGrid
 	void _ParseSection_ITEM_OBJECTS(string line);
 	void _ParseSection_ENEMIES(string line);
 public:
-	CGrid() {}
 	CGrid(LPCWSTR filePath);
 	void GetObjects(vector<LPGAMEOBJECT>& listObject, int playerX, int playerY);
 	void Load(LPCWSTR filePath);

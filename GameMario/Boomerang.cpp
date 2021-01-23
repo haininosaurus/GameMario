@@ -3,6 +3,8 @@
 
 CBoomerang::CBoomerang()
 {
+	shoot_start = 0;
+	isFly = 0;
 	state = BOOMERANG_STATE_HIDEN;
 	vx = 0;
 }
@@ -93,7 +95,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - shoot_start < 2000)
 		{
 			vx = -BOOMERANG_FLYING_SPEECH + 0.05f;
-			vy = BOOMERANG_GRAVITY + 0.01;
+			vy = BOOMERANG_GRAVITY + 0.01f;
 		}
 		else if (GetTickCount64() - shoot_start < 3000)
 		{
@@ -115,7 +117,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - shoot_start < 2000)
 		{
 			vx = BOOMERANG_FLYING_SPEECH - 0.05f;
-			vy = BOOMERANG_GRAVITY + 0.01;
+			vy = BOOMERANG_GRAVITY + 0.01f;
 		}
 		else if (GetTickCount64() - shoot_start < 3000)
 		{

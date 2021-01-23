@@ -12,6 +12,7 @@ class CScore : public CGameObject
 public:
 	CScore();
 	CScore(vector<CNumber*> num) {
+		score = 0;
 		for (int i = 0; i < num.size(); i++)
 		{
 			numbers.push_back(num[i]);

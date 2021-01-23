@@ -423,7 +423,7 @@ public:
 	DWORD GetFlyLowStart() { return fly_low_start; }
 	DWORD GetFlyHighStart() { return fly_high_start; }
 	DWORD GetShootFireBulletStart() { return shoot_fire_bullet_start; }
-	bool IsIdle(float x, float y, float ox, float oy, int ony)
+	bool IsIdle(float x, float y, float ox, float oy, float ony)
 	{
 		if (ony != 0 && x + GetCurrentWidthMario() - ox >= 0) return 1;
 		return 0;

@@ -103,7 +103,7 @@ public:
 	void SetDefectStart(DWORD t) { defect_start = t; }
 	void SetTimeFly() { 
 		if(fly_time == 0)
-			fly_time = GetTickCount64();
+			fly_time = (DWORD)GetTickCount64();
 	}
 	void SetDefectState(int d) { deflect_state = d; }
 	int GetForm() { return form; }

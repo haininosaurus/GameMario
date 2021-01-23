@@ -4,7 +4,10 @@
 
 CBoomerangBro::CBoomerangBro(CBoomerang* boom[2])
 {
-	time_start = GetTickCount64();
+	is_back = 0;
+	is_idle = 0;
+	is_right = 0;
+	time_start = (DWORD)GetTickCount64();
 	found_player = false;
 	for (int i = 0; i < 2; i++)
 	{
@@ -179,7 +182,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x - 8, y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_RIGHT);
-							boomerang[i]->SetShootStart(GetTickCount64());
+							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
 						}
 						else
@@ -187,7 +190,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x + 14, y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_LEFT);
-							boomerang[i]->SetShootStart(GetTickCount64());
+							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
 						}
 
@@ -228,7 +231,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x - 8, y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_RIGHT);
-							boomerang[i]->SetShootStart(GetTickCount64());
+							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
 						}
 						else
@@ -236,7 +239,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							is_shoot = 1;
 							boomerang[i]->SetPosition(x + 14, y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_LEFT);
-							boomerang[i]->SetShootStart(GetTickCount64());
+							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
 						}
 
@@ -248,15 +251,13 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - time_start < 4400)
 		{
 			is_shoot = 0;
-			time_start = GetTickCount64();
+			time_start = (DWORD)GetTickCount64();
 		}
-
-
-
 		else
 		{
 			vx = 0;
 			vy = 0;
+			time_start = (DWORD)GetTickCount64();
 		}
 	}
 

@@ -29,7 +29,7 @@ class CNumber : public CGameObject
 	int number;
 	
 public:
-
+	CNumber() { number = 0; }
 	void SetNumber(int num) { number = num; }
 	int GetNumber() { return number; }
 	void SetState(int state);

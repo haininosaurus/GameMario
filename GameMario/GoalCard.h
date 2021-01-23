@@ -22,7 +22,7 @@ class CGoalCard : public CGameObject
 	DWORD create_start;
 	CCardText* cardtext;
 public:
-	CGoalCard(CCardText* c) { create_start = GetTickCount64();  state = 1; cardtext = c; }
+	CGoalCard(CCardText* c) { create_start = (DWORD)GetTickCount64();  state = 1; cardtext = c; }
 	void SetState(int state);
 	void SetStateCardText(int s) { cardtext->SetState(s); }
 	void SetCardText(CCardText* c) { cardtext = c; }

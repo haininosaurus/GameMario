@@ -9,12 +9,10 @@ class CCoinPlay : public CGameObject
 	int coin;
 
 public:
-	CCoinPlay() {
-		CGame* game = CGame::GetInstance();
-		coin = game->GetCoinPlay(); 
-	}
 	CCoinPlay(vector<CNumber*> num) {
-		for (int i = 0; i < num.size(); i++)
+		CGame* game = CGame::GetInstance();
+		coin = game->GetCoinPlay();
+		for (int i = 0; i < (int)num.size(); i++)
 		{
 			numbers.push_back(num[i]);
 		}

@@ -17,7 +17,6 @@ class CArrow : public CGameObject
 	int isP;
 	int isBlack;
 public:
-	CArrow() { isBlack = 1; };
 	CArrow(int p) { isP = p; isBlack = 1; };
 	void SetWhiteState() { isBlack = 0; }
 	void SetBlackState() { isBlack = 1; }
@@ -36,9 +35,9 @@ class CArrows : public CGameObject
 	DWORD p_start;
 
 public:
-	CArrows() {};
 
 	CArrows(vector<CArrow*> arr) {
+		p_start = 0;
 		for (int i = 0; i < arr.size(); i++)
 		{
 			arrows.push_back(arr[i]);

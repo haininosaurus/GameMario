@@ -16,8 +16,8 @@ CGoomba::CGoomba(int form)
 	SetForm(form);
 	intro_state = 0;
 	hiden_state = 0;
-	time_start = GetTickCount64();
-	create_time = GetTickCount64();
+	time_start = (DWORD)GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 	SetState(GOOMBA_STATE_WALKING);
 }
 
@@ -256,7 +256,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				SetState(GOOMBA_STATE_JUMPING);
 			else SetState(GOOMBA_STATE_WALKING);
 		}
-		else time_start = GetTickCount64();
+		else time_start = (DWORD)GetTickCount64();
 	}
 	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 

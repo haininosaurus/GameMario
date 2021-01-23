@@ -968,7 +968,7 @@ void CLuigi::CreateIntroAnimationLuigi()
 	}
 	else if (GetTickCount64() - create_time > 16000 && GetTickCount64() - create_time < 16200)
 	{
-		if (!kick_state) SetKickStart(GetTickCount64());
+		if (!kick_state) SetKickStart((DWORD)GetTickCount64());
 		SetState(LUIGI_STATE_KICK);
 		vx = 0;
 	}

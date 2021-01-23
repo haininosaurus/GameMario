@@ -12,14 +12,19 @@ void CCamera::UpdateCam(DWORD dt) {
 		//Mario chạm biên map bên phải
 		if (cam_x < 1743 && auto_cam) {
 			
-			cam_x += 0.035 * dt;
+			cam_x += 0.0315 * dt;
 			CGame::GetInstance()->SetCamPos(round(cam_x), 267.0f);
 			SetCamPosition(round(cam_x), 267.0f);
 		}
-		else if (auto_cam)
+		else if (auto_cam && cam_x < 2000)
 		{
 			CGame::GetInstance()->SetCamPos(1743, 267.0f);
 			SetCamPosition(1743, 267.0f);
+		}
+		else if (auto_cam && cam_x > 2000)
+		{
+			CGame::GetInstance()->SetCamPos(2000, 267.0f);
+			SetCamPosition(2000, 267.0f);
 		}
 		else {
 			player->GetPosition(cx, cy);

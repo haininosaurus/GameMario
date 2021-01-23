@@ -11,7 +11,7 @@ public:
 	CLives() { lives = 3; }
 	CLives(vector<CNumber*> num) {
 		lives = 3;
-		for (int i = 0; i < num.size(); i++)
+		for (int i = 0; i < (int)num.size(); i++)
 		{
 			numbers.push_back(num[i]);
 		}

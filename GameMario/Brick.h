@@ -22,6 +22,13 @@ class CBrick : public CGameObject
 {
 	CGameObject* item[ITEM_AMOUNT];
 public:
+	CBrick()
+	{
+		for (int i = 0; i < ITEM_AMOUNT; i++)
+		{
+			item[i] = NULL;
+		}
+	}
 	void SetState(int state) { CGameObject::SetState(state); }
 	void SetItem() { item[0]->SetState(2); item[0]->SetPosition(x, y); }
 	CGameObject* GetItem() { return item[0]; }

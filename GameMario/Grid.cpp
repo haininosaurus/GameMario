@@ -46,6 +46,10 @@
 
 CGrid::CGrid(LPCWSTR filePath)
 {
+	numRow = 0, numCol = 0;
+	cellWidth = 0;
+	cellHeight = 0;
+	cells = NULL;
 	Load(filePath);
 }
 
@@ -221,9 +225,9 @@ void CGrid::_ParseSection_OBJECTS(string line)
 	if (obj != NULL)
 	{
 		int add = 0;
-		obj->SetPosition(x, y);
+		obj->SetPosition((float)x, (float)y);
 		obj->SetAnimationSet(ani_set);
-		obj->SetOrigin(x, y, obj->GetState());
+		obj->SetOrigin((float)x, (float)y, obj->GetState());
 		cells[cellX][cellY].Add(obj);
 	}
 }
@@ -423,7 +427,7 @@ void CGrid::Load(LPCWSTR filePath)
 	f.open(filePath);
 
 	// current resource section flag
-	int section;
+	int section = 0;
 
 	char str[MAX_GRID_LINE];
 	while (f.getline(str, MAX_GRID_LINE))

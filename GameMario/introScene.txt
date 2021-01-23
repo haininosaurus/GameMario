@@ -7,7 +7,7 @@
 4	Textures\1-1.png	156	252	240
 5	Textures\enemies-1.png	0	0	0
 6	Textures\tiles-3.png	176	224	248
-7	Textures\enemies.png	0	0	0
+7	Textures\enemies.png	0	136	255
 8	Textures\misc.png	166	185	255	
 9	Textures\misc-1.png	166	185	255
 10	Textures\black-background.png	1	1	1

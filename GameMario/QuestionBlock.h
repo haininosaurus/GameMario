@@ -47,6 +47,7 @@ public:
 		{
 			if (item[i] != NULL) return item[i];
 		}
+		return NULL;
 	}
 	void SetDeflectStart(DWORD deflectstart) { deflect_start = deflectstart; }
 	virtual void Render();

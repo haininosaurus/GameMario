@@ -19,7 +19,7 @@ CKoopa::CKoopa(int form)
 	SetForm(form);
 	SetState(KOOPA_STATE_WALKING_LEFT);
 	intro_state = 0;
-	create_time = GetTickCount64();
+	create_time = (DWORD)GetTickCount64();
 }
 void CKoopa::Render()
 {
@@ -236,7 +236,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						CMario* mario = dynamic_cast<CMario*>(e->obj);
 						mario->SetState(MARIO_STATE_DEFLECT);
 						vy = -KOOPA_JUMP_DEFLECT_SPEED;
-						vx = -0.05;
+						vx = -0.05f;
 					}
 				}
 				if (state == KOOPA_STATE_SPIN_LEFT)
@@ -333,10 +333,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (mario->x - x >= 18)
 		{
+			nx = 1;
 			vx = KOOPA_WALKING_SPEED;
 		}
 		else if (mario->x - x <= -1)
 		{
+			nx = -1;
 			vx = -KOOPA_WALKING_SPEED;
 		}
 	}
@@ -432,7 +434,7 @@ void CKoopa::SetState(int state)
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_TORTOISESHELL_DOWN:
-		if (!tortoiseshell_state) tortoiseshell_start = GetTickCount64();
+		if (!tortoiseshell_state) tortoiseshell_start = (DWORD)GetTickCount64();
 		tortoiseshell_state = 1;
 		vx = 0;
 		vy = 0;
@@ -441,7 +443,7 @@ void CKoopa::SetState(int state)
 		isDown = 1;
 		break;
 	case KOOPA_STATE_TORTOISESHELL_UP:
-		if (!tortoiseshell_state) tortoiseshell_start = GetTickCount64();
+		if (!tortoiseshell_state) tortoiseshell_start = (DWORD)GetTickCount64();
 		tortoiseshell_state = 1;
 		vx = 0;
 		vy = 0;

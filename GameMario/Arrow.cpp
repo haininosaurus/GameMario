@@ -90,7 +90,7 @@ void CArrows::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (arrows[6] != NULL)
 	{
-		if (GetPState()) SetPStart(GetTickCount64());
+		if (GetPState()) SetPStart((DWORD)GetTickCount64());
 		else if (!GetPState())
 		{
 			DebugOut(L"da vao ham chuan bi reset\n");

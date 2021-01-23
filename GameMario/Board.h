@@ -22,7 +22,15 @@ class CScoreBoard : public CGameObject
 	CCard* card[CARD_AMOUNT];
 
 public:
-	CScoreBoard() { cam = NULL; time = NULL; score = NULL; arrows = NULL; }
+	CScoreBoard() {
+		cam = NULL; time = NULL; score = NULL; arrows = NULL;
+		coin = NULL;
+		lives = NULL;
+		for (int i = 0; i < CARD_AMOUNT; i++)
+		{
+			card[i] = NULL;
+		}
+	}
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);

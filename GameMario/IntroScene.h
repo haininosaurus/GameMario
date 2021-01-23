@@ -25,10 +25,6 @@
 #include "Title.h"
 
 
-#define QUESTIONBLOCK_AMOUNT		8
-#define ITEM_QUESTIONBLOCK_AMOUNT	8
-#define BRICK_AMOUNT				20
-#define ITEM_BRICK_AMOUNT			20
 
 class CIntroScene : public CScene
 {

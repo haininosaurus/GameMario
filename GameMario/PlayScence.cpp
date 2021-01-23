@@ -14,6 +14,39 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	player = NULL;
+	cam = NULL;
+	grid = NULL;
+	map = NULL;
+	time = NULL;
+	score = NULL;
+	arrows = NULL;
+	coinPlay = NULL;
+	darkEnergy = NULL;
+	lives = NULL;
+	sb = NULL;
+	for (int i = 0; i < 2; i++)
+	{
+		boomerang[i] = NULL;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = NULL;
+	}
+	for (int i = 0; i < 16; i++)
+	{
+		pieceBrick[i] = NULL;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		scoreEffect[i] = NULL;
+	}
+
+
+
+	cardT = NULL;
+	cardText = NULL;
+
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
@@ -593,7 +626,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cam->UpdateCam(dt);
 
-	grid->GetObjects(objects, cam->GetCx(), cam->GetCy());
+	grid->GetObjects(objects, (int)cam->GetCx(), (int)cam->GetCy());
 
 
 
@@ -686,12 +719,20 @@ void CPlayScene::Unload()
 	cardT = NULL;
 	cardText = NULL;
 
+	grid->Unload();
+
+	grid = nullptr;
+
+	delete grid;
+
 	for (int i = 0; i < CARD_AMOUNT; i++)
 		cards[i] = NULL;
 	for (int i = 0; i < 16; i++)
 		pieceBrick[i] = NULL;
 	for (int i = 0; i < 3; i++)
 		scoreEffect[i] = NULL;
+	for (int i = 0; i < 2; i++)
+		boomerang[i] = NULL;
 	//DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -736,7 +777,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_X:
 
 		if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
-			mario->SetJumpStart(GetTickCount64());
+			mario->SetJumpStart((DWORD)GetTickCount64());
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
 		{
@@ -829,7 +870,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_Z:
 		if (mario->GetStateTakeTortoiseshell() == 1)
 		{
-			mario->SetKickStart(GetTickCount64());
+			mario->SetKickStart((DWORD)GetTickCount64());
 			mario->SetState(MARIO_STATE_KICK);
 		}
 		break;
@@ -895,7 +936,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	//if key left is down, disable key right and key down
 	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && !mario->GetIdle())
 	{
-		mario->SetWalkLeftTime(GetTickCount64());
+		mario->SetWalkLeftTime((DWORD)GetTickCount64());
 		if (GetTickCount64() - mario->GetWalkRightTime() > 200)
 		{
 			if (game->IsKeyDown(DIK_Z) || game->IsKeyDown(DIK_Z) && game->IsKeyDown(DIK_X))

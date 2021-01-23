@@ -23,9 +23,12 @@ class CCoin : public CGameObject
 
 public:
 	CCoin() {
+		effect_state = 0;
+		effect_time_start = 0;
+		scoreEffect = NULL;
 		int effect_state = 0;
 		DWORD effect_time_start = 0;
-		CScoreEffect* scoreEffect = 0;
+		CScoreEffect* scoreEffect = NULL;
 	}
 	void SetScoreEffect(CScoreEffect* s) { scoreEffect = s; }
 	void SetState(int state);

@@ -9,6 +9,10 @@ class CDarkEnergy : public CGameObject
 {
 	DWORD create_start;
 public:
+	CDarkEnergy()
+	{
+		create_start = 0;
+	}
 	void SetState(int state) {
 		CGameObject::SetState(state);
 	}

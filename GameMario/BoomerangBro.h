@@ -33,8 +33,6 @@ class CBoomerangBro : public CollisionObject
 public:
 	CBoomerangBro(CBoomerang* boomerang[2]);
 
-	void CreateBoomerang(CGameObject* fireBullet);
-
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

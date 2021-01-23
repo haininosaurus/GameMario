@@ -9,6 +9,7 @@ class CPieceBrick : public CGameObject
 	DWORD display_start;
 public:
 	//CPieceBrick(float x, float y, float v);
+	CPieceBrick() { display_start = 0; }
 	void SetDisplay(float x, float y, float vx, float vy, DWORD t)
 	{
 		SetPosition(x, y);
