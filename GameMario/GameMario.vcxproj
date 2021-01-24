@@ -73,6 +73,7 @@
     <ClCompile Include="ScoreEffect.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Switch.cpp" />
+    <ClCompile Include="Tail.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TimePlay.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="ScoreEffect.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Switch.h" />
+    <ClInclude Include="Tail.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TimePlay.h" />
     <ClInclude Include="Title.h" />

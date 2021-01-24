@@ -9,6 +9,7 @@
 #include "Energy.h"
 #include "PieceBrick.h"
 #include "LongWoodenBlock.h"
+#include "Tail.h"
 
 
 #define MARIO_WALKING_SPEED								0.1f 
@@ -222,9 +223,9 @@
 #define MARIO_DARK_SIT_BBOX_WIDTH	14
 #define MARIO_DARK_SIT_BBOX_HEIGHT	18
 
-#define MARIO_TAIL_BBOX_WIDTH 21
+#define MARIO_TAIL_BBOX_WIDTH 14
 #define MARIO_TAIL_BBOX_HEIGHT 28
-#define MARIO_TAIL_SIT_BBOX_WIDTH	22
+#define MARIO_TAIL_SIT_BBOX_WIDTH	14
 #define MARIO_TAIL_SIT_BBOX_HEIGHT	18
 
 #define MARIO_FIRE_BBOX_WIDTH 14
@@ -235,8 +236,8 @@
 #define MARIO_SMALL_BBOX_WIDTH  12
 #define MARIO_SMALL_BBOX_HEIGHT 15
 
-#define MARIO_UNTOUCHABLE_TIME 5000
-#define MARIO_SLIDE_WALKING_TIME 300
+#define MARIO_UNTOUCHABLE_TIME			1000
+#define MARIO_SLIDE_WALKING_TIME		300
 
 
 
@@ -249,6 +250,12 @@ class CMario : public CollisionObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
+	int floor_wood = 0;
+	DWORD floor_wood_start;
+	int is_fight = false;
+
+	bool is_collide_wooden = false;
+	bool is_dead = false;
 	bool is_high;
 	bool is_idle;
 	bool is_maxp = false;
@@ -294,6 +301,8 @@ class CMario : public CollisionObject
 	CGameObject* tortoiseshell;
 
 	CGameObject* fire_bullet[2];
+	CTail* tail;
+
 	CScoreEffect* score[3];
 	CArrows* arrows;
 	CCoinPlay* coinplay;
@@ -327,11 +336,14 @@ public:
 	virtual void Render();
 
 	void SetState(int state);
+	bool GetIsDead() { return is_dead; }
+	void SetIsDead(int d) { is_dead = d; }
 	void SetLevel(int l) { level = l; }
 	void SetArrows(CArrows* ar) { arrows = ar; }
 	void SetCoinPlay(CCoinPlay* cp) { coinplay = cp; }
 	void SetDarkEnergy(CDarkEnergy* e) { darkEnergy = e; }
 	void SetLives(CLives* l) { lives = l; }
+	int GetUntouchable() { return untouchable; }
 	void SetCards(CCard* c[3]) {
 		for (int i = 0; i < 3; i++)
 		{
@@ -355,37 +367,7 @@ public:
 			}
 		}
 	}
-	void CreatePieceBrick(float x, float y, DWORD t)
-	{
-		int count = 0;
-		for (int i = 0; i < 16; i++)
-		{
-			if (pieceBrick[i]->GetState() == PIECEBRICK_STATE_HIDEN && count < 4)
-			{
-				count++;
-				pieceBrick[i]->SetState(PIECEBRICK_STATE_DISPLAY);
-				
-				switch (count)
-				{
-				case 1:
-					pieceBrick[i]->SetDisplay(x, y, -0.08f, -0.08f, t);
-					break;
-				case 2:
-					pieceBrick[i]->SetDisplay(x + 8, y, 0.08f, -0.08f, t);
-					break;
-				case 3:
-					pieceBrick[i]->SetDisplay(x, y + 8, -0.08f, 0.08f, t);
-					break;
-				case 4:
-					pieceBrick[i]->SetDisplay(x + 8, y + 8, 0.08f, 0.08f, t);
-					break;
-				default:
-					break;
-				}
 
-			}
-		}
-	}
 	CCard* GetCard() { return card[0]; }
 	CArrows* GetArrows() { return arrows; }
 	CCoinPlay* GetCoinPlay() { return coinplay; }
@@ -393,7 +375,9 @@ public:
 	CDarkEnergy* GetDarkEnergy() { return darkEnergy; }
 	CPieceBrick* GetPieceBrick() { return pieceBrick[0]; }
 
+	int GetDirection() { return nx; }
 	int GetLevel() { return level; }
+	int GetFloorWood() { return floor_wood; }
 	int GetJumpState() { return jump_state; }
 	int GetStateTakeTortoiseshell() { return take_tortoistate_state; }
 	int GetKickState() { return kick_state; }
@@ -469,6 +453,7 @@ public:
 	void SetSmokeStart(DWORD t) { smoke_start = t; }
 
 	void CreateFireBullet(CGameObject* fireBullet);
+	void CreateTail(CTail* t);
 	void CreateScore(CScoreEffect* s);
 	void DisplayScores(int s, float x, float y, DWORD t);
 	void ShootFireBullet();

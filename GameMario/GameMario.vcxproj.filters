@@ -264,6 +264,9 @@
     <ClCompile Include="FireFlower.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tail.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IntroScene.h">
@@ -450,6 +453,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FireFlower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

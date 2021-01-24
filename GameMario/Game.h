@@ -50,6 +50,8 @@ class CGame
 	int screen_width;
 	int screen_height;
 
+	int destroy_brick;
+
 	unordered_map<int, LPSCENE> scenes;
 	int current_scene;
 

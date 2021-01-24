@@ -75,6 +75,8 @@
 #include "Boomerang.h"
 #include "BoomerangBro.h"
 #include "FireFlower.h"
+#include "Tail.h"
+#include "PieceBrick.h"
 
 #include "Cell.h"
 
@@ -148,6 +150,7 @@ protected:
 	CLives* lives;
 	CScoreBoard* sb;
 	CBoomerang* boomerang[2];
+	CTail* tail;
 
 	CCard* cards[3];
 	CCard* cardT;
@@ -186,6 +189,37 @@ public:
 	CMario* GetPlayer() { return player; }
 	CCamera* GetCamera() { return cam; }
 	virtual bool IsInUseArea(float x, float y);
+	void CreatePieceBrick(float x, float y, DWORD t)
+	{
+		int count = 0;
+		for (int i = 0; i < 16; i++)
+		{
+			if (pieceBrick[i]->GetState() == 0 && count < 4)
+			{
+				count++;
+				pieceBrick[i]->SetState(1);
+
+				switch (count)
+				{
+				case 1:
+					pieceBrick[i]->SetDisplay(x, y, -0.08f, -0.08f, t);
+					break;
+				case 2:
+					pieceBrick[i]->SetDisplay(x + 8, y, 0.08f, -0.08f, t);
+					break;
+				case 3:
+					pieceBrick[i]->SetDisplay(x, y + 8, -0.08f, 0.08f, t);
+					break;
+				case 4:
+					pieceBrick[i]->SetDisplay(x + 8, y + 8, 0.08f, 0.08f, t);
+					break;
+				default:
+					break;
+				}
+
+			}
+		}
+	}
 
 	friend class CPlayScenceKeyHandler;
 };

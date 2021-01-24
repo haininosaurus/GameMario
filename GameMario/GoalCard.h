@@ -19,11 +19,17 @@
 
 class CGoalCard : public CGameObject
 {
+	int isHiden;
+	DWORD hiden_start;
 	DWORD create_start;
 	CCardText* cardtext;
 public:
-	CGoalCard(CCardText* c) { create_start = (DWORD)GetTickCount64();  state = 1; cardtext = c; }
+	CGoalCard(CCardText* c) { create_start = (DWORD)GetTickCount64();  state = 1; cardtext = c; isHiden = 0; hiden_start = 0; }
 	void SetState(int state);
+	void SetSwitchScene(DWORD t){
+		isHiden = 1;
+		hiden_start = t;
+	}
 	void SetStateCardText(int s) { cardtext->SetState(s); }
 	void SetCardText(CCardText* c) { cardtext = c; }
 	CCardText* GetCardText() { return cardtext; }

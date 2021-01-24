@@ -356,16 +356,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (form == PARAKOOPA_GREEN_FORM)
 	{
-		if (mario->x - x >= 18)
-		{
-			nx = 1;
-			vx = KOOPA_WALKING_SPEED;
-		}
-		else if (mario->x - x <= -1)
-		{
-			nx = -1;
-			vx = -KOOPA_WALKING_SPEED;
-		}
+		nx = -1;
+		//if (mario->x - x >= 18)
+		//{
+		//	nx = 1;
+		//	//vx = KOOPA_WALKING_SPEED;
+		//}
+		//else if (mario->x - x <= -1)
+		//{
+		//	nx = -1;
+		//	//vx = -KOOPA_WALKING_SPEED;
+		//}
 	}
 	if (form == PARAKOOPA_RED_FORM)
 	{
@@ -409,6 +410,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vy = -0.06f;
 			}
 		}
+	}
+
+	if (y > 448 && !intro_state)
+	{
+		if(state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
+			SetState(KOOPA_STATE_DIE);
 	}
 
 

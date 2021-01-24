@@ -23,6 +23,7 @@ CGoomba::CGoomba(int form)
 
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == GOOMBA_STATE_DEFLECT) return;
 	left = x;
 	top = y;
 	if (form == PARAGOOMBA_BROWN_FORM)
@@ -74,7 +75,7 @@ void CGoomba::FilterCollision(
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
-		if (dynamic_cast<CMario*>(c->obj))
+		if (dynamic_cast<CMario*>(c->obj) && !dynamic_cast<CMario*>(c->obj)->GetUntouchable())
 		{
 			if (c->nx != 0)
 			{
@@ -137,6 +138,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	CGameObject::Update(dt, coObjects);
+
+	//CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
 	if (intro_state) CreateIntroAnimationGoomba();
 	if (hiden_state == 1) return;
@@ -217,19 +220,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						goomba->vx = GOOMBA_WALKING_SPEED;
 					}
 				}
-				//if (dynamic_cast<CMario*>(e->obj))
-				//{
-				//	CMario* mario = dynamic_cast<CMario*>(e->obj);
-				//	if (e->nx > 0)
-				//	{
-				//		vx = +GOOMBA_WALKING_SPEED;
-				//	}
-				//	if (e->nx < 0)
-				//	{
-				//		vx = -GOOMBA_WALKING_SPEED;
-				//	}
-				//	//mario->SetLevel(MARIO_LEVEL_BIG);
-				//}
 			}
 
 		}
@@ -237,7 +227,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 	
-
 	else if (GetState() == GOOMBA_STATE_DIE && !isDestroy)
 	{
 		timeDestroy += dt;
@@ -248,7 +237,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (form == PARAGOOMBA_BROWN_FORM)
+	if (form == PARAGOOMBA_BROWN_FORM && state != GOOMBA_STATE_DEFLECT)
 	{
 		if (GetTickCount64() - time_start < 2000)
 		{
@@ -272,6 +261,19 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	DebugOut(L"Mario nx: %d\n", nx);
+	if (mario->GetFightState() && state != GOOMBA_STATE_DEFLECT)
+	{
+		if (mario->x - x < 0 && abs(x - mario->x) <= 25)
+		{
+			SetState(GOOMBA_STATE_DEFLECT);
+		}
+		else
+		{
+			if (abs(mario->x - x) <= 25)
+				SetState(GOOMBA_STATE_DEFLECT);
+		}
+	}
 }
 
 void CGoomba::Render()
@@ -326,6 +328,7 @@ void CGoomba::SetState(int state)
 		vx = -GOOMBA_WALKING_SPEED;
 		break;
 	case GOOMBA_STATE_DEFLECT:
+		alive = 0;
 		hiden_state = 0;
 		vy = -GOONBA_JUMP_DEFLECT_SPEED;
 		break;

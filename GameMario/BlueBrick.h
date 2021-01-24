@@ -3,6 +3,7 @@
 
 #define BLUE_BRICK_BBOX_WIDTH 16
 #define BLUE_BRICK_BBOX_HEIGHT 16
+
 class CBlueBrick : public CGameObject
 {
 public:

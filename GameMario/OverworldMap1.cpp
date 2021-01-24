@@ -433,7 +433,7 @@ void COverworldMapScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	if (game->IsKeyDown(DIK_X))
 	{
-		if(mariooverworld->GetTypeCurrentNode() != 0)
+		if(mariooverworld->GetTypeCurrentNode() == 1 || mariooverworld->GetTypeCurrentNode() == 4)
 			CGame::GetInstance()->SwitchScene(mariooverworld->GetTypeCurrentNode());
 	}
 	else if (game->IsKeyDown(DIK_RIGHT) && !mariooverworld->GetIsMoving())

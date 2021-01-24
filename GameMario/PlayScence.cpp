@@ -107,6 +107,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BOOMERANG_BRO			38
 #define OBJECT_TYPE_BOOMERANG				39
 #define OBJECT_TYPE_FIRE_FLOWER				40
+#define OBJECT_TYPE_TAIL					41
 
 #define OBJECT_TYPE_PORTAL					50
 
@@ -349,6 +350,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CFireBullet();
 		player->CreateFireBullet(obj);
 		break;
+	case OBJECT_TYPE_TAIL:
+		obj = new CTail();
+		tail = (CTail*)obj;
+		player->CreateTail(tail);
+		break;
 	case OBJECT_TYPE_NUMBER:
 		{
 			int type = atoi(tokens[4].c_str());
@@ -554,6 +560,16 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+	if (id == 1 || id == 4)
+	{
+		if (player->GetIsDead())
+		{
+			player->SetIsDead(false);
+			CGame::GetInstance()->SetCamPos(0, 0);
+			CGame::GetInstance()->SwitchScene(3);
+
+		}
+	}
 
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -604,7 +620,12 @@ void CPlayScene::Update(DWORD dt)
 		player->SetLives(lives);
 	}
 
+	CGame* game = CGame::GetInstance();
 
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i]->SetState(game->GetItem(i));
+	}
 
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -650,12 +671,10 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 
-	CGame* game = CGame::GetInstance();
 
-	for (int i = 0; i < 3; i++)
-	{
-		cards[i]->SetState(game->GetItem(i));
-	}
+
+
+
 }
 
 void CPlayScene::Render()
@@ -775,8 +794,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->SwitchScene(3);
 		break;
 	case DIK_S:
-
-		if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
+		if (mario->GetFloorWood()) 	mario->SetJumpStart((DWORD)GetTickCount64());
+		else if (mario->GetJumpState() == 0 && mario->GetKickState() == 0 && mario->GetFlyLowState() == 0) {
 			mario->SetJumpStart((DWORD)GetTickCount64());
 		}
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL)
@@ -801,7 +820,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_A:
 		if (mario->GetLevel() == MARIO_LEVEL_TAIL && mario->GetFightState() == 0 &&
-			(DWORD)GetTickCount64() - mario->GetFightStart() > 500)
+			(DWORD)GetTickCount64() - mario->GetFightStart() > 400)
 		{
 			mario->SetFightStart((DWORD)GetTickCount64());
 			mario->SetState(MARIO_STATE_FIGHT);
@@ -961,7 +980,14 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (!mario->GetSlideState()) mario->SetState(MARIO_STATE_IDLE);
 
 	if (game->IsKeyDown(DIK_S)) {
-		if (GetTickCount64() - mario->GetJumpStart() < 380 && !mario->GetFallState())
+		if (GetTickCount64() - mario->GetJumpStart() < 380 && mario->GetFloorWood())
+		{
+			if (mario->GetSpeechJump() < 0.2)
+				mario->SetSpeechJump();
+			if (mario->GetJumpState() != -1 && mario->vy <= 0)
+				mario->SetState(MARIO_STATE_JUMP);
+		}
+		else if (GetTickCount64() - mario->GetJumpStart() < 380 && !mario->GetFallState())
 		{
 			if (mario->GetSpeechJump() < 0.2)
 				mario->SetSpeechJump();

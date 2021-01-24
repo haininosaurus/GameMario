@@ -1,4 +1,5 @@
 #include "GoalCard.h"
+#include "Game.h"
 #include "Utils.h"
 
 void CGoalCard::SetState(int state)
@@ -25,6 +26,16 @@ void CGoalCard::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		if (state == 4) state = 1;
 
 		create_start = (DWORD)GetTickCount64();
+	}
+	if (isHiden)
+	{
+		if (GetTickCount64() - hiden_start > 1000)
+		{
+			DebugOut(L"da vao switch scene\n");
+			CGame::GetInstance()->SetCamPos(0, 0);
+			CGame::GetInstance()->SwitchScene(3);
+			isHiden = 0;
+		}
 	}
 }
 

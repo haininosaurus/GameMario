@@ -13,19 +13,24 @@ void CCamera::UpdateCam(DWORD dt) {
 		if (cam_x < 1743 && auto_cam) {
 			
 			cam_x += 0.0315f * dt;
+
+			if (player->x <= cam_x)
+			{
+				player->x = cam_x;
+			}
 			CGame::GetInstance()->SetCamPos(round(cam_x), 267.0f);
 			SetCamPosition(round(cam_x), 267.0f);
 		}
-		else if (auto_cam && cam_x < 2000)
+		else if (cam_x < 2000 && player->x < 2000)
 		{
 			CGame::GetInstance()->SetCamPos(1743, 267.0f);
 			SetCamPosition(1743, 267.0f);
 		}
-		else if (auto_cam && cam_x > 2000)
-		{
-			CGame::GetInstance()->SetCamPos(2000, 267.0f);
-			SetCamPosition(2000, 267.0f);
-		}
+		//else if (player->x > 2000)
+		//{
+		//	CGame::GetInstance()->SetCamPos(2000, 267.0f);
+		//	SetCamPosition(2000, 267.0f);
+		//}
 		else {
 			player->GetPosition(cx, cy);
 			CGame* game = CGame::GetInstance();
