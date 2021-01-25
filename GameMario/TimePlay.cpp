@@ -15,8 +15,8 @@ void CTime::PushNumbers(CNumber* num)
 void CTime::SetPositionNumbers(float x, float y)
 {
 	numbers[0]->SetPosition(x, y);
-	numbers[1]->SetPosition(x + 8, y);
-	numbers[2]->SetPosition(x + 16, y);
+	numbers[1]->SetPosition(x + TIME_X_PLUS_8, y);
+	numbers[2]->SetPosition(x + TIME_X_PLUS_16, y);
 }
 
 void CTime::Render()
@@ -36,7 +36,7 @@ void CTime::Render()
 
 void CTime::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (GetTickCount64() - time_start > 1000)
+	if (GetTickCount64() - time_start > TIME_COUNT)
 	{
 		time -= 1;
 		time_start = (DWORD)GetTickCount64();

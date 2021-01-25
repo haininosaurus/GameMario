@@ -154,7 +154,7 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-		if (GetTickCount64() - shoot_start > 1000)
+		if (GetTickCount64() - shoot_start > FIREBULLET_SHOOT_TIME)
 		{
 			SetState(FIREBULLET_TRANSPARENT_STATE);
 		}
@@ -166,7 +166,7 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == FIREBULLET_DESTROY_STATE)
 	{
-		if (GetTickCount64() - destroy_start < 700)
+		if (GetTickCount64() - destroy_start < FIREBULLET_DESTROY_TIME)
 			SetState(FIREBULLET_DESTROY_STATE);
 		else SetState(FIREBULLET_TRANSPARENT_STATE);
 	}

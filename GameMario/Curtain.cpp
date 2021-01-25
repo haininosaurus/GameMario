@@ -18,6 +18,6 @@ void CCurtain::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 void CCurtain::CreateIntroAnimationCurtain()
 {
-	if (GetTickCount64() - create_time < 1500 && GetTickCount64() - create_time > 1000)
+	if (GetTickCount64() - create_time < CURTAIN_MOVE_END && GetTickCount64() - create_time > CURTAIN_MOVE_START)
 		vy = -SPEED_Y;
 }

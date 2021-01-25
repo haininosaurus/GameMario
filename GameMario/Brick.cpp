@@ -13,7 +13,7 @@ void CBrick::Render()
 
 void CBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (state == BRICK_STATE_HIDEN) return;
+	if (state == BRICK_STATE_HIDEN || state == BRICK_STATE_DESTROY) return;
 	else
 	{
 		l = x;
@@ -56,4 +56,33 @@ void CBrick::createEffectDestroy()
 	//	obj[i]->SetAnimationSet(ani_set);
 	//for (int i = 0; i < 4; i++)
 	//	CPlayScene::AddEffectObject(obj[i]);
+}
+
+void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CMario* mario = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	
+
+	//DebugOut(L"Mario nx: %d\n", nx);
+	if (mario->GetFightState() && state == BRICK_STATE_NORMAL)
+	{
+		if (abs(mario->y - y) > BRICK_RANGE_Y_MIN_DESTROY && abs(mario->y - y) < BRICK_RANGE_Y_MAX_DESTROY)
+		{
+			if (mario->x - x < 0 && abs(x - mario->x) <= GOOMBA_AUTO_DEAD_ZONE)
+			{
+				SetState(BRICK_STATE_HIDEN);
+				((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->CreatePieceBrick(x, y, (DWORD)GetTickCount64());
+			}
+			else
+			{
+				if (abs(mario->x - x) <= GOOMBA_AUTO_DEAD_ZONE)
+				{
+					SetState(BRICK_STATE_HIDEN);
+					((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->CreatePieceBrick(x, y, (DWORD)GetTickCount64());
+				}
+
+			}
+		}
+
+	}
 }

@@ -1,8 +1,10 @@
 #pragma once
 #include "GameObject.h"
 
-#define PIECEBRICK_STATE_HIDEN		0
-#define PIECEBRICK_STATE_DISPLAY	1
+#define PIECEBRICK_STATE_HIDEN			0
+#define PIECEBRICK_STATE_DISPLAY		1
+
+#define PIECEBRICK_STATE_HIDEN_TIME		400
 
 class CPieceBrick : public CGameObject
 {

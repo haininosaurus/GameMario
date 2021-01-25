@@ -12,7 +12,7 @@
 #include "Tail.h"
 
 
-#define MARIO_WALKING_SPEED								0.1f 
+#define MARIO_WALKING_SPEED								0.12f 
 #define MARIO_RUNNING_SPEED								0.15f
 #define MARIO_RUNNING_FAST_SPEED						0.2f
 
@@ -207,38 +207,111 @@
 
 #define MARIO_ANI_DIE									126
 
-#define	MARIO_LEVEL_SMALL	1
-#define	MARIO_LEVEL_BIG		2
-#define MARIO_LEVEL_TAIL	3
-#define MARIO_LEVEL_FIRE	 4
-#define MARIO_LEVEL_DARK	5
+#define	MARIO_LEVEL_SMALL								1
+#define	MARIO_LEVEL_BIG									2
+#define MARIO_LEVEL_TAIL								3
+#define MARIO_LEVEL_FIRE								4
+#define MARIO_LEVEL_DARK								5
 
-#define MARIO_BIG_BBOX_WIDTH  14
-#define MARIO_BIG_BBOX_HEIGHT 27
-#define MARIO_BIG_SIT_BBOX_WIDTH	14
-#define MARIO_BIG_SIT_BBOX_HEIGHT	18
+#define MARIO_BIG_BBOX_WIDTH							14
+#define MARIO_BIG_BBOX_HEIGHT							27
+#define MARIO_BIG_SIT_BBOX_WIDTH						14
+#define MARIO_BIG_SIT_BBOX_HEIGHT						18
 
-#define MARIO_DARK_BBOX_WIDTH  14
-#define MARIO_DARK_BBOX_HEIGHT 27
-#define MARIO_DARK_SIT_BBOX_WIDTH	14
-#define MARIO_DARK_SIT_BBOX_HEIGHT	18
+#define MARIO_DARK_BBOX_WIDTH							14
+#define MARIO_DARK_BBOX_HEIGHT							27
+#define MARIO_DARK_SIT_BBOX_WIDTH						14
+#define MARIO_DARK_SIT_BBOX_HEIGHT						18
 
-#define MARIO_TAIL_BBOX_WIDTH 14
-#define MARIO_TAIL_BBOX_HEIGHT 28
-#define MARIO_TAIL_SIT_BBOX_WIDTH	14
-#define MARIO_TAIL_SIT_BBOX_HEIGHT	18
+#define MARIO_TAIL_BBOX_WIDTH							14
+#define MARIO_TAIL_BBOX_HEIGHT							28
+#define MARIO_TAIL_SIT_BBOX_WIDTH						14
+#define MARIO_TAIL_SIT_BBOX_HEIGHT						18
 
-#define MARIO_FIRE_BBOX_WIDTH 14
-#define MARIO_FIRE_BBOX_HEIGHT 27
-#define MARIO_FIRE_SIT_BBOX_WIDTH	14
-#define MARIO_FIRE_SIT_BBOX_HEIGHT	18
+#define MARIO_FIRE_BBOX_WIDTH							14
+#define MARIO_FIRE_BBOX_HEIGHT							27
+#define MARIO_FIRE_SIT_BBOX_WIDTH						14
+#define MARIO_FIRE_SIT_BBOX_HEIGHT						18
 
-#define MARIO_SMALL_BBOX_WIDTH  12
-#define MARIO_SMALL_BBOX_HEIGHT 15
+#define MARIO_SMALL_BBOX_WIDTH							12
+#define MARIO_SMALL_BBOX_HEIGHT							15
 
-#define MARIO_UNTOUCHABLE_TIME			1000
-#define MARIO_SLIDE_WALKING_TIME		300
+#define MARIO_UNTOUCHABLE_TIME							1000
+#define MARIO_SLIDE_WALKING_TIME						300
+#define MARIO_SMOKE_STATE_TIME							300
+#define MARIO_GROWUP_STATE_TIME							1000
+#define MARIO_FLOOR_WOOD_STATE_TIME						200
 
+#define MARIO_PIPE_DOWN_TIME							400
+#define MARIO_PIPE_DOWN_1_TIME							410
+#define MARIO_PIPE_DOWN_2_TIME							800
+
+#define MARIO_PIPE_POS_X_1								2198
+#define MARIO_PIPE_POS_Y_1								369
+#define MARIO_PIPE_POS_X_4								2328
+#define MARIO_PIPE_POS_Y_4								384
+
+#define MARIO_TORTOISESHELL_POS_PLUS_2					2
+#define MARIO_TORTOISESHELL_POS_PLUS_10					10
+#define MARIO_TORTOISESHELL_POS_PLUS_15					15
+#define MARIO_DARK_ENERGY_POS_PLUS_X					28
+#define MARIO_DARK_ENERGY_POS_PLUS_Y					40
+
+#define MARIO_KICK_TORTOISESHELL_TIME					150
+#define MARIO_FIGHT_TIME								450
+#define MARIO_SHOOT_TIME								200
+#define MARIO_KICK_TIME									200
+#define MARIO_FLY_LOW_TIME								300
+#define MARIO_FLY_HIGH_TIME								1000
+#define MARIO_RUN_TIME									200
+
+#define MARIO_FLY_HIGH_RANGE_Y							28
+#define MARIO_RANGE_X_MAP								2800
+
+#define DEAD_ZONE_X										2128
+#define DEAD_ZONE_Y										448
+#define SAFE_ZONE_Y										496
+
+#define PIECEBRICK_AMOUNT								16
+#define CARD_AMOUNT										3
+#define FIREBULLET_AMOUNT								2
+#define SCOREEFFECT_AMOUNT								3
+
+#define MARIO_FLY_LOW_END								1300
+#define MARIO_POS_SWITCH_Y_PLUS							9
+
+#define MARIO_INTRO_INIT_TIME							2500
+#define MARIO_INTRO_WALKING_1_TIME						4150
+#define MARIO_INTRO_SIT_TIME							4900
+#define MARIO_INTRO_SIT_TIME_END						5000
+#define MARIO_INTRO_IDLE_TIME_START						8400
+#define MARIO_INTRO_IDLE_TIME_END						8800
+#define MARIO_INTRO_HEADUP_TIME							9800
+#define MARIO_INTRO_JUMP_TIME							10300
+#define MARIO_INTRO_FLY_LOW_TIME						11300
+#define MARIO_INTRO_IDLE_2_TIME							11600
+#define MARIO_INTRO_DEFLECT_TIME						11900
+#define MARIO_INTRO_TURN_LEFT_TIME						12100
+#define MARIO_INTRO_WALKING_RIGHT_TIME					12800
+#define MARIO_INTRO_KICK_TIME							13000
+#define MARIO_INTRO_IDLE_2_TIME_START					14000
+#define MARIO_INTRO_IDLE_2_TIME_END						15800
+#define MARIO_INTRO_WALKING_LEFT_TIME					16200
+#define MARIO_INTRO_JUMP_2_TIME_START					16450
+#define MARIO_INTRO_JUMP_2_TIME_END						16900
+#define MARIO_INTRO_JUMP_3_TIME_START					17000
+#define MARIO_INTRO_JUMP_3_TIME_END						17500
+#define MARIO_INTRO_RUN_RIGHT_TIME_START				17800
+#define MARIO_INTRO_RUN_RIGHT_TIME_END					18000
+#define MARIO_INTRO_KICK_TIME_START						18200
+#define MARIO_INTRO_KICK_TIME_END						18400
+#define MARIO_INTRO_STAND_TIME							20000
+#define MARIO_INTRO_TRANS_START							20500
+#define MARIO_INTRO_TRANS_END							20700
+#define MARIO_INTRO_GROWUP_START						20800
+#define MARIO_INTRO_GROWUP_END							21000
+#define MARIO_INTRO_WALKING_RIGHT_START					21300
+#define MARIO_INTRO_WALKING_RIGHT_END					23000
 
 
 class CMario : public CollisionObject
@@ -300,15 +373,15 @@ class CMario : public CollisionObject
 
 	CGameObject* tortoiseshell;
 
-	CGameObject* fire_bullet[2];
+	CGameObject* fire_bullet[FIREBULLET_AMOUNT];
 	CTail* tail;
 
-	CScoreEffect* score[3];
+	CScoreEffect* score[SCOREEFFECT_AMOUNT];
 	CArrows* arrows;
 	CCoinPlay* coinplay;
 	CLives* lives;
-	CCard* card[3];
-	CPieceBrick* pieceBrick[16];
+	CCard* card[CARD_AMOUNT];
+	CPieceBrick* pieceBrick[PIECEBRICK_AMOUNT];
 	CDarkEnergy* darkEnergy;
 
 	DWORD jump_start;
@@ -344,22 +417,22 @@ public:
 	void SetDarkEnergy(CDarkEnergy* e) { darkEnergy = e; }
 	void SetLives(CLives* l) { lives = l; }
 	int GetUntouchable() { return untouchable; }
-	void SetCards(CCard* c[3]) {
-		for (int i = 0; i < 3; i++)
+	void SetCards(CCard* c[CARD_AMOUNT]) {
+		for (int i = 0; i < CARD_AMOUNT; i++)
 		{
 			card[i] = c[i];
 		}
 	}
-	void SetPieceBrick(CPieceBrick* p[16])
+	void SetPieceBrick(CPieceBrick* p[PIECEBRICK_AMOUNT])
 	{
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < PIECEBRICK_AMOUNT; i++)
 		{
 			pieceBrick[i] = p[i];
 		}
 	}
 	void SetCardState(int s)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < CARD_AMOUNT; i++)
 		{
 			if (card[i]->GetState() == CARD_STATE_EMPTY) {
 				card[i]->SetState(s);

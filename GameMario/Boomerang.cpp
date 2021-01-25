@@ -88,16 +88,16 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (isFly && state == BOOMERANG_STATE_FLYING_LEFT)
 	{
-		if (GetTickCount64() - shoot_start < 1200) {
+		if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_1_TIME) {
 			vx = -BOOMERANG_FLYING_SPEECH;
 			vy = -BOOMERANG_GRAVITY;
 		}
-		else if (GetTickCount64() - shoot_start < 2000)
+		else if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_2_TIME)
 		{
-			vx = -BOOMERANG_FLYING_SPEECH + 0.05f;
-			vy = BOOMERANG_GRAVITY + 0.01f;
+			vx = -BOOMERANG_FLYING_SPEECH + BOOMERANG_SPEED_X_PLUS;
+			vy = BOOMERANG_GRAVITY + BOOMERANG_SPEED_Y_PLUS;
 		}
-		else if (GetTickCount64() - shoot_start < 3000)
+		else if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_3_TIME)
 		{
 			vx = BOOMERANG_FLYING_SPEECH;
 			vy = 0;
@@ -110,16 +110,16 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (isFly && state == BOOMERANG_STATE_FLYING_RIGHT)
 	{
-		if (GetTickCount64() - shoot_start < 1200) {
+		if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_1_TIME) {
 			vx = BOOMERANG_FLYING_SPEECH;
 			vy = -BOOMERANG_GRAVITY;
 		}
-		else if (GetTickCount64() - shoot_start < 2000)
+		else if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_2_TIME)
 		{
-			vx = BOOMERANG_FLYING_SPEECH - 0.05f;
-			vy = BOOMERANG_GRAVITY + 0.01f;
+			vx = BOOMERANG_FLYING_SPEECH - BOOMERANG_SPEED_X_PLUS;
+			vy = BOOMERANG_GRAVITY + BOOMERANG_SPEED_Y_PLUS;
 		}
-		else if (GetTickCount64() - shoot_start < 3000)
+		else if (GetTickCount64() - shoot_start < BOOMERANG_FLYING_STATE_3_TIME)
 		{
 			vx = -BOOMERANG_FLYING_SPEECH;
 			vy = 0;

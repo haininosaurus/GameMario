@@ -11,6 +11,7 @@
 #include "Utils.h"
 #include "QuestionBlock.h"
 #include "ColorBrick.h"
+
 CGoomba::CGoomba(int form)
 {
 	SetForm(form);
@@ -230,18 +231,18 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (GetState() == GOOMBA_STATE_DIE && !isDestroy)
 	{
 		timeDestroy += dt;
-		if (timeDestroy >= dt * 15)
+		if (timeDestroy >= dt * DELTA_DESTROY_TIME)
 		{
-			SetPosition(-50, 50);
+			SetPosition(GOOMBA_DEAD_X, GOOMBA_DEAD_Y);
 			isDestroy = true;
 		}
 	}
 
 	if (form == PARAGOOMBA_BROWN_FORM && state != GOOMBA_STATE_DEFLECT)
 	{
-		if (GetTickCount64() - time_start < 2000)
+		if (GetTickCount64() - time_start < PARAGOOMBA_ANI_TIME)
 		{
-			if (GetTickCount64() - time_start < 500)
+			if (GetTickCount64() - time_start < PARAGOOMBA_ANI_JUMP_TIME)
 				SetState(GOOMBA_STATE_JUMPING);
 			else SetState(GOOMBA_STATE_WALKING);
 		}
@@ -251,26 +252,26 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (form == PARAGOOMBA_BROWN_FORM)
 	{
-		if (mario->x - x >= 18)
+		if (mario->x - x >= GOOMBA_RANGE_RIGHT_ATTACK_PLAYER)
 		{
 			vx = GOOMBA_WALKING_SPEED;
 		}
-		else if (mario->x - x <= -1)
+		else if (mario->x - x <= GOOMBA_RANGE_LEFT_ATTACK_PLAYER)
 		{
 			vx = -GOOMBA_WALKING_SPEED;
 		}
 	}
 
-	DebugOut(L"Mario nx: %d\n", nx);
+	//DebugOut(L"Mario nx: %d\n", nx);
 	if (mario->GetFightState() && state != GOOMBA_STATE_DEFLECT)
 	{
-		if (mario->x - x < 0 && abs(x - mario->x) <= 25)
+		if (mario->x - x < 0 && abs(x - mario->x) <= GOOMBA_AUTO_DEAD_ZONE)
 		{
 			SetState(GOOMBA_STATE_DEFLECT);
 		}
 		else
 		{
-			if (abs(mario->x - x) <= 25)
+			if (abs(mario->x - x) <= GOOMBA_AUTO_DEAD_ZONE)
 				SetState(GOOMBA_STATE_DEFLECT);
 		}
 	}
@@ -355,16 +356,13 @@ void CGoomba::SetState(int state)
 
 void CGoomba::CreateIntroAnimationGoomba()
 {
-	if (GetTickCount64() - create_time < 6500) SetState(GOOMBA_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 6500 && GetTickCount64() - create_time < 10800) {
+	if (GetTickCount64() - create_time < GOOMBA_INTRO_STATE_HIDEN) SetState(GOOMBA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > GOOMBA_INTRO_STATE_HIDEN && GetTickCount64() - create_time < GOOMBA_INTRO_STATE_IDLE) {
 		SetState(GOOMBA_STATE_IDLE);
 	}
-	if (GetTickCount64() - create_time > 10800 && GetTickCount64() - create_time < 11000) {
+	if (GetTickCount64() - create_time > GOOMBA_INTRO_STATE_IDLE && GetTickCount64() - create_time < GOOMBA_INTRO_STATE_WALKING) {
 		SetState(GOOMBA_STATE_WALKING);
 	}	
-	//if (GetTickCount64() - create_time > 11000 && GetTickCount64() - create_time < 11500) {
-	//	SetState(GOOMBA_STATE_DIE);
-	//}
 }
 
 int CGoomba::GetState() {

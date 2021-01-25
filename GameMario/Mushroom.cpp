@@ -110,9 +110,9 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == EFFECT_STATE)
 	{
-		if (GetTickCount64() - effect_time_start < 1010)
+		if (GetTickCount64() - effect_time_start < MUSHROOM_EFFECT_TIME)
 		{
-			if (GetTickCount64() - effect_time_start > 200)
+			if (GetTickCount64() - effect_time_start > MUSHROOM_EFFECT_MOVE_TIME)
 			{
 				hiden_state = 0;
 				vy = -MUSHROOM_SPEED_Y;

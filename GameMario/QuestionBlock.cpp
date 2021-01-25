@@ -34,35 +34,35 @@ void CQuestionBlock::SetStateItem(int state)
 		{
 			if (item[i]->GetState() == COIN_STATE_HIDEN && dynamic_cast<CCoin*>(item[i]))
 			{
-				item[i]->SetPosition(x + 4, y - 16);
+				item[i]->SetPosition(x + QUESTIONBLOCK_POS_PLUS_4, y - QUESTIONBLOCK_POS_PLUS_16);
 				item[i]->SetState(state);
 				item[i] = NULL;
 				break;
 			}
 			else if (item[i]->GetState() == LEAF_STATE_HIDEN && dynamic_cast<CLeaf*>(item[i]))
 			{
-				item[i]->SetPosition(x, y - 4);
+				item[i]->SetPosition(x, y - QUESTIONBLOCK_POS_PLUS_4);
 				item[i]->SetState(state);
 				item[i] = NULL;
 				break;
 			}
 			else if (item[i]->GetState() == MUSHROOM_STATE_HIDEN && dynamic_cast<CMushroom*>(item[i]))
 			{
-				item[i]->SetPosition(x, y - 4);
+				item[i]->SetPosition(x, y - QUESTIONBLOCK_POS_PLUS_4);
 				item[i]->SetState(state);
 				item[i] = NULL;
 				break;
 			}
 			else if (item[i]->GetState() == SWITCH_STATE_HIDEN && dynamic_cast<CSwitch*>(item[i]))
 			{
-				item[i]->SetPosition(x, y - 16);
+				item[i]->SetPosition(x, y - QUESTIONBLOCK_POS_PLUS_16);
 				item[i]->SetState(state);
 				item[i] = NULL;
 				break;
 			}
 			else if (item[i]->GetState() == FIRE_FLOWER_STATE_HIDEN && dynamic_cast<CFireFlower*>(item[i]))
 			{
-				item[i]->SetPosition(x, y - 16);
+				item[i]->SetPosition(x, y - QUESTIONBLOCK_POS_PLUS_16);
 				item[i]->SetState(state);
 				item[i] = NULL;
 				break;
@@ -86,7 +86,7 @@ void CQuestionBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == QUESTIONBLOCK_DEFLECT_STATE)
 		{
-			if (y > init_location_y - 8) y += dy;
+			if (y > init_location_y - QUESTIONBLOCK_POS_PLUS_8) y += dy;
 			else
 			{
 				SetState(QUESTIONBLOCK_FALL_STATE);

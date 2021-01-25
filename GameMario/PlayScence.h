@@ -90,6 +90,10 @@
 #define GRID_SECTION_ITEM_OBJECTS	3
 #define GRID_SECTION_ENEMIES		4
 
+#define PIECEBRICK_SPEED			0.08f
+#define PIECEBRICK_X_PLUS			8
+#define PIECEBRICK_AMOUNT			16
+
 #define IN_USE_WIDTH	200
 #define IN_USE_HEIGHT	200
 
@@ -192,7 +196,7 @@ public:
 	void CreatePieceBrick(float x, float y, DWORD t)
 	{
 		int count = 0;
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < PIECEBRICK_AMOUNT; i++)
 		{
 			if (pieceBrick[i]->GetState() == 0 && count < 4)
 			{
@@ -202,16 +206,16 @@ public:
 				switch (count)
 				{
 				case 1:
-					pieceBrick[i]->SetDisplay(x, y, -0.08f, -0.08f, t);
+					pieceBrick[i]->SetDisplay(x, y, -PIECEBRICK_SPEED, -PIECEBRICK_SPEED, t);
 					break;
 				case 2:
-					pieceBrick[i]->SetDisplay(x + 8, y, 0.08f, -0.08f, t);
+					pieceBrick[i]->SetDisplay(x + PIECEBRICK_X_PLUS, y, PIECEBRICK_SPEED, -PIECEBRICK_SPEED, t);
 					break;
 				case 3:
-					pieceBrick[i]->SetDisplay(x, y + 8, -0.08f, 0.08f, t);
+					pieceBrick[i]->SetDisplay(x, y + PIECEBRICK_X_PLUS, -PIECEBRICK_SPEED, PIECEBRICK_SPEED, t);
 					break;
 				case 4:
-					pieceBrick[i]->SetDisplay(x + 8, y + 8, 0.08f, 0.08f, t);
+					pieceBrick[i]->SetDisplay(x + PIECEBRICK_X_PLUS, y + PIECEBRICK_X_PLUS, PIECEBRICK_SPEED, PIECEBRICK_SPEED, t);
 					break;
 				default:
 					break;

@@ -16,6 +16,8 @@
 #define GOALCARD_ANI_FLOWER			1
 #define GOALCARD_ANI_MUSHROOM		2
 
+#define GOALCARD_SWITCH_TIME		1000
+
 
 class CGoalCard : public CGameObject
 {

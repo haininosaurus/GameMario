@@ -22,6 +22,18 @@
 #define SCORE_ANI_8000				7
 #define SCORE_ANI_LEVELUP			8
 
+#define SCORE_DISPLAY_TIME			500
+#define SCORE_MINIMUN				100
+
+#define SCORE_200					200
+#define SCORE_400					400
+#define SCORE_800					800
+#define SCORE_1000					1000
+#define SCORE_2000					2000
+#define SCORE_4000					4000
+#define SCORE_8000					8000
+
+
 
 #define SCORE_STATE_HIDEN			-1
 

@@ -6,11 +6,11 @@
 void CBackgroundObject::Render() {
 
 	animation_set->at(0)->Render(x, y);
-	if (x == 2496 && y == 133) {
-		for (int i = 0; i < 17; i++) {
-			for (int j = 0; j < 21; j++) {
-				if (x + 16 * j == 2496) animation_set->at(1)->Render(x + 16 * j, y - 16 * i);
-				else animation_set->at(0)->Render(x + 16 * j, y - 16 * i);
+	if (x == DARK_BACKGROUND_POSITION_X && y == DARK_BACKGROUND_POSITION_Y) {
+		for (int i = 0; i < BACKGROUND_OBJECTS_HEIGHT_AMOUNT; i++) {
+			for (int j = 0; j < BACKGROUND_OBJECTS_WIDTH_AMOUNT; j++) {
+				if (x + BACKGROUND_OBJECT_SIZE * j == DARK_BACKGROUND_POSITION_X) animation_set->at(1)->Render(x + BACKGROUND_OBJECT_SIZE * j, y - BACKGROUND_OBJECT_SIZE * i);
+				else animation_set->at(0)->Render(x + BACKGROUND_OBJECT_SIZE * j, y - BACKGROUND_OBJECT_SIZE * i);
 			}
 		}
 	}

@@ -12,12 +12,12 @@ CScore::CScore()
 void CScore::SetPositionNumbers(float x, float y)
 {
 	numbers[0]->SetPosition(x, y);
-	numbers[1]->SetPosition(x + 8, y);
-	numbers[2]->SetPosition(x + 16, y);
-	numbers[3]->SetPosition(x + 24, y);
-	numbers[4]->SetPosition(x + 32, y);
-	numbers[5]->SetPosition(x + 40, y);
-	numbers[6]->SetPosition(x + 48, y);
+	numbers[1]->SetPosition(x + SCORE_X_PlUS_8, y);
+	numbers[2]->SetPosition(x + SCORE_X_PlUS_16, y);
+	numbers[3]->SetPosition(x + SCORE_X_PlUS_24, y);
+	numbers[4]->SetPosition(x + SCORE_X_PlUS_32, y);
+	numbers[5]->SetPosition(x + SCORE_X_PlUS_40, y);
+	numbers[6]->SetPosition(x + SCORE_X_PlUS_48, y);
 }
 
 void CScore::Render()

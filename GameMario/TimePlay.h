@@ -4,6 +4,11 @@
 
 #define TIME_LIMIT			300
 
+#define TIME_X_PLUS_8			8
+#define TIME_X_PLUS_16			16
+
+#define TIME_COUNT				1000
+
 class CTime : public CGameObject
 {
 	vector<CNumber*> numbers;

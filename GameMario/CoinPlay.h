@@ -3,6 +3,8 @@
 #include "Number.h"
 #include "Game.h"
 
+#define COINPLAY_X_PLUS			8
+
 class CCoinPlay : public CGameObject
 {
 	vector<CNumber*> numbers;

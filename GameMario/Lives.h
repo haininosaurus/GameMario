@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Number.h"
 
+#define LIVE_X_PLUS				8
+
 class CLives : public CGameObject
 {
 	vector<CNumber*> numbers;

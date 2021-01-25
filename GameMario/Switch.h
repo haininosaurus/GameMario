@@ -2,25 +2,33 @@
 #include "GameObject.h"
 #include "Brick.h"
 
-#define SWITCH_STATE_HIDEN	0
-#define EFFECT_STATE	1
-#define SWITCH_STATE_ACTIVE	2
+#define SWITCH_STATE_HIDEN				0
+#define EFFECT_STATE					1
+#define SWITCH_STATE_ACTIVE				2
 
-#define SWITCH_ANI_NORMAL	0
-#define SWITCH_ANI_ACTIVE	1
+#define SWITCH_ANI_NORMAL				0
+#define SWITCH_ANI_ACTIVE				1
+
+#define SWITCH_BBOX_WIDTH				16
+#define SWITCH_BBOX_HEIGHT				16
+#define SWITCH_ACTIVE_BBOX_HEIGHT		8
+
+#define SWICH_RESET_TIME				5000
+
+#define SWITCH_BRICK_AMOUNT				19
 
 
 
 class CSwitch : public CGameObject
 {
-	CBrick* brick[19];
+	CBrick* brick[SWITCH_BRICK_AMOUNT];
 	DWORD switch_time;
 public:
 
-	CSwitch(CBrick* b[19])
+	CSwitch(CBrick* b[SWITCH_BRICK_AMOUNT])
 	{
 		switch_time = 0;
-		for (int i = 0; i < 19; i++)
+		for (int i = 0; i < SWITCH_BRICK_AMOUNT; i++)
 		{
 			brick[i] = b[i];
 		}
@@ -30,7 +38,7 @@ public:
 		CGameObject::SetState(state);
 	}
 	void SetSwitch() {
-		for (int i = 0; i < 18; i++)
+		for (int i = 0; i < SWITCH_BRICK_AMOUNT - 1; i++)
 		{
 			if (brick[i]->GetState() == BRICK_STATE_NORMAL)
 			{
@@ -41,7 +49,7 @@ public:
 		}
 	}
 	void ResetItem() {
-		for (int i = 0; i < 18; i++)
+		for (int i = 0; i < SWITCH_BRICK_AMOUNT - 1; i++)
 		{
 			if (brick[i]->GetItem()->GetState() == 2)
 			{
@@ -64,7 +72,7 @@ public:
 	{
 		if (state == SWITCH_STATE_ACTIVE)
 		{
-			if (GetTickCount64() - switch_time > 5000)
+			if (GetTickCount64() - switch_time > SWICH_RESET_TIME)
 				ResetItem();
 		}
 	}
@@ -75,15 +83,15 @@ public:
 		{
 			l = x;
 			t = y;
-			r = x + 16;
-			b = y + 16;
+			r = x + SWITCH_BBOX_WIDTH;
+			b = y + SWITCH_BBOX_HEIGHT;
 		}
 		else if (state == SWITCH_STATE_ACTIVE)
 		{
 			l = x;
 			t = y;
-			r = x + 16;
-			b = y + 8;
+			r = x + SWITCH_BBOX_WIDTH;
+			b = y + SWITCH_ACTIVE_BBOX_HEIGHT;
 		}
 
 	}

@@ -13,6 +13,9 @@
 #define EFFECT_STATE	1
 #define MUSHROOM_STATE_NORMAL	2
 
+#define MUSHROOM_EFFECT_TIME		1010
+#define MUSHROOM_EFFECT_MOVE_TIME	200
+
 #define MUSHROOM_RED_ANI		0
 
 class CMushroom : public CollisionObject

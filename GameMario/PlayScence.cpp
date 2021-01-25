@@ -14,6 +14,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	tail = NULL;
 	player = NULL;
 	cam = NULL;
 	grid = NULL;
@@ -762,6 +763,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
 	CCamera* camera = ((CPlayScene*)scence)->GetCamera();
+	if (mario->GetIsDead()) return;
 
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;
 	switch (KeyCode)
@@ -884,6 +886,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+
+	if (mario->GetIsDead()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_A:
@@ -912,6 +917,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+
+	if (mario->GetIsDead()) return;
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_GROWUP || mario->GetState() == MARIO_STATE_SMOKE) return;

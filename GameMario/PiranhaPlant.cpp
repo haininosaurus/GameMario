@@ -68,7 +68,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		tan = sx / sy;
 
 
-		if (abs(x - player->x) < 150)
+		if (abs(x - player->x) < PIRANHAPLANT_RANGE_ATTACK_PLAYER_X)
 		{
 			if (state == PIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == PIRANHAPLANT_STATE_HIDE && tan < -1.0f)
 				found_player = true;
@@ -85,20 +85,20 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (move_up_state)
 			{
-				if (GetTickCount() - move_up_time < 920)
+				if (GetTickCount() - move_up_time < PIRANHAPLANT_MOVE_UP_TIME)
 					SetState(PIRANHAPLANT_STATE_MOVE_UP);
 				else SetState(PIRANHAPLANT_STATE_APPEARANCE);
 			}
 			if (appearance_state)
 			{
-				if (GetTickCount() - move_up_time < 2000)
+				if (GetTickCount() - move_up_time < PIRANHAPLANT_APPEARANCE_TIME)
 					SetState(PIRANHAPLANT_STATE_APPEARANCE);
-				if (GetTickCount() - move_up_time > 2500)
+				if (GetTickCount() - move_up_time > PIRANHAPLANT_MOVE_DOWN_TIME)
 					SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
 			}
 			if (move_down_state)
 			{
-				if (GetTickCount() - move_up_time < 3420)
+				if (GetTickCount() - move_up_time < PIRANHAPLANT_RESET_TIME)
 					SetState(PIRANHAPLANT_STATE_MOVE_DOWN);
 				else
 				{

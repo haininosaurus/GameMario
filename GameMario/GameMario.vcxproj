@@ -61,7 +61,7 @@
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Number.cpp" />
-    <ClCompile Include="OverworldMap1.cpp" />
+    <ClCompile Include="OverworldMap.cpp" />
     <ClCompile Include="PieceBrick.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />

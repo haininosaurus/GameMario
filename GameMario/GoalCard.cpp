@@ -22,16 +22,16 @@ void CGoalCard::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 {
 	if (GetTickCount64() - create_start > 100 && state != GOALCARD_STATE_HIDEN)
 	{
-		if(state < 4) state += 1;
-		if (state == 4) state = 1;
+		if(state <= GOALCARD_STATE_MUSHROOM) state += 1;
+		if (state == GOALCARD_STATE_MUSHROOM + 1) state = 1;
 
 		create_start = (DWORD)GetTickCount64();
 	}
 	if (isHiden)
 	{
-		if (GetTickCount64() - hiden_start > 1000)
+		if (GetTickCount64() - hiden_start > GOALCARD_SWITCH_TIME)
 		{
-			DebugOut(L"da vao switch scene\n");
+			//DebugOut(L"da vao switch scene\n");
 			CGame::GetInstance()->SetCamPos(0, 0);
 			CGame::GetInstance()->SwitchScene(3);
 			isHiden = 0;

@@ -263,7 +263,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (smoke_state)
 	{
-		if (GetTickCount64() - smoke_start < 300)
+		if (GetTickCount64() - smoke_start < MARIO_SMOKE_STATE_TIME)
 		{
 			return;
 		}
@@ -276,7 +276,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (growup_state)
 	{
-		if (GetTickCount64() - growup_start < 1000)
+		if (GetTickCount64() - growup_start < MARIO_GROWUP_STATE_TIME)
 		{
 			return;
 		}
@@ -468,15 +468,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 						}
 
-						else if (e->nx != 0)
+						else if (e->nx != 0 || e->ny > 0)
 						{
 							if (untouchable == 0)
 							{
 								if (koopa->GetState() != KOOPA_STATE_TORTOISESHELL_DOWN && koopa->GetState() != KOOPA_STATE_TORTOISESHELL_UP && !fight_state)
 								{
-									if (level > MARIO_LEVEL_SMALL)
+									if (level > MARIO_LEVEL_SMALL && !fight_state && !intro_state)
 									{
-										level = MARIO_LEVEL_SMALL;
+										SetLevel(GetLevel() - 1);
 										StartUntouchable();
 									}
 									else
@@ -541,7 +541,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goalCard->GetCardText()->SetState(1);
 					goalCard->GetCardText()->GetCard()->SetState(goalCard->GetState());
 					goalCard->SetState(COIN_STATE_HIDEN);
-					goalCard->SetSwitchScene(GetTickCount64());
+					goalCard->SetSwitchScene((DWORD)GetTickCount64());
 				}
 			}
 
@@ -555,7 +555,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (brick->GetState() == BRICK_STATE_NORMAL && fight_state)
 					{
 
-						brick->SetState(BRICK_STATE_HIDEN);
+						//brick->SetState(BRICK_STATE_HIDEN);
 						//CreatePieceBrick(brick->x, brick->y, (DWORD)GetTickCount64());
 
 					}
@@ -574,24 +574,25 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->nx != 0)
 				{
 					is_idle = 1;
-					if (y < 149 - GetCurrentHeightMario() - 5) {
-						x += vx * min_tx;
-						y += vy;
-
-						vx *= remainingTime;
-						vy *= remainingTime;
-
-						if (abs(nx) > 0.0001f)
-							vx = -vx;
-						if (abs(ny) > 0.0001f)
-							vy = -vy;
-
-						float dotprod = (vx * ny + vy * nx) * remainingTime;
-						vx = dotprod * ny;
-						vy = dotprod * nx;
-					}
-
 				}
+				//	//if (y < 149 - GetCurrentHeightMario() - 5) {
+				//	//	x += vx * min_tx;
+				//	//	y += vy;
+
+				//	//	vx *= remainingTime;
+				//	//	vy *= remainingTime;
+
+				//	//	if (abs(nx) > 0.0001f)
+				//	//		vx = -vx;
+				//	//	if (abs(ny) > 0.0001f)
+				//	//		vy = -vy;
+
+				//	//	float dotprod = (vx * ny + vy * nx) * remainingTime;
+				//	//	vx = dotprod * ny;
+				//	//	vy = dotprod * nx;
+				//	//}
+
+				//}
 				if (e->ny != 0 && sit_state && pipe->GetType() == PIPE_STATE_UP_DOWN)
 				{
 					//is_idle = IsIdle(x, y, e->obj->x, e->obj->y, e->ny);
@@ -640,6 +641,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (e->nx != 0)
 				{
+					is_idle = 1;
 					if (fight_state)
 					{
 						if (quesBlock->GetState() == QUESTIONBLOCK_ITEM_STATE)
@@ -746,7 +748,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						switchs->SetSwitch();
 						switchs->SetState(SWITCH_STATE_ACTIVE);
-						switchs->SetPosition(switchs->x, switchs->y + 9);
+						switchs->SetPosition(switchs->x, switchs->y + MARIO_POS_SWITCH_Y_PLUS);
 						switchs->SetSwitchTime((DWORD)GetTickCount64());
 					}
 
@@ -818,7 +820,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (ny < 0)
 				{
 					floor_wood = 1;
-					floor_wood_start = GetTickCount64();
+					floor_wood_start = (DWORD)GetTickCount64();
 					if (wood->GetState() == LONG_WOODEN_BLOCK_STATE_NORMAL)
 					{
 						wood->SetAlive(false);
@@ -845,7 +847,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (floor_wood)
 	{
-		if (GetTickCount64() - floor_wood_start > 200) floor_wood = 0;
+		if (GetTickCount64() - floor_wood_start > MARIO_FLOOR_WOOD_STATE_TIME) floor_wood = 0;
 	}
 
 
@@ -857,7 +859,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (pipe_down_state)
 	{
-		if (GetTickCount64() - pipe_down_start < 400)
+		if (GetTickCount64() - pipe_down_start < MARIO_PIPE_DOWN_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_DOWN);
 			y += 1;
@@ -872,17 +874,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (pipe_down_fast_state)
 	{
-		if (GetTickCount64() - pipe_down_fast_start < 400)
+		if (GetTickCount64() - pipe_down_fast_start < MARIO_PIPE_DOWN_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_DOWN_FAST);
 			y += 1;
 		}
-		else if (GetTickCount64() - pipe_down_fast_start < 410)
+		else if (GetTickCount64() - pipe_down_fast_start < MARIO_PIPE_DOWN_1_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_DOWN_FAST);
-			SetPosition(2198, 369);
+			SetPosition(MARIO_PIPE_POS_X_1, MARIO_PIPE_POS_Y_1);
 		}
-		else if (GetTickCount64() - pipe_down_fast_start < 800)
+		else if (GetTickCount64() - pipe_down_fast_start < MARIO_PIPE_DOWN_2_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_DOWN_FAST);
 			y -= 2;
@@ -896,13 +898,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (pipe_up_state)
 	{
-		if (GetTickCount64() - pipe_up_start < 400)
+		if (GetTickCount64() - pipe_up_start < MARIO_PIPE_DOWN_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_UP);
 			y -= 2;
 		}
-		else if(GetTickCount64() - pipe_up_start < 410) SetPosition(2328, 384);
-		else if(GetTickCount64() - pipe_up_start < 800)
+		else if(GetTickCount64() - pipe_up_start < MARIO_PIPE_DOWN_1_TIME) SetPosition(MARIO_PIPE_POS_X_4, MARIO_PIPE_POS_Y_4);
+		else if(GetTickCount64() - pipe_up_start < MARIO_PIPE_DOWN_2_TIME)
 		{
 			SetState(MARIO_STATE_PIPE_UP);
 			y -= 2;
@@ -921,14 +923,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx > 0)
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_RIGHT);
-				tortoiseshell->x = x + 10;
-				tortoiseshell->y = y - 2;
+				tortoiseshell->x = x + MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y - MARIO_TORTOISESHELL_POS_PLUS_2;
 			}
 			else
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
-				tortoiseshell->x = x - 10;
-				tortoiseshell->y = y - 2;
+				tortoiseshell->x = x - MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y - MARIO_TORTOISESHELL_POS_PLUS_2;
 			}
 
 		}
@@ -938,14 +940,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx > 0)
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_RIGHT);
-				tortoiseshell->x = x + 10;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x + MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 			else
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
-				tortoiseshell->x = x - 10;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x - MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 		}
 		else if (level == MARIO_LEVEL_TAIL)
@@ -953,14 +955,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx > 0)
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_RIGHT);
-				tortoiseshell->x = x + 15;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x + MARIO_TORTOISESHELL_POS_PLUS_15;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 			else
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
-				tortoiseshell->x = x - 10;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x - MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 		}
 		else if (level == MARIO_LEVEL_FIRE)
@@ -968,14 +970,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx > 0)
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_RIGHT);
-				tortoiseshell->x = x + 10;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x + MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 			else
 			{
 				SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
-				tortoiseshell->x = x - 10;
-				tortoiseshell->y = y + 10;
+				tortoiseshell->x = x - MARIO_TORTOISESHELL_POS_PLUS_10;
+				tortoiseshell->y = y + MARIO_TORTOISESHELL_POS_PLUS_10;
 			}
 		}
 	}
@@ -983,14 +985,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (level == MARIO_LEVEL_DARK)
 	{
 
-		darkEnergy->x = x - 28;
-		darkEnergy->y = y - 40;
+		darkEnergy->x = x - MARIO_DARK_ENERGY_POS_PLUS_X;
+		darkEnergy->y = y - MARIO_DARK_ENERGY_POS_PLUS_Y;
 	}
 
-	if (GetTickCount64() - kick_start < 150 && !take_tortoistate_state)
+	if (GetTickCount64() - kick_start < MARIO_KICK_TORTOISESHELL_TIME && !take_tortoistate_state)
 		SetState(MARIO_STATE_KICK);
 
-	if (GetTickCount64() - fight_start < 450)
+	if (GetTickCount64() - fight_start < MARIO_FIGHT_TIME)
 	{
 		//if (!is_fight) tail->SetFight(x, y, nx, GetTickCount64());
 		//is_fight = 1;
@@ -1002,7 +1004,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//is_fight = 0;
 	}
 	
-	if (GetTickCount64() - shoot_fire_bullet_start < 200)
+	if (GetTickCount64() - shoot_fire_bullet_start < MARIO_SHOOT_TIME)
 	{
 		if(nx > 0) 	SetState(MARIO_STATE_SHOOT_FIRE_BULLET_RIGHT);
 		else SetState(MARIO_STATE_SHOOT_FIRE_BULLET_LEFT);
@@ -1017,31 +1019,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == MARIO_STATE_RUNNING_RIGHT && running_time_right == -1) running_time_right = (DWORD)GetTickCount64();
 	else if (state == MARIO_STATE_RUNNING_LEFT && running_time_left == -1) running_time_left = (DWORD)GetTickCount64();
 
-	if (GetTickCount64() - GetKickStart() < 200) SetState(MARIO_STATE_KICK);
+	if (GetTickCount64() - GetKickStart() < MARIO_KICK_TIME) SetState(MARIO_STATE_KICK);
 	else kick_state = 0;
 
-	if (GetTickCount64() - fly_low_start < 300 && !intro_state)
+	if (GetTickCount64() - fly_low_start < MARIO_FLY_LOW_TIME && !intro_state)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 		else SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
 	else fly_low_state = 0;
 
-	if (GetTickCount64() - fly_low_start < 1300 && intro_state)
+	if (GetTickCount64() - fly_low_start < MARIO_FLY_LOW_END && intro_state)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_LOW_RIGHT);
 		else SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
 	
-	if (GetTickCount64() - fly_high_start < 1000)
+	if (GetTickCount64() - fly_high_start < MARIO_FLY_HIGH_TIME)
 	{
 		if (nx > 0) SetState(MARIO_STATE_FLYING_HIGH_RIGHT);
 		else SetState(MARIO_STATE_FLYING_HIGH_LEFT);
 	}
 	else fly_high_state = 0;
 
-	if (fly_high_state && y < 28) is_high = 1;
-	if (y >= 28) is_high = 0;
+	if (fly_high_state && y < MARIO_FLY_HIGH_RANGE_Y) is_high = 1;
+	if (y >= MARIO_FLY_HIGH_RANGE_Y) is_high = 0;
 
 	if (turn_state == 0 && run_state == 0 && !kick_state)
 	{
@@ -1111,12 +1113,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == MARIO_STATE_RUNNING_LEFT || state == MARIO_STATE_RUNNING_RIGHT || state == MARIO_STATE_RUNNING_LEFT_FAST || state == MARIO_STATE_RUNNING_RIGHT_FAST)
 		{
-			if (GetTickCount64() - running_start > 400 && !is_idle)
+			if (GetTickCount64() - running_start > MARIO_RUN_TIME && !is_idle)
 			{
 				arrows->SetWhiteArrows();
 				running_start = (DWORD)GetTickCount64();
 			}
-			else if (is_idle && GetTickCount64() - running_start > 400)
+			else if (is_idle && GetTickCount64() - running_start > MARIO_RUN_TIME)
 			{
 				arrows->SetBlackArrows();
 				running_start = (DWORD)GetTickCount64();
@@ -1124,7 +1126,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 		else {
-			if (GetTickCount64() - running_start > 400)
+			if (GetTickCount64() - running_start > MARIO_RUN_TIME)
 			{
 				arrows->SetBlackArrows();
 				running_start = (DWORD)GetTickCount64();
@@ -1145,7 +1147,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//}
 	////else is_maxp = false;
 
-	if (x > 2800)
+	if (x > MARIO_RANGE_X_MAP)
 	{
 		CGame* game = CGame::GetInstance();
 
@@ -1158,11 +1160,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	if (y > 448 && state != MARIO_STATE_PIPE_UP && state != MARIO_STATE_PIPE_DOWN && state != MARIO_STATE_PIPE_DOWN_FAST)
+	if (y > DEAD_ZONE_Y && state != MARIO_STATE_PIPE_UP && state != MARIO_STATE_PIPE_DOWN && state != MARIO_STATE_PIPE_DOWN_FAST)
 	{
-		if (x > 2128 && y < 496)
+		if (x > DEAD_ZONE_X && y < SAFE_ZONE_Y)
 			is_dead = true;
-		else if (x <= 2128)
+		else if (x <= DEAD_ZONE_X)
 			is_dead = true;
 	}
 }
@@ -1595,6 +1597,7 @@ void CMario::SetState(int state)
 		running_time_left = -1;
 		break;
 	case MARIO_STATE_DIE:
+		is_dead = 1;
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_STATE_RUNNING_RIGHT:
@@ -1883,19 +1886,19 @@ void CMario::DisplayScores(int s, float x, float y, DWORD t)
 void CMario::CreateIntroAnimationMario()
 {
 
-	if (GetTickCount64() - create_time < 2500) nx = 0;
-	if (GetTickCount64() - create_time < 4150 && GetTickCount64() - create_time > 2500) {
+	if (GetTickCount64() - create_time < MARIO_INTRO_INIT_TIME) nx = 0;
+	if (GetTickCount64() - create_time < MARIO_INTRO_WALKING_1_TIME && GetTickCount64() - create_time > MARIO_INTRO_INIT_TIME) {
 		SetState(MARIO_STATE_WALKING_LEFT);
 		if (GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
 			SetWalkingLeftSpeech();
 	}
-	if (GetTickCount64() - create_time < 4900 && GetTickCount64() - create_time > 4150) {
+	if (GetTickCount64() - create_time < MARIO_INTRO_SIT_TIME && GetTickCount64() - create_time > MARIO_INTRO_WALKING_1_TIME) {
 		SetState(MARIO_STATE_SIT);
 		vx = 0;
 		vy = 0;
 		sit_state = 1;
 	}
-	if (GetTickCount64() - create_time > 4900 && GetTickCount64() - create_time < 5000) {
+	if (GetTickCount64() - create_time > MARIO_INTRO_SIT_TIME && GetTickCount64() - create_time < MARIO_INTRO_SIT_TIME_END) {
 		if (!checkSit) {
 			y -= 10;
 			checkSit = 1;
@@ -1904,89 +1907,89 @@ void CMario::CreateIntroAnimationMario()
 		SetState(MARIO_STATE_IDLE);
 		SetSitState(0);
 	}
-	if (GetTickCount64() - create_time > 5000 && GetTickCount64() - create_time < 8400)
+	if (GetTickCount64() - create_time > MARIO_INTRO_SIT_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_IDLE_TIME_START)
 	{
 		SetPosition(x, 138);
 		vy = 0;
 
 	}
-	if (GetTickCount64() - create_time > 8400 && GetTickCount64() - create_time < 8800)
+	if (GetTickCount64() - create_time > MARIO_INTRO_IDLE_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_IDLE_TIME_END)
 	{
 		vy = 0;
 		SetState(MARIO_STATE_IDLE);
 	}
-	if (GetTickCount64() - create_time > 8800 && GetTickCount64() - create_time < 9800)
+	if (GetTickCount64() - create_time > MARIO_INTRO_IDLE_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_HEADUP_TIME)
 	{
 		vy = 0;
 		SetState(MARIO_STATE_HEADUP);
 	}
-	if (GetTickCount64() - create_time > 9800 && GetTickCount64() - create_time < 10300)
+	if (GetTickCount64() - create_time > MARIO_INTRO_HEADUP_TIME && GetTickCount64() - create_time < MARIO_INTRO_JUMP_TIME)
 	{
 		SetState(MARIO_STATE_JUMP);
 	}
-	if (GetTickCount64() - create_time > 10300 && GetTickCount64() - create_time < 11300)
+	if (GetTickCount64() - create_time > MARIO_INTRO_JUMP_TIME && GetTickCount64() - create_time < MARIO_INTRO_FLY_LOW_TIME)
 	{
 		if (fly_low_state == 0) fly_low_start = (DWORD)GetTickCount64();
 		vx = -MARIO_WALKING_SPEED + 0.015f;
 		SetState(MARIO_STATE_FLYING_LOW_LEFT);
 	}
-	if (GetTickCount64() - create_time > 11300 && GetTickCount64() - create_time < 11600)
+	if (GetTickCount64() - create_time > MARIO_INTRO_FLY_LOW_TIME && GetTickCount64() - create_time < MARIO_INTRO_IDLE_2_TIME)
 	{
 		fly_low_state = 0;
 		SetState(MARIO_STATE_IDLE);
 	}
-	if (GetTickCount64() - create_time > 11600 && GetTickCount64() - create_time < 11900)
+	if (GetTickCount64() - create_time > MARIO_INTRO_IDLE_2_TIME && GetTickCount64() - create_time < MARIO_INTRO_DEFLECT_TIME)
 	{
 		vy = -MARIO_JUMP_DEFLECT_SPEED + 0.15f;
 		vx = -MARIO_WALKING_SPEED + 0.04f;
 	}
-	if (GetTickCount64() - create_time > 11900 && GetTickCount64() - create_time < 12100)
+	if (GetTickCount64() - create_time > MARIO_INTRO_DEFLECT_TIME && GetTickCount64() - create_time < MARIO_INTRO_TURN_LEFT_TIME)
 	{
 		SetState(MARIO_STATE_TURN_LEFT);
 	}
-	if (GetTickCount64() - create_time > 12100 && GetTickCount64() - create_time < 12800)
+	if (GetTickCount64() - create_time > MARIO_INTRO_TURN_LEFT_TIME && GetTickCount64() - create_time < MARIO_INTRO_WALKING_RIGHT_TIME)
 	{
 		SetState(MARIO_STATE_WALKING_RIGHT);
 		if (GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
 			SetWalkingRightSpeech();
 	}
-	if (GetTickCount64() - create_time > 12800 && GetTickCount64() - create_time < 13000)
+	if (GetTickCount64() - create_time > MARIO_INTRO_WALKING_RIGHT_TIME && GetTickCount64() - create_time < MARIO_INTRO_KICK_TIME)
 	{
 		if (!kick_state) SetKickStart((DWORD)GetTickCount64());
 		SetState(MARIO_STATE_KICK);
 	}
-	if (GetTickCount64() - create_time > 14000 && GetTickCount64() - create_time < 15800)
+	if (GetTickCount64() - create_time > MARIO_INTRO_IDLE_2_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_IDLE_2_TIME_END)
 	{
 		SetState(MARIO_STATE_IDLE);
 	}
-	if (GetTickCount64() - create_time > 15800 && GetTickCount64() - create_time < 16200)
+	if (GetTickCount64() - create_time > MARIO_INTRO_IDLE_2_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_WALKING_LEFT_TIME)
 	{
 		SetState(MARIO_STATE_WALKING_LEFT);
 		if (GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
 			SetWalkingLeftSpeech();
 	}
-	if (GetTickCount64() - create_time > 16200 && GetTickCount64() - create_time < 16450)
+	if (GetTickCount64() - create_time > MARIO_INTRO_WALKING_LEFT_TIME && GetTickCount64() - create_time < MARIO_INTRO_JUMP_TIME)
 	{
 		SetState(MARIO_STATE_JUMP);		
 	}
-	if (GetTickCount64() - create_time > 16450 && GetTickCount64() - create_time < 16900) {
+	if (GetTickCount64() - create_time > MARIO_INTRO_JUMP_2_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_JUMP_2_TIME_END) {
 		jump_state = 0;
 	}
-	if (GetTickCount64() - create_time > 16900 && GetTickCount64() - create_time < 17000) {
+	if (GetTickCount64() - create_time > MARIO_INTRO_JUMP_2_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_JUMP_3_TIME_START) {
 		SetState(MARIO_STATE_JUMP);
 	}
-	if (GetTickCount64() - create_time > 17000 && GetTickCount64() - create_time < 17500) {
+	if (GetTickCount64() - create_time > MARIO_INTRO_JUMP_3_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_JUMP_3_TIME_END) {
 		jump_state = 0;
 		vx = 0; 
 		nx = 1;
 	}
-	if (GetTickCount64() - create_time > 17500 && GetTickCount64() - create_time < 17800) {
+	if (GetTickCount64() - create_time > MARIO_INTRO_JUMP_3_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_RUN_RIGHT_TIME_START) {
 		SetState(MARIO_STATE_RUNNING_RIGHT);
 		//SetState(MARIO_STATE_TAKE_TORTOISESHELL_LEFT);
 		if (GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
 			SetWalkingRightSpeech();
 	}
-	if (GetTickCount64() - create_time > 17800 && GetTickCount64() - create_time < 18000)
+	if (GetTickCount64() - create_time > MARIO_INTRO_RUN_RIGHT_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_RUN_RIGHT_TIME_END)
 	{
 		SetState(MARIO_STATE_IDLE);
 		vx = 0;
@@ -1994,18 +1997,18 @@ void CMario::CreateIntroAnimationMario()
 		take_tortoistate_state = 0;
 		tortoiseshell = NULL;
 	}
-	else if (GetTickCount64() - create_time > 18200 && GetTickCount64() - create_time < 18400)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_KICK_TIME_START && GetTickCount64() - create_time < MARIO_INTRO_KICK_TIME_END)
 	{
 		tortoiseshell = NULL;
 		if (!kick_state) SetKickStart((DWORD)GetTickCount64());
 		SetState(MARIO_STATE_KICK);
 		vx = 0;
 	}
-	else if (GetTickCount64() - create_time > 18400 && GetTickCount64() - create_time < 20000)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_KICK_TIME_END && GetTickCount64() - create_time < MARIO_INTRO_STAND_TIME)
 	{
 		vx = 0;
 	}
-	else if (GetTickCount64() - create_time > 20500 && GetTickCount64() - create_time < 20700)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_TRANS_START && GetTickCount64() - create_time < MARIO_INTRO_TRANS_END)
 	{
 		vx = 0;
 		if (growup_state == 0)
@@ -2015,29 +2018,23 @@ void CMario::CreateIntroAnimationMario()
 			growup_start = (DWORD)GetTickCount64();
 		}
 	}
-	else if (GetTickCount64() - create_time > 20800 && GetTickCount64() - create_time < 21000)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_GROWUP_START && GetTickCount64() - create_time < MARIO_INTRO_GROWUP_END)
 	{
 		growup_state = 0;
 		vx = 0;
 		SetState(MARIO_STATE_IDLE);
 		SetLevel(MARIO_LEVEL_SMALL);
 	}
-	else if (GetTickCount64() - create_time > 21000 && GetTickCount64() - create_time < 21300)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_GROWUP_END && GetTickCount64() - create_time < MARIO_INTRO_WALKING_RIGHT_START)
 	{
 		nx = -1;
 	}
-	else if (GetTickCount64() - create_time > 21300 && GetTickCount64() - create_time < 23000)
+	else if (GetTickCount64() - create_time > MARIO_INTRO_WALKING_RIGHT_START && GetTickCount64() - create_time < MARIO_INTRO_WALKING_RIGHT_END)
 	{
 		SetState(MARIO_STATE_WALKING_RIGHT);
 		if (GetWalkingRightSpeech() < MARIO_WALKING_SPEED)
 			SetWalkingRightSpeech();
 	}
-	//else if (GetTickCount64() - create_time > 23000 && GetTickCount64() - create_time < 23700)
-	//{
-	//	SetState(MARIO_STATE_WALKING_LEFT);
-	//	if (GetWalkingLeftSpeech() < MARIO_WALKING_SPEED)
-	//		SetWalkingLeftSpeech();
-	//}
 
 
 

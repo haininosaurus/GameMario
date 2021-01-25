@@ -102,7 +102,7 @@ void CKoopa::FilterCollision(
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
-		if (dynamic_cast<CColorBrick*>(c->obj) || dynamic_cast<CGoomba*>(c->obj) || dynamic_cast<CLeaf*>(c->obj)) {}
+		if (dynamic_cast<CColorBrick*>(c->obj) || dynamic_cast<CGoomba*>(c->obj) || dynamic_cast<CLeaf*>(c->obj) || dynamic_cast<CCoin*>(c->obj)) {}
 		else if(dynamic_cast<CTransObject*>(c->obj) && state == KOOPA_STATE_SPIN_LEFT ||
 			dynamic_cast<CTransObject*>(c->obj) && state == KOOPA_STATE_SPIN_RIGHT){ }
 		else if (dynamic_cast<CColorBrickTop*>(c->obj)) {
@@ -250,7 +250,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						CMario* mario = dynamic_cast<CMario*>(e->obj);
 						mario->SetState(MARIO_STATE_DEFLECT);
 						vy = -KOOPA_JUMP_DEFLECT_SPEED;
-						vx = -0.05f;
+						vx = -KOOPA_INTRO_SPEED_X;
 					}
 				}
 				if (state == KOOPA_STATE_SPIN_LEFT)
@@ -261,7 +261,12 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							if (dynamic_cast<CBrick*>(e->obj))
 							{
 								CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-								brick->SetState(BRICK_STATE_HIDEN);
+								if (brick->y - (y + KOOPA_BBOX_SPIN_HEIGHT) < 0)
+								{
+									((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->CreatePieceBrick(x, y, (DWORD)GetTickCount64());
+									brick->SetState(BRICK_STATE_HIDEN);
+								}
+
 							}
 
 							if (dynamic_cast<CQuestionBlock*>(e->obj))
@@ -336,14 +341,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (y - preY > 1 && preY != 0) {
 				if (vx > 0)
 				{
-					SetPosition(x - 5, preY);
+					SetPosition(x - KOOPA_RESET_POSITION_X, preY);
 					SetState(KOOPA_STATE_WALKING_LEFT);
 					preY = y;
 				}
 				else
 				{
 
-					SetPosition(x + 5, preY);
+					SetPosition(x + KOOPA_RESET_POSITION_X, preY);
 					SetState(KOOPA_STATE_WALKING_RIGHT);
 					preY = y;
 				}
@@ -357,24 +362,14 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (form == PARAKOOPA_GREEN_FORM)
 	{
 		nx = -1;
-		//if (mario->x - x >= 18)
-		//{
-		//	nx = 1;
-		//	//vx = KOOPA_WALKING_SPEED;
-		//}
-		//else if (mario->x - x <= -1)
-		//{
-		//	nx = -1;
-		//	//vx = -KOOPA_WALKING_SPEED;
-		//}
 	}
 	if (form == PARAKOOPA_RED_FORM)
 	{
-		if (mario->x - x >= 18)
+		if (mario->x - x >= PARAKOOPA_RED_FORM_ZONE_RIGHT)
 		{
 			nx = 1;
 		}
-		else if (mario->x - x <= -1)
+		else if (mario->x - x <= PARAKOOPA_RED_FORM_ZONE_LEFT)
 		{
 			nx = -1;
 		}
@@ -386,20 +381,19 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetTimeFly();
 		if (isFlyDown)
 		{
-			if (GetTickCount64() - fly_time >= 2000)
+			if (GetTickCount64() - fly_time >= PARAKOOPA_FLYING_TIME)
 			{
 				isFlyDown = false;
 				fly_time = 0;
 			}
 			else
 			{
-				//vy += 0.00001f *dt;
 				vy = 0.06f;
 			}
 		}
 		else
 		{
-			if (GetTickCount64() - fly_time >= 2000)
+			if (GetTickCount64() - fly_time >= PARAKOOPA_FLYING_TIME)
 			{
 				isFlyDown = true;
 				fly_time = 0;
@@ -412,7 +406,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (y > 448 && !intro_state)
+	if (y > KOOPA_DEAD_ZONE_Y && !intro_state)
 	{
 		if(state == KOOPA_STATE_SPIN_LEFT || state == KOOPA_STATE_SPIN_RIGHT)
 			SetState(KOOPA_STATE_DIE);
@@ -512,43 +506,39 @@ void CKoopa::SetState(int state)
 
 void CKoopa::CreateIntroAnimationKoopa()
 {
-	if (GetTickCount64() - create_time < 6000) SetState(KOOPA_STATE_HIDEN);
-	if (GetTickCount64() - create_time > 6000 && GetTickCount64() - create_time < 7500) {
+	if (GetTickCount64() - create_time < KOOPA_INTRO_HIDEN_TIME) SetState(KOOPA_STATE_HIDEN);
+	if (GetTickCount64() - create_time > KOOPA_INTRO_HIDEN_TIME && GetTickCount64() - create_time < KOOPA_INTRO_TORTOISESHELL_DOWN) {
 		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 	}
-	if (GetTickCount64() - create_time > 8600 && GetTickCount64() - create_time < 10000) {
+	if (GetTickCount64() - create_time > KOOPA_INTRO_TAKEN_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_SPIN_RIGHT_TIME_START) {
 		SetState(KOOPA_STATE_TAKEN);
 	}
-	if (GetTickCount64() - create_time > 12800 && GetTickCount64() - create_time < 15000) {
+	if (GetTickCount64() - create_time > KOOPA_INTRO_SPIN_RIGHT_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_SPIN_RIGHT_TIME_END) {
 		SetState(KOOPA_STATE_SPIN_RIGHT);
 	}
-	if (GetTickCount64() - create_time > 15000 && GetTickCount64() - create_time < 15050) {
-		SetPosition(283, 144);
+	if (GetTickCount64() - create_time > KOOPA_INTRO_TORTOISESHELL_DOWN_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_TORTOISESHELL_DOWN_TIME_END) {
+		SetPosition(KOOPA_INTRO_TORTOISESHELL_DOWN_POS_X, KOOPA_INTRO_TORTOISESHELL_DOWN_POS_Y);
 		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 	}
-	if (GetTickCount64() - create_time > 16100 && GetTickCount64() - create_time < 16400) {
+	if (GetTickCount64() - create_time > KOOPA_INTRO_SPIN_LEFT_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_SPIN_LEFT_TIME_END) {
 
 		SetState(KOOPA_STATE_SPIN_LEFT);
 	}
-	if (GetTickCount64() - create_time > 16550 && GetTickCount64() - create_time < 18000) {
+	if (GetTickCount64() - create_time > KOOPA_INTRO_TORTOISESHELL_DOWN_1_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_TORTOISESHELL_DOWN_1_TIME_END) {
 
 		SetState(KOOPA_STATE_TORTOISESHELL_DOWN);
 	}
-	if (GetTickCount64() - create_time > 18200 && GetTickCount64() - create_time < 20000) {
+	if (GetTickCount64() - create_time > KOOPA_INTRO_SPIN_RIGHT_1_TIME_START && GetTickCount64() - create_time < KOOPA_INTRO_SPIN_RIGHT_1_TIME_END) {
 
 		SetState(KOOPA_STATE_SPIN_RIGHT);
 	}
-	if (GetTickCount64() - create_time > 20000 && GetTickCount64() - create_time < 20100)
+	if (GetTickCount64() - create_time > KOOPA_INTRO_SET_POS_1_START && GetTickCount64() - create_time < KOOPA_INTRO_SET_POS_1_END)
 	{
-		SetPosition(0, 136);
+		SetPosition(KOOPA_INTRO_POS_1_X, KOOPA_INTRO_POS_1_Y);
 	}
-	if (GetTickCount64() - create_time > 20700 && GetTickCount64() - create_time < 20800)
+	if (GetTickCount64() - create_time > KOOPA_INTRO_SET_POS_2_START && GetTickCount64() - create_time < KOOPA_INTRO_SET_POS_2_START)
 	{
-		//vx = 0;
-	}
-	if (GetTickCount64() - create_time > 20700 && GetTickCount64() - create_time < 20800)
-	{
-		SetPosition(x + 2, y);
+		SetPosition(x + KOOPA_INTRO_POS_PLUS_2_X, y);
 	}
 
 }

@@ -12,6 +12,15 @@
 #define ARROW_ANI_WHITE_P		2
 #define ARROW_ANI_BLACK_P		3
 
+#define ARROW_POS_X_PLUS_8		8
+#define ARROW_POS_X_PLUS_16		16
+#define ARROW_POS_X_PLUS_24		24
+#define ARROW_POS_X_PLUS_32		32
+#define ARROW_POS_X_PLUS_40		40
+#define ARROW_POS_X_PLUS_48		48
+
+#define ARROW_RESET_P_TIME		2500
+
 class CArrow : public CGameObject
 {
 	int isP;

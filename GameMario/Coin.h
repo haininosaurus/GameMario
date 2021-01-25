@@ -2,17 +2,20 @@
 #include "GameObject.h"
 #include "ScoreEffect.h"
 
-#define COIN_BBOX_WIDTH 12
-#define COIN_BBOX_HEIGHT 12
+#define COIN_BBOX_WIDTH				12
+#define COIN_BBOX_HEIGHT			12
 
-#define COIN_SPEED_Y	0.2f
+#define COIN_SPEED_Y				0.2f
 
-#define COIN_STATE_HIDEN	0
-#define EFFECT_STATE		1
-#define COIN_STATE_NORMAL	2
+#define COIN_STATE_HIDEN			0
+#define EFFECT_STATE				1
+#define COIN_STATE_NORMAL			2
 
-#define COIN_NORMAL_ANI		0
-#define COIN_EFFECT_ANI		1
+#define COIN_NORMAL_ANI				0
+#define COIN_EFFECT_ANI				1
+
+#define COIN_EFFECT_TIME			500
+#define COIN_EFFECT_MOVE_TIME		300
 
 class CCoin : public CGameObject
 {

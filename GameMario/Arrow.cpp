@@ -40,12 +40,12 @@ void CArrow::SetState(int state)
 void CArrows::SetPositionArrows(float x, float y)
 {
 	arrows[0]->SetPosition(x, y);
-	arrows[1]->SetPosition(x + 8, y);
-	arrows[2]->SetPosition(x + 16, y);
-	arrows[3]->SetPosition(x + 24, y);
-	arrows[4]->SetPosition(x + 32, y);
-	arrows[5]->SetPosition(x + 40, y);
-	arrows[6]->SetPosition(x + 48, y);
+	arrows[1]->SetPosition(x + ARROW_POS_X_PLUS_8, y);
+	arrows[2]->SetPosition(x + ARROW_POS_X_PLUS_16, y);
+	arrows[3]->SetPosition(x + ARROW_POS_X_PLUS_24, y);
+	arrows[4]->SetPosition(x + ARROW_POS_X_PLUS_32, y);
+	arrows[5]->SetPosition(x + ARROW_POS_X_PLUS_40, y);
+	arrows[6]->SetPosition(x + ARROW_POS_X_PLUS_48, y);
 }
 
 void CArrows::SetWhiteArrows()
@@ -93,8 +93,7 @@ void CArrows::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (GetPState()) SetPStart((DWORD)GetTickCount64());
 		else if (!GetPState())
 		{
-			DebugOut(L"da vao ham chuan bi reset\n");
-			if (GetTickCount64() - p_start > 2000) ResetArrows();
+			if (GetTickCount64() - p_start > ARROW_RESET_P_TIME) ResetArrows();
 		}
 	}
 

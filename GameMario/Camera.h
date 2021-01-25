@@ -19,6 +19,14 @@
 #define UNDERGROUND_Y				432.0f
 #define CAM_Y_UNDERGROUND			507.0f
 
+#define CAM_Y_MIN					267.0f
+
+#define CAM_X_SPEED_1_4				0.0315f 
+#define CAM_X_RANGE_AUTO_1_4		1743
+#define CAM_X_RANGE_NORMAL_1_4		2000
+
+#define CAM_Y_PLUS					20
+
 #define ID_SCENE_MAP_1				1
 #define ID_SCENE_MAP_4				4
 

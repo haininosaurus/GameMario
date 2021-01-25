@@ -3,6 +3,9 @@
 
 #define SPEED_Y		0.08f
 
+#define CURTAIN_MOVE_START		1000
+#define CURTAIN_MOVE_END		1500
+
 class CCurtain : public CGameObject
 {
 	DWORD create_time;

@@ -8,7 +8,7 @@ void CPieceBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	y += vy * dt;
 	x += vx * dt;
 
-	if (state == PIECEBRICK_STATE_DISPLAY && GetTickCount64() - display_start > 400)
+	if (state == PIECEBRICK_STATE_DISPLAY && GetTickCount64() - display_start > PIECEBRICK_STATE_HIDEN_TIME)
 	{
 		SetState(PIECEBRICK_STATE_HIDEN);
 	}

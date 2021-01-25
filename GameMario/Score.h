@@ -4,6 +4,13 @@
 #include "Utils.h"
 #include "Game.h"
 
+#define SCORE_X_PlUS_8		8
+#define SCORE_X_PlUS_16		16
+#define SCORE_X_PlUS_24		24
+#define SCORE_X_PlUS_32		32
+#define SCORE_X_PlUS_40		40
+#define SCORE_X_PlUS_48		48
+
 class CScore : public CGameObject
 {
 	vector<CNumber*> numbers;

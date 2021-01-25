@@ -90,7 +90,7 @@ void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		tan = sx / sy;
 
 
-		if (abs(x - player->x) < 150)
+		if (abs(x - player->x) < FIREPIRANHAPLANT_RANGE_ATTACK_PLAYER_X)
 		{
 			if (state == FIREPIRANHAPLANT_STATE_HIDE && tan > 1.0f || state == FIREPIRANHAPLANT_STATE_HIDE && tan < -1.0f)
 				found_player = true;
@@ -102,27 +102,27 @@ void CFirePiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (hide_state)
 			{
 				move_up_state = 1;
-				move_up_time = GetTickCount();
+				move_up_time = (DWORD)GetTickCount64();
 			}
 
 			if (move_up_state)
 			{
-				if (GetTickCount() - move_up_time < 920)
+				if (GetTickCount64() - move_up_time < FIREPIRANHAPLANT_MOVE_UP_TIME)
 					SetState(FIREPIRANHAPLANT_STATE_MOVE_UP);
 				else SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
 			}
 			if (appearance_state)
 			{
-				if (GetTickCount() - move_up_time < 3000)
+				if (GetTickCount64() - move_up_time < FIREPIRANHAPLANT_APPEARANCE_TIME)
 					SetState(FIREPIRANHAPLANT_STATE_APPEARANCE);
-				if (GetTickCount() - move_up_time > 2000 && fire_plant_bullet->GetState() == FIREPLANTBULLET_TRANSPARENT_STATE)
+				if (GetTickCount64() - move_up_time > FIREPIRANHAPLANT_SHOOT_TIME && fire_plant_bullet->GetState() == FIREPLANTBULLET_TRANSPARENT_STATE)
 					ShootFirePlantBullet();
-				if (GetTickCount() - move_up_time > 3500)
+				if (GetTickCount64() - move_up_time > FIREPIRANHAPLANT_MOVE_DOWN_TIME)
 					SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
 			}
 			if (move_down_state)
 			{
-				if (GetTickCount() - move_up_time < 4420)
+				if (GetTickCount64() - move_up_time < FIREPIRANHAPLANT_RESET_TIME)
 					SetState(FIREPIRANHAPLANT_STATE_MOVE_DOWN);
 				else
 				{
@@ -210,16 +210,16 @@ void CFirePiranhaPlant::ShootFirePlantBullet()
 
 		if (nx > 0)
 		{
-			fire_plant_bullet->SetPosition(x + 20, y);
-			if (tan > 0 && tan < 1.7)
+			fire_plant_bullet->SetPosition(x + FIREPIRANHAPLANT_POSITION_RIGHT_X, y);
+			if (tan > 0 && tan < FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_RIGHT_30_STATE);
 			}
-			else if (tan > 1.7)
+			else if (tan > FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_RIGHT_60_STATE);
 			}
-			else if (tan < 0 && tan > -1.7f)
+			else if (tan < 0 && tan > -FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_RIGHT_120_STATE);
 			}
@@ -233,15 +233,15 @@ void CFirePiranhaPlant::ShootFirePlantBullet()
 		else
 		{
 			fire_plant_bullet->SetPosition(x, y);
-			if (tan > 0 && tan < 1.7)
+			if (tan > 0 && tan < FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_LEFT_120_STATE);
 			}
-			else if (tan > 1.7)
+			else if (tan > FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_LEFT_150_STATE);
 			}
-			else if (tan < 0 && tan > -1.7f)
+			else if (tan < 0 && tan > -FIREPIRANHAPLANT_TAN_ANGLE_ATTACK)
 			{
 				fire_plant_bullet->SetState(FIREPLANTBULLET_SHOOTED_LEFT_30_STATE);
 			}

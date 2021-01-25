@@ -5,7 +5,7 @@ CTitle::CTitle(int f) : CGameObject()
 	form = f;
 	if (form)
 	{
-		type = 4;
+		type = HIDEN_TITLE;
 	}
 	create_time = (DWORD)GetTickCount64();
 }
@@ -28,14 +28,14 @@ void CTitle::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 void CTitle::CreateIntroAnimationTitle()
 {
-	if (GetTickCount64() - create_time < 5000 && GetTickCount64() - create_time > 4800) {
+	if (GetTickCount64() - create_time < TITLE_MOVE_END && GetTickCount64() - create_time > TITLE_MOVE_START) {
 		vy = TITLE_SPEED_Y;
 		type = 0;
 	}
 
-	if (GetTickCount64() - create_time > 5700 && GetTickCount64() - create_time < 7000)
+	if (GetTickCount64() - create_time > TITLE_STOP_START && GetTickCount64() - create_time < TITLE_STOP_END)
 		vy = 0;
-	if (GetTickCount64() - create_time > 7000)
+	if (GetTickCount64() - create_time > TITLE_STOP_END)
 	{
 		y = 0;
 		x = 0;

@@ -2,14 +2,14 @@
 #include "Mario.h"
 
 
-CBoomerangBro::CBoomerangBro(CBoomerang* boom[2])
+CBoomerangBro::CBoomerangBro(CBoomerang* boom[BOOMERANG_AMOUNT])
 {
 	is_back = 0;
 	is_idle = 0;
 	is_right = 0;
 	time_start = (DWORD)GetTickCount64();
 	found_player = false;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < BOOMERANG_AMOUNT; i++)
 	{
 		boomerang[i] = boom[i];
 	}
@@ -154,16 +154,16 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-		if (GetTickCount64() - time_start < 1500)
+		if (GetTickCount64() - time_start < BOOMERANGBRO_GOAHEAD_TIME)
 		{
 			is_back = 0;
-			if (mario->x - x >= 18)
+			if (mario->x - x >= BOOMERANGBRO_RANGE_ATTACK_PLAYER_RIGHT)
 			{
 				is_right = 1;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = BOOMERANG_WALKING_SPEED;
 			}
-			else if (mario->x - x <= -1)
+			else if (mario->x - x <= BOOMERANGBRO_RANGE_ATTACK_PLAYER_LEFT)
 			{
 				is_right = 0;
 				SetState(BOOMERANGBRO_STATE_WALKING);
@@ -173,14 +173,14 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			//SetState(BOOMERANGBRO_STATE_THROWING);
 			if (!is_shoot)
 			{
-				for (int i = 0; i < 2; i++)
+				for (int i = 0; i < BOOMERANG_AMOUNT; i++)
 				{
 					if (boomerang[i]->GetState() == BOOMERANG_STATE_HIDEN)
 					{
 						if (is_right)
 						{
 							is_shoot = 1;
-							boomerang[i]->SetPosition(x - 8, y - 8);
+							boomerang[i]->SetPosition(x - BOOMERANGBRO_BOOMERANG_LEFT_X, y - BOOMERANGBRO_BOOMERANG_LEFT_Y);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_RIGHT);
 							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
@@ -188,7 +188,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else
 						{
 							is_shoot = 1;
-							boomerang[i]->SetPosition(x + 14, y - 8);
+							boomerang[i]->SetPosition(x + BOOMERANGBRO_BOOMERANG_RIGHT_X, BOOMERANGBRO_BOOMERANG_RIGHT_Y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_LEFT);
 							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
@@ -199,37 +199,37 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-		else if (GetTickCount64() - time_start < 3000)
+		else if (GetTickCount64() - time_start < BOOMERANGBRO_GOBACK_TIME)
 		{
 			is_shoot = 0;
 			is_back = 1;
-			if (mario->x - x >= 18)
+			if (mario->x - x >= BOOMERANGBRO_RANGE_ATTACK_PLAYER_RIGHT)
 			{
 				is_right = 1;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = -BOOMERANG_WALKING_SPEED;
 			}
-			else if (mario->x - x <= -1)
+			else if (mario->x - x <= BOOMERANGBRO_RANGE_ATTACK_PLAYER_LEFT)
 			{
 				is_right = 0;
 				SetState(BOOMERANGBRO_STATE_WALKING);
 				vx = BOOMERANG_WALKING_SPEED;
 			}
 		}
-		else if (GetTickCount64() - time_start < 4000)
+		else if (GetTickCount64() - time_start < BOOMERANGBRO_THROWN_BOOMERANG_TIME)
 		{
 
 			SetState(BOOMERANGBRO_STATE_THROWING);
 			if (!is_shoot)
 			{
-				for (int i = 0; i < 2; i++)
+				for (int i = 0; i < BOOMERANG_AMOUNT; i++)
 				{
 					if (boomerang[i]->GetState() == BOOMERANG_STATE_HIDEN)
 					{
 						if (is_right)
 						{
 							is_shoot = 1;
-							boomerang[i]->SetPosition(x - 8, y - 8);
+							boomerang[i]->SetPosition(x - BOOMERANGBRO_BOOMERANG_LEFT_X, BOOMERANGBRO_BOOMERANG_LEFT_Y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_RIGHT);
 							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
@@ -237,7 +237,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else
 						{
 							is_shoot = 1;
-							boomerang[i]->SetPosition(x + 14, y - 8);
+							boomerang[i]->SetPosition(x + BOOMERANGBRO_BOOMERANG_RIGHT_X, BOOMERANGBRO_BOOMERANG_RIGHT_Y - 8);
 							boomerang[i]->SetState(BOOMERANG_STATE_FLYING_LEFT);
 							boomerang[i]->SetShootStart((DWORD)GetTickCount64());
 							break;
@@ -248,7 +248,7 @@ void CBoomerangBro::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-		else if (GetTickCount64() - time_start < 4400)
+		else if (GetTickCount64() - time_start < BOOMERANGBRO_RESET)
 		{
 			is_shoot = 0;
 			time_start = (DWORD)GetTickCount64();

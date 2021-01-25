@@ -18,9 +18,9 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == EFFECT_STATE)
 	{
-		if (GetTickCount64() - effect_time_start < 500)
+		if (GetTickCount64() - effect_time_start < COIN_EFFECT_TIME)
 		{
-			if (GetTickCount64() - effect_time_start < 300)
+			if (GetTickCount64() - effect_time_start < COIN_EFFECT_MOVE_TIME)
 				vy = -COIN_SPEED_Y;
 			else vy = COIN_SPEED_Y;
 			y += dy;

@@ -5,7 +5,7 @@
 void CLives::SetPositionNumbers(float x, float y)
 {
 	numbers[0]->SetPosition(x, y);
-	numbers[1]->SetPosition(x + 8, y);
+	numbers[1]->SetPosition(x + LIVE_X_PLUS, y);
 }
 
 void CLives::Render()

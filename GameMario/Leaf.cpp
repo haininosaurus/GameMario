@@ -23,7 +23,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (!effect_left_time_start && !effect_right_time_start)
 		{
-			if (GetTickCount64() - effect_time_start < 300)
+			if (GetTickCount64() - effect_time_start < LEAF_EFFECT_RIGHT_TIME)
 			{
 				isRight = 1;
 				vy = -LEAF_SPEED_Y;

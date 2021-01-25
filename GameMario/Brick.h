@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "PieceBrick.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
@@ -16,6 +17,10 @@
 
 #define ITEM_AMOUNT		10
 
+#define BRICK_RANGE_Y_MAX_DESTROY		20
+#define BRICK_RANGE_Y_MIN_DESTROY		5
+
+
 #define PIECE_BRICK_ANIMATIONSET	440
 
 class CBrick : public CGameObject
@@ -31,6 +36,7 @@ public:
 	}
 	void SetState(int state) { CGameObject::SetState(state); }
 	void SetItem() { item[0]->SetState(2); item[0]->SetPosition(x, y); }
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	CGameObject* GetItem() { return item[0]; }
 	void AddItemBrick(CGameObject* i);
 	void createEffectDestroy();

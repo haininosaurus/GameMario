@@ -55,10 +55,10 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (GetTickCount64() - fight_start > 300) {
-		SetState(TAIL_STATE_FIGHT);
-	}
-	else SetState(TAIL_STATE_HIDEN);
+	//if (GetTickCount64() - fight_start > 300) {
+	//	SetState(TAIL_STATE_FIGHT);
+	//}
+	//else SetState(TAIL_STATE_HIDEN);
 }
 
 void CTail::SetState(int state)
@@ -69,17 +69,17 @@ void CTail::SetState(int state)
 
 void CTail::SetFight(float Mx, float My, int Mnx, DWORD t)
 {
-	if (Mnx > 0)
-	{
-		vx = TAIL_FIGHT_SPEED;
-		SetPosition(Mx + 14, My + 20);
-		fight_start = t;
-	}
-	else {
-		vx = -TAIL_FIGHT_SPEED;
-		SetPosition(Mx, My + 20);
-		fight_start = t;
-	}
+	//if (Mnx > 0)
+	//{
+	//	vx = TAIL_FIGHT_SPEED;
+	//	SetPosition(Mx + 14, My + 20);
+	//	fight_start = t;
+	//}
+	//else {
+	//	vx = -TAIL_FIGHT_SPEED;
+	//	SetPosition(Mx, My + 20);
+	//	fight_start = t;
+	//}
 
 }
 

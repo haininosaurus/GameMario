@@ -10,6 +10,13 @@
 
 #define HIDEN_TITLE			4
 
+#define TITLE_MOVE_START		4800
+#define TITLE_MOVE_END			5000
+
+#define TITLE_STOP_START		5700
+#define TITLE_STOP_END			7000
+		
+
 class CTitle : public CGameObject
 {
 	int type;

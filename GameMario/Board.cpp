@@ -13,15 +13,15 @@ void CScoreBoard::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	if (cam != NULL)
 	{
-		SetPosition(cam->GetCx() - 8.0f, cam->GetCy() + 165.0f);
-		time->SetPositionNumbers(cam->GetCx() + 152.0f, cam->GetCy() + 185.0f);
-		score->SetPositionNumbers(cam->GetCx() + 80.0f, cam->GetCy() + 185.0f);
-		arrows->SetPositionArrows(cam->GetCx() + 80.0f, cam->GetCy() + 176.0f);
-		coin->SetPositionNumbers(cam->GetCx() + 160.0f, cam->GetCy() + 176.0f);
-		lives->SetPositionNumbers(cam->GetCx() + 56.0f, cam->GetCy() + 185.0f);
-		card[0]->SetPosition(cam->GetCx() + 200.0f, cam->GetCy() + 171.0f);
-		card[1]->SetPosition(cam->GetCx() + 232.0f, cam->GetCy() + 171.0f);
-		card[2]->SetPosition(cam->GetCx() + 264.0f, cam->GetCy() + 171.0f);
+		SetPosition(cam->GetCx() - BOARD_CAM_X_PLUS, cam->GetCy() + BOARD_CAM_Y_PLUS);
+		time->SetPositionNumbers(cam->GetCx() + BOARD_TIME_X_PLUS, cam->GetCy() + BOARD_TIME_Y_PLUS);
+		score->SetPositionNumbers(cam->GetCx() + BOARD_SCORE_X_PLUS, cam->GetCy() + BOARD_SCORE_Y_PLUS);
+		arrows->SetPositionArrows(cam->GetCx() + BOARD_ARROW_X_PLUS, cam->GetCy() + BOARD_ARROW_Y_PLUS);
+		coin->SetPositionNumbers(cam->GetCx() + BOARD_COIN_X_PLUS, cam->GetCy() + BOARD_COIN_Y_PLUS);
+		lives->SetPositionNumbers(cam->GetCx() + BOARD_LIVE_X_PLUS, cam->GetCy() + BOARD_LIVE_Y_PLUS);
+		card[0]->SetPosition(cam->GetCx() + BOARD_CARD_1_X_PLUS, cam->GetCy() + BOARD_CARD_Y_PLUS);
+		card[1]->SetPosition(cam->GetCx() + BOARD_CARD_2_X_PLUS, cam->GetCy() + BOARD_CARD_Y_PLUS);
+		card[2]->SetPosition(cam->GetCx() + BOARD_CARD_3_X_PLUS, cam->GetCy() + BOARD_CARD_Y_PLUS);
 
 	}
 }

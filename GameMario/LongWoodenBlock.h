@@ -10,6 +10,8 @@
 #define LONG_WOODEN_BLOCK_STATE_NORMAL		100
 #define LONG_WOODEN_BLOCK_STATE_FALL		200
 
+#define LONG_WOODEN_BLOCK_TIME_FALL			400
+
 
 class CLongWoodenBlock : public CGameObject
 {
